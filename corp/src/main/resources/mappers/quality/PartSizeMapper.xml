@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.certification.dao.PartSizeMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.certification.bean.PartSize" >
+    <id column="part_size_id" property="partSizeId" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="part_name" property="partName" jdbcType="VARCHAR" />
+    <result column="senal_number" property="senalNumber" jdbcType="VARCHAR" />
+    <result column="material" property="material" jdbcType="VARCHAR" />
+    <result column="drawing_number" property="drawingNumber" jdbcType="VARCHAR" />
+    <result column="part_condition" property="partCondition" jdbcType="VARCHAR" />
+    <result column="testItem" property="testItem" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="conclusion" property="conclusion" jdbcType="VARCHAR" />
+    <result column="inspector" property="inspector" jdbcType="VARCHAR" />
+    <result column="approval_date" property="approvalDate" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_time" property="wfInstTime" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_remark" property="wfInstRemark" jdbcType="VARCHAR" />
+    <result column="audit" property="audit" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    part_size_id, id, contract_id, part_name, senal_number, material, drawing_number, 
+    part_condition, testItem, status, 
+    remark,conclusion,inspector,reviewed,approval_date,wf_inst_id, wf_inst_time, 
+    wf_inst_remark, audit, create_time, update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.lyarc.tp.corp.quality.certification.bean.PartSize" >
+    select * from t_part_size where 1=1
+    <if test='partSizeId != null and partSizeId !=""'>
+      AND part_size_id = #{partSizeId}
+    </if>
+  </select>
+    <select id="selectByPid" parameterType="com.lyarc.tp.corp.quality.certification.bean.PartSize" resultType="com.lyarc.tp.corp.quality.certification.bean.PartSize" >
+    select * from t_part_size where 1=1
+    <if test='partSizeId != null and partSizeId !=""'>
+      AND part_size_id = #{partSizeId}
+    </if>
+  </select>
+  <select id="selectByPrimaryKeys" resultType="com.lyarc.tp.corp.quality.certification.bean.PartSize" >
+    select 
+    *
+    from t_part_size
+    
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_part_size
+    where part_size_id = #{partSizeId,jdbcType=VARCHAR}
+  </delete>
+ 
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.PartSize" >
+    insert into t_part_size
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="partSizeId != null" >
+        part_size_id,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="partName != null" >
+        part_name,
+      </if>
+      <if test="senalNumber != null" >
+        senal_number,
+      </if>
+      <if test="material != null" >
+        material,
+      </if>
+      <if test="drawingNumber != null" >
+        drawing_number,
+      </if>
+      <if test="partCondition != null" >
+        part_condition,
+      </if>
+      <if test="testItem != null" >
+        testItem,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="conclusion != null" >
+        conclusion,
+      </if>
+      <if test="inspector != null" >
+        inspector,
+      </if>
+      <if test="reviewed != null" >
+        reviewed,
+      </if>
+      <if test="approvalDate != null" >
+        approval_date,
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time,
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark,
+      </if>
+      <if test="audit != null" >
+        audit,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="partSizeId != null" >
+        #{partSizeId,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="partName != null" >
+        #{partName,jdbcType=VARCHAR},
+      </if>
+      <if test="senalNumber != null" >
+        #{senalNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="material != null" >
+        #{material,jdbcType=VARCHAR},
+      </if>
+      <if test="drawingNumber != null" >
+        #{drawingNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="partCondition != null" >
+        #{partCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="testItem != null" >
+        #{testItem,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="conclusion != null" >
+        #{conclusion,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+        #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewed != null" >
+        #{reviewed,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalDate != null" >
+        #{approvalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstId != null" >
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="audit != null" >
+        #{audit,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.PartSize" >
+    update t_part_size
+    <set >
+      <if test="id != null" >
+        id = #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="partName != null" >
+        part_name = #{partName,jdbcType=VARCHAR},
+      </if>
+      <if test="senalNumber != null" >
+        senal_number = #{senalNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="material != null" >
+        material = #{material,jdbcType=VARCHAR},
+      </if>
+      <if test="drawingNumber != null" >
+        drawing_number = #{drawingNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="partCondition != null" >
+        part_condition = #{partCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="testItem != null" >
+        testItem = #{testItem,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+       remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="conclusion != null" >
+       conclusion = #{conclusion,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+       inspector = #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewed != null" >
+       reviewed = #{reviewed,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalDate != null" >
+        approval_date = #{approvalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="audit != null" >
+        audit = #{audit,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where part_size_id = #{partSizeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updStatusP" parameterType="com.lyarc.tp.corp.quality.certification.bean.PartSize" >
+    update t_part_size
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="inspector != null" >
+       inspector = #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewed != null" >
+       reviewed = #{reviewed,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalDate != null" >
+        approval_date = #{approvalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where part_size_id = #{partSizeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

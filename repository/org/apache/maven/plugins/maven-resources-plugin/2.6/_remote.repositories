@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Dec 26 16:31:26 CST 2018
+maven-resources-plugin-2.6.pom>aliyun=
+maven-resources-plugin-2.6.pom>public=
+maven-resources-plugin-2.6.jar>public=
+maven-resources-plugin-2.6.jar>aliyun=

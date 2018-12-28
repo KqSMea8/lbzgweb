@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.purchase.provider.dao.ProviderMaterialMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.purchase.provider.bean.ProviderMaterial">
+    <id column="provider_id" jdbcType="VARCHAR" property="providerId" />
+    <id column="mater_id" jdbcType="VARCHAR" property="materId" />
+    <result column="mater_type" jdbcType="VARCHAR" property="materType" />
+    <result column="origin" jdbcType="VARCHAR" property="origin" />
+    <result column="use" jdbcType="VARCHAR" property="use" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="creator" jdbcType="INTEGER" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    provider_id, mater_id, mater_type, origin, `use`, `level`, price, remark, status, creator,
+    create_time, update_time, tmstamp
+  </sql> 
+  <select id="selectByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderMaterialKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_provider_material
+    where provider_id = #{providerId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="ProviderMaterialQueryBean" resultType="ProviderMaterialDto">
+    SELECT
+    p.provider_id, m.mater_id,  p.origin, p.`use`, p.`level`, p.price, p.remark, p.status, p.creator
+    ,m.apply_to_product_type materType,
+    m.mater_name materName,m.spec,m.model,m.sub_type subType, pr.provider_name providerName,
+    pr.link_phone linkPhone,pr.link_man linkMan,m.unit
+    from t_provider_material p
+    left Join t_provider pr on p.provider_id = pr.provider_id and pr.status = 1
+    right join t_material m on p.mater_id = m.mater_id
+    where m.type = 1
+    <if test='providerId != null  and providerId != ""'>
+      AND p.provider_id=#{providerId}
+    </if>
+    <if test='materId != null and materId !=""'>
+      AND p.mater_id=#{materId}
+    </if>
+    <if test='materType != null and materType != ""'>
+      AND m.apply_to_product_type=#{materType}
+    </if>
+    <if test='materName != null and materName != ""'>
+      AND (m.mater_name LIKE concat('%',#{materName},'%') )
+    </if>
+    <if test='status != null'>
+      AND p.status=#{status}
+    </if>
+    <if test='containOtherMater == 0'>
+      AND p.provider_id is not null
+    </if>
+    ORDER BY m.mater_id,p.provider_id
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="ProviderMaterialQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(1)
+    from t_provider_material p
+    left Join t_provider pr on p.provider_id = pr.provider_id and pr.status = 1
+    right join t_material m on p.mater_id = m.mater_id
+    where m.type = 1
+    <if test='providerId != null  and providerId != ""'>
+      AND p.provider_id=#{providerId}
+    </if>
+    <if test='materId != null and materId !=""'>
+      AND p.mater_id=#{materId}
+    </if>
+    <if test='materType != null and materType != ""'>
+      AND m.apply_to_product_type=#{materType}
+    </if>
+    <if test='materName != null and materName != ""'>
+      AND (m.mater_name LIKE concat('%',#{materName},'%') )
+    </if>
+    <if test='status != null'>
+      AND p.status=#{status}
+    </if>
+    <if test='containOtherMater == 0'>
+      AND p.provider_id is not null
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderMaterialKey">
+    delete from t_provider_material
+    where provider_id = #{providerId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderMaterial">
+    insert into t_provider_material (provider_id, mater_id, mater_type, 
+      origin, `use`, `level`,
+      price, remark, status, 
+      creator, create_time, update_time, 
+      tmstamp)
+    values (#{providerId,jdbcType=VARCHAR}, #{materId,jdbcType=VARCHAR}, #{materType,jdbcType=VARCHAR}, 
+      #{origin,jdbcType=VARCHAR}, #{use,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
+      #{price,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderMaterial">
+    insert into t_provider_material
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="providerId != null">
+        provider_id,
+      </if>
+      <if test="materId != null">
+        mater_id,
+      </if>
+      <if test="materType != null">
+        mater_type,
+      </if>
+      <if test="origin != null">
+        origin,
+      </if>
+      <if test="use != null">
+        `use`,
+      </if>
+      <if test="level != null">
+        `level`,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="providerId != null">
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null">
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materType != null">
+        #{materType,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null">
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="use != null">
+        #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderMaterial">
+    update t_provider_material
+    <set>
+      <if test="materType != null">
+        mater_type = #{materType,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null">
+        origin = #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="use != null">
+        `use` = #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        `level` = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where provider_id = #{providerId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderMaterial">
+    update t_provider_material
+    set mater_type = #{materType,jdbcType=VARCHAR},
+      origin = #{origin,jdbcType=VARCHAR},
+      `use` = #{use,jdbcType=VARCHAR},
+      `level` = #{level,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where provider_id = #{providerId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

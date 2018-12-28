@@ -1,0 +1,1460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.lyarc.tp.corp.quality.revision.dao.RevisedInspectionMapper">
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.quality.revision.bean.RevisedInspection">
+		<id column="revision_id" jdbcType="VARCHAR" property="revisionId" />
+		<result column="ledger_id" jdbcType="VARCHAR"
+			property="ledgerId" />
+		<result column="batch_id" jdbcType="VARCHAR" property="batchId" />
+		<result column="provider" jdbcType="VARCHAR"
+			property="provider" />
+		<result column="mater_name" jdbcType="VARCHAR"
+			property="materName" />
+		<result column="inspection_date" jdbcType="TIMESTAMP"
+			property="inspectionDate" />
+		<result column="analyst" jdbcType="VARCHAR" property="analyst" />
+		<result column="inspector" jdbcType="VARCHAR"
+			property="inspector" />
+		<result column="auditor" jdbcType="VARCHAR" property="auditor" />
+		<result column="audit_time" jdbcType="TIMESTAMP"
+			property="auditTime" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+		<result column="tmstamp" jdbcType="TIMESTAMP"
+			property="tmstamp" />
+	</resultMap>
+	<!-- <select id="list" parameterType="TcheckRevisionLogQueryBean" resultType="TcheckRevisionLog"> 
+		select * from t_check_revision_log where 1=1 <if test='revisionId != null 
+		and revisionId !=""'> AND revision_id LIKE concat('%',#{revisionId},'%') 
+		</if> <if test="createBeginTime != null"> AND DATE_FORMAT(create_time,'%Y-%m-%d') 
+		>= DATE_FORMAT(#{createBeginTime},'%Y-%m-%d') </if> <if test="createEndTime 
+		!= null"> AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createEndTime},'%Y-%m-%d') 
+		</if> <if test="offset != null and pageSize != null"> limit #{offset},#{pageSize} 
+		</if> </select> <select id="count" parameterType="TcheckRevisionLogQueryBean" 
+		resultType="java.lang.Long"> select count(revision_id) from t_check_revision_log 
+		where 1=1 <if test='revisionId != null and revisionId !=""'> AND revision_id 
+		LIKE concat('%',#{revisionId},'%') </if> <if test="createBeginTime != null"> 
+		AND DATE_FORMAT(create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createBeginTime},'%Y-%m-%d') 
+		</if> <if test="createEndTime != null"> AND DATE_FORMAT(create_time,'%Y-%m-%d') 
+		&lt;= DATE_FORMAT(#{createEndTime},'%Y-%m-%d') </if> </select> -->
+	
+	<!-- 添加检验结果修订日志	t_check_revision_log -->
+	<insert id="insertNewTcheckRevisionLog"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.TcheckRevisionLog">
+		insert into t_check_revision_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="revisionId != null">
+				revision_id,
+			</if>
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="provider != null">
+				provider,
+			</if>
+			<if test="materName != null">
+				mater_name,
+			</if>
+			<if test="inspectionDate != null">
+				inspection_date,
+			</if>
+			<if test="analyst != null">
+				analyst,
+			</if>
+			<if test="inspector != null">
+				inspector,
+			</if>
+			<if test="auditor != null">
+				auditor,
+			</if>
+			<if test="auditTime != null">
+				audit_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="revisionId != null">
+				#{revisionId,jdbcType=VARCHAR},
+			</if>
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="provider != null">
+				#{provider,jdbcType=VARCHAR},
+			</if>
+			<if test="materName != null">
+				#{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="inspectionDate != null">
+				#{inspectionDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="analyst != null">
+				#{analyst,jdbcType=VARCHAR},
+			</if>
+			<if test="inspector != null">
+				#{inspector,jdbcType=VARCHAR},
+			</if>
+			<if test="auditor != null">
+				#{auditor,jdbcType=VARCHAR},
+			</if>
+			<if test="auditTime != null">
+				#{auditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 3.砖管检验1004 查询所有 -->
+	<select id="getAllCheckBrickTube"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckBrickTube">
+		select * from t_check_brick_tube where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<select id="getAllCheckBrickTubeDetail"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckBrickTubeDetail">
+		select * from t_check_brick_tube_detail where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 3.砖管检验1004  查询主表最新信息 -->
+	<select id="selectNewCheckBrickTube"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckBrickTube">
+		select * from t_check_brick_tube where 1=1
+		<if test='batchId != null and batchId !=""'>
+		and batch_id= #{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 3.砖管检验1004  查询子表最新信息 -->
+	<select id="selectNewCheckBrickTubeDetail"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckBrickTubeDetail">
+		select * from t_check_brick_tube_detail where 1=1  
+				<if test='batchId != null and batchId !=""'>
+		and batch_id= #{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 3.砖管检验1004 添加 主表 -->
+	<insert id="insertAllCheckBrickTube"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckBrickTube">
+		insert into t_check_brick_tube
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="brickTubeId != null">
+				brick_tube_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="conclusion != null">
+				conclusion,
+			</if>
+			<if test="lotMoisture != null">
+				lot_moisture,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="brickTubeId != null">
+				#{brickTubeId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=VARCHAR},
+			</if>
+			<if test="lotMoisture != null">
+				#{lotMoisture,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 3.砖管检验1004 添加 子表 -->
+	<insert id="insertAllCheckBrickTubeDetail"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckBrickTubeDetail">
+		insert into t_check_brick_tube_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="origin != null">
+				origin,
+			</if>
+			<if test="brickTubeName != null">
+				brick_tube_name,
+			</if>
+			<if test="brickTubeType != null">
+				brick_tube_type,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="stockQuantity != null">
+				stock_quantity,
+			</if>
+			<if test="spotCheckQuantity != null">
+				spot_check_quantity,
+			</if>
+			<if test="spotCheckId != null">
+				spot_check_id,
+			</if>
+			<if test="checkQuantity != null">
+				check_quantity,
+			</if>
+			<if test="spotCheckYieid != null">
+				spot_check_yieid,
+			</if>
+			<if test="qualifiedNo != null">
+				qualified_no,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="yieid != null">
+				yieid,
+			</if>
+			<if test="conclusion != null">
+				conclusion,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="brickDetailId != null">
+				brick_detail_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="origin != null">
+				#{origin,jdbcType=VARCHAR},
+			</if>
+			<if test="brickTubeName != null">
+				#{brickTubeName,jdbcType=VARCHAR},
+			</if>
+			<if test="brickTubeType != null">
+				#{brickTubeType,jdbcType=VARCHAR},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=INTEGER},
+			</if>
+			<if test="stockQuantity != null">
+				#{stockQuantity,jdbcType=INTEGER},
+			</if>
+			<if test="spotCheckQuantity != null">
+				#{spotCheckQuantity,jdbcType=INTEGER},
+			</if>
+			<if test="spotCheckId != null">
+				#{spotCheckId,jdbcType=INTEGER},
+			</if>
+			<if test="checkQuantity != null">
+				#{checkQuantity,jdbcType=INTEGER},
+			</if>
+			<if test="spotCheckYieid != null">
+				#{spotCheckYieid,jdbcType=DECIMAL},
+			</if>
+			<if test="qualifiedNo != null">
+				#{qualifiedNo,jdbcType=INTEGER},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="yieid != null">
+				#{yieid,jdbcType=DECIMAL},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="brickDetailId != null">
+				#{brickDetailId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 9.电极检验1012 查询所有-->
+	<select id="getAllCheckElectrode"
+		parameterType="RevisedInspectionQueryBean"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckElectrode">
+		select * from t_check_electrode where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 9.电极检验1012   查询最新版本 -->
+	<select id="selectNewCheckElectrode"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckElectrode">
+		select * from t_check_electrode where 1=1
+		<if test='batchId != null and batchId !=""'>
+			and batch_id=#{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 9.电极检验1012 添加所有-->
+	<insert id="insertAllCheckElectrode"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckElectrode">
+		insert into t_check_electrode
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="standard != null">
+				standard,
+			</if>
+			<if test="lengthSize != null">
+				length_size,
+			</if>
+			<if test="resistance != null">
+				resistance,
+			</if>
+			<if test="conclusion != null">
+				conclusion,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="inspectionItem != null">
+				inspection_item,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=INTEGER},
+			</if>
+			<if test="standard != null">
+				#{standard,jdbcType=INTEGER},
+			</if>
+			<if test="lengthSize != null">
+				#{lengthSize,jdbcType=DECIMAL},
+			</if>
+			<if test="resistance != null">
+				#{resistance,jdbcType=DECIMAL},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="inspectionItem != null">
+				#{inspectionItem,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 2.铁合金检验1002 查询主表所有-->
+	<select id="getAllCheckFerroAlloy"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckFerroAlloy">
+		select * from t_check_ferro_alloy where
+		1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 2.铁合金检验1002 查询子表所有-->
+	<select id="getAllCheckFerroAlloyDetail"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckFerroAlloyDetail">
+		select * from t_check_ferro_alloy_detail where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 2.铁合金检验1002 查询主表最新版本 -->
+	<select id="selectNewCheckFerroAlloy"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckFerroAlloy">
+		select * from t_check_ferro_alloy where 1=1
+				<if test='batchId != null and batchId !=""'>
+		and batch_id= #{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 2.铁合金检验1002 查询子表最新版本 -->
+	<select id="selectNewCheckFerroAlloyDetail"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckFerroAlloyDetail">
+		select * from t_check_ferro_alloy_detail where 1=1
+		<if test='batchId != null and batchId !=""'>
+		and batch_id= #{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 2.铁合金检验1002 添加主表所有-->
+	<insert id="insertAllCheckFerroAlloy"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckFerroAlloy">
+		insert into t_check_ferro_alloy
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="inspectConclusion != null">
+				inspect_conclusion,
+			</if>
+			<if test="tenTestAvg != null">
+				ten_test_avg,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="inspectConclusion != null">
+				#{inspectConclusion,jdbcType=INTEGER},
+			</if>
+			<if test="tenTestAvg != null">
+				#{tenTestAvg,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 2.铁合金检验1002 添加子表所有-->
+	<insert id="insertAllCheckFerroAlloyDetail"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckFerroAlloyDetail">
+		insert into t_check_ferro_alloy_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ferroAlloyId != null">
+				ferro_alloy_id,
+			</if>
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="analysisNo != null">
+				analysis_no,
+			</if>
+			<if test="contentC != null">
+				content_c,
+			</if>
+			<if test="contentSi != null">
+				content_si,
+			</if>
+			<if test="contentMn != null">
+				content_mn,
+			</if>
+			<if test="contentS != null">
+				content_s,
+			</if>
+			<if test="contentP != null">
+				content_p,
+			</if>
+			<if test="contentCr != null">
+				content_cr,
+			</if>
+			<if test="contentMo != null">
+				content_mo,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ferroAlloyId != null">
+				#{ferroAlloyId,jdbcType=VARCHAR},
+			</if>
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="analysisNo != null">
+				#{analysisNo,jdbcType=INTEGER},
+			</if>
+			<if test="contentC != null">
+				#{contentC,jdbcType=NUMERIC},
+			</if>
+			<if test="contentSi != null">
+				#{contentSi,jdbcType=NUMERIC},
+			</if>
+			<if test="contentMn != null">
+				#{contentMn,jdbcType=NUMERIC},
+			</if>
+			<if test="contentS != null">
+				#{contentS,jdbcType=NUMERIC},
+			</if>
+			<if test="contentP != null">
+				#{contentP,jdbcType=NUMERIC},
+			</if>
+			<if test="contentCr != null">
+				#{contentCr,jdbcType=NUMERIC},
+			</if>
+			<if test="contentMo != null">
+				#{contentMo,jdbcType=NUMERIC},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<!-- 6.石灰检验1009	查询所有 -->
+	<select id="getAllCheckLime"
+		parameterType="RevisedInspectionQueryBean"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckLime">
+		select * from t_check_lime where 1=1
+		<if test='revisionId != null and revisionId !=""'>
+			AND batch_id =#{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 6.石灰检验1009   查询最新版本 -->
+	<select id="selectNewCheckLime"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckLime">
+		select * from t_check_lime where 1=1
+		<if test='batchId != null and batchId !=""'>
+			and batch_id=#{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 6.石灰检验1009	插入所有 -->
+	<insert id="insertAllCheckLime"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckLime">
+		insert into t_check_lime
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="checkoutTypeId != null">
+				checkout_type_id,
+			</if>
+			<if test="standard != null">
+				standard,
+			</if>
+			<if test="actual != null">
+				actual,
+			</if>
+			<if test="conclusion != null">
+				conclusion,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="checkoutTypeId != null">
+				#{checkoutTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="standard != null">
+				#{standard,jdbcType=VARCHAR},
+			</if>
+			<if test="actual != null">
+				#{actual,jdbcType=VARCHAR},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 8.原砂检验1011 查询所有-->
+	<select id="getAllCheckOriginalSand"
+		parameterType="RevisedInspectionQueryBean"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckOriginalSand">
+		select * from t_check_original_sand where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 8.原砂检验1011   查询最新版本 -->
+	<select id="selectNewCheckOriginalSand"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckOriginalSand">
+		select * from t_check_original_sand where 1=1
+		<if test='batchId != null and batchId !=""'>
+			and batch_id=#{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 8.原砂检验1011 添加所有-->
+	<insert id="insertAllCheckOriginalSand"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckOriginalSand">
+		insert into t_check_original_sand
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="siltContent != null">
+				silt_content,
+			</if>
+			<if test="waterContent != null">
+				water_content,
+			</if>
+			<if test="colloidIndex != null">
+				colloid_index,
+			</if>
+			<if test="conclusion != null">
+				conclusion,
+			</if>
+			<if test="fineRate != null">
+				fine_rate,
+			</if>
+			<if test="averageRate != null">
+				average_rate,
+			</if>
+			<if test="granularityAvg != null">
+				granularity_avg,
+			</if>
+			<if test="mainGrainComposition != null">
+				main_grain_composition,
+			</if>
+			<if test="residualQuantity != null">
+				residual_quantity,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="apertureSize != null">
+				aperture_size,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			 <if test="inspectionResult != null">
+				inspection_result,
+			</if> 
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=INTEGER},
+			</if>
+			<if test="siltContent != null">
+				#{siltContent,jdbcType=DECIMAL},
+			</if>
+			<if test="waterContent != null">
+				#{waterContent,jdbcType=DECIMAL},
+			</if>
+			<if test="colloidIndex != null">
+				#{colloidIndex,jdbcType=DECIMAL},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=INTEGER},
+			</if>
+			<if test="fineRate != null">
+				#{fineRate,jdbcType=VARCHAR},
+			</if>
+			<if test="averageRate != null">
+				#{averageRate,jdbcType=VARCHAR},
+			</if>
+			<if test="granularityAvg != null">
+				#{granularityAvg,jdbcType=VARCHAR},
+			</if>
+			<if test="mainGrainComposition != null">
+				#{mainGrainComposition,jdbcType=VARCHAR},
+			</if>
+			<if test="residualQuantity != null">
+				#{residualQuantity,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="apertureSize != null">
+				#{apertureSize,jdbcType=DOUBLE},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			 <if test="inspectionResult != null">
+				#{inspectionResult,jdbcType=VARCHAR},
+			</if> 
+		</trim>
+	</insert> 
+	<!-- 5.树脂、铬矿砂检验1008 查询所有-->
+	<select id="getAllCheckResinChromeOre"
+		parameterType="RevisedInspectionQueryBean"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckResinChromeOre">
+		select * from t_check_resin_chrome_ore where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 5.树脂、铬矿砂检验1008  查询主表最新信息 -->
+	<select id="selectNewCheckResinChromeOre"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckResinChromeOre"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckResinChromeOre">
+		select * from t_check_resin_chrome_ore where 1=1
+				<if test='batchId != null and batchId !=""'>
+		and batch_id= #{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 5.树脂、铬矿砂检验1008 插入所有-->
+	<insert id="insertAllCheckResinChromeOre"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckResinChromeOre">
+		insert into t_check_resin_chrome_ore
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="conclusion != null"> 
+				conclusion, 
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="itemOne != null">
+				item_one,
+			</if>
+			<if test="itemTwo != null">
+				item_two,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=INTEGER},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="itemOne != null">
+				#{itemOne,jdbcType=VARCHAR},
+			</if>
+			<if test="itemTwo != null">
+				#{itemTwo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 1.原辅材料目视检验 获取全部 -->
+	<select id="getAllCheckVisualInspection"
+		parameterType="RevisedInspectionQueryBean"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckVisualInspection">
+		select * from t_check_visual_inspection where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 1.原辅材料目视检验 查询最新版本 -->
+	<select id="selectNewCheckVisualInspection"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckVisualInspection">
+		
+		select * from t_check_visual_inspection where 1=1
+		<if test='batchId != null and batchId !=""'>
+			and batch_id=#{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 1.原辅材料目视检验 获取初始数据 -->
+	<select id="getInitialCheckVisualInspection"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckVisualInspection">
+		select * from t_check_visual_inspection where 1=1
+		<if test='batchId != null and batchId !=""'>
+			and batch_id=0
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id=0
+		</if>
+	</select>
+	<!-- 1.原辅材料目视检验 添加全部 -->
+	<insert id="insertAllCheckVisualInspection"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckVisualInspection">
+		insert into t_check_visual_inspection
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="inspectionItem != null">
+				inspection_item,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="inspectionItem != null">
+				#{inspectionItem,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="quantity!= null">
+				#{quantity,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 4.V法涂料检验1006 查询主表所有-->
+	<select id="getAllCheckVMethodCoating"
+		parameterType="RevisedInspectionQueryBean"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckVMethodCoating">
+		select * from t_check_v_method_coating where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 4.V法涂料检验1006 查询子表所有-->
+	<select id="getAllCheckVMethodCoatingDetail"
+		parameterType="RevisedInspectionQueryBean"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckVMethodCoatingDetail">
+		select * from t_check_v_method_coating_detail where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 4.V法涂料检验1006  查询主表最新信息 -->
+	<select id="selectNewCheckVMethodCoating"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckVMethodCoating">
+		select * from t_check_v_method_coating where 1=1
+				<if test='batchId != null and batchId !=""'>
+		and batch_id= #{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 4.V法涂料检验1006  查询子表最新信息 -->
+	<select id="selectNewCheckVMethodCoatingDetail"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckVMethodCoatingDetail">
+		select * from t_check_v_method_coating_detail where 1=1  
+				<if test='batchId != null and batchId !=""'>
+		and batch_id= #{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 4.V法涂料检验1006 添加主表所有-->
+	<insert id="insertAllCheckVMethodCoating"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckVMethodCoating">
+		insert into t_check_v_method_coating
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="proportionAvg != null">
+				proportion_avg,
+			</if>
+			<if test="baumeDegreeAvg != null">
+				baume_degree_avg,
+			</if>
+			<if test="suspensionPropertyAvg != null">
+				suspension_property_avg,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="proportionAvg != null">
+				#{proportionAvg,jdbcType=DECIMAL},
+			</if>
+			<if test="baumeDegreeAvg != null">
+				#{baumeDegreeAvg,jdbcType=DECIMAL},
+			</if>
+			<if test="suspensionPropertyAvg != null">
+				#{suspensionPropertyAvg,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<!-- 4.V法涂料检验1006 添加子表所有-->
+	<insert id="insertAllCheckVMethodCoatingDetail"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckVMethodCoatingDetail">
+		insert into t_check_v_method_coating_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="sample != null">
+				sample,
+			</if>
+			<if test="proportion != null">
+				proportion,
+			</if>
+			<if test="baumeDegree != null">
+				baume_degree,
+			</if>
+			<if test="suspensionProperty != null">
+				suspension_property,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="conclusion != null">
+				conclusion,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="vMethodId != null">
+				v_method_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="sample != null">
+				#{sample,jdbcType=VARCHAR},
+			</if>
+			<if test="proportion != null">
+				#{proportion,jdbcType=DECIMAL},
+			</if>
+			<if test="baumeDegree != null">
+				#{baumeDegree,jdbcType=DECIMAL},
+			</if>
+			<if test="suspensionProperty != null">
+				#{suspensionProperty,jdbcType=DECIMAL},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=INTEGER},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="vMethodId != null">
+				#{vMethodId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 7.水玻璃检验1010 	查询所有-->
+	<select id="getAllCheckWaterGlass"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckWaterGlass">
+		select * from t_check_water_glass where 1=1
+		<if test='batchId != null and batchId !=""'>
+			AND batch_id = #{batchId,jdbcType=VARCHAR}
+		</if>
+		order by version_id desc
+	</select>
+	<!-- 7.水玻璃检验1010   查询最新版本 -->
+	<select id="selectNewCheckWaterGlass"
+		parameterType="java.lang.String"
+		resultType="com.lyarc.tp.corp.quality.revision.bean.CheckWaterGlass">
+		select * from t_check_water_glass where 1=1
+		<if test='batchId != null and batchId !=""'>
+			and batch_id=#{batchId,jdbcType=VARCHAR}
+		</if>
+		<if test='versionId != null and versionId !=""'>
+		and version_id= #{versionId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 7.水玻璃检验1010   添加所有-->
+	<insert id="insertAllCheckWaterGlass"
+		parameterType="com.lyarc.tp.corp.quality.revision.bean.CheckWaterGlass">
+		insert into t_check_water_glass
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				ledger_id,
+			</if>
+			<if test="batchId != null">
+				batch_id,
+			</if>
+			<if test="versionId != null">
+				version_id,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="modulusStand != null">
+				modulus_stand,
+			</if>
+			<if test="proportionStand != null">
+				proportion_stand,
+			</if>
+			<if test="modulusMeasure != null">
+				modulus_measure,
+			</if>
+			<if test="proportionMeasure != null">
+				proportion_measure,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="conclusion != null">
+				conclusion,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ledgerId != null">
+				#{ledgerId,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null">
+				#{batchId,jdbcType=VARCHAR},
+			</if>
+			<if test="versionId != null">
+				#{versionId,jdbcType=INTEGER},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=INTEGER},
+			</if>
+			<if test="modulusStand != null">
+				#{modulusStand,jdbcType=VARCHAR},
+			</if>
+			<if test="proportionStand != null">
+				#{proportionStand,jdbcType=VARCHAR},
+			</if>
+			<if test="modulusMeasure != null">
+				#{modulusMeasure,jdbcType=VARCHAR},
+			</if>
+			<if test="proportionMeasure != null">
+				#{proportionMeasure,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="conclusion != null">
+				#{conclusion,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updCheckRevisionLogVersionId">
+	update t_check_revision_log set version_id=#{versionId,jdbcType=INTEGER},operator=#{operator,jdbcType=VARCHAR} where batch_id=#{batchId,jdbcType=VARCHAR}
+	</update>
+</mapper>

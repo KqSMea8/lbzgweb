@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<Configuration status="DEBUG" monitorInterval="30">
+	<Properties>
+        <Property name="syscontent">/logs/ty1PrivateCorp/test</Property>
+    </Properties>
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%d][%-5p][%t]%X %logger{36} - %m (%F:%L)%n" />
+		</Console>
+		<RollingFile name="ROLLING_INFO" fileName="${syscontent}/debug.log"
+			filePattern="${syscontent}/$${date:yyyy-MM-dd}/info_%d{yyyy-MM-dd}-%i.log">
+			<Filters>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+			<PatternLayout pattern="[%d][%-5p][%t]%X %logger{36} - %m(%F:%L)%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="20"/>
+		</RollingFile>
+		<RollingFile name="ROLLING_ERROR" fileName="${syscontent}/error.log"
+			filePattern="${syscontent}/$${date:yyyy-MM-dd}/error_%d{yyyy-MM-dd}-%i.log">
+			<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+			<PatternLayout pattern="[%d][%-5p][%t]%X %logger{36} - %m(%F:%L)%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+		</RollingFile>
+
+	</Appenders>
+	<Loggers>
+		<!-- 屏蔽框架输出信息 -->
+		<logger name="org.apache" level="WARN" />
+		<logger name="org.eclipse" level="WARN" />
+		<logger name="org.quartz" level="INFO" />
+		<logger name="org.springframework" level="INFO" />
+		<Root level="DEBUG">
+			<AppenderRef ref="STDOUT" />
+			<AppenderRef ref="ROLLING_INFO" />
+			<AppenderRef ref="ROLLING_ERROR" />
+            <AppenderRef ref="com.lyarc.tp.corp.innerapi.controller.InnerApiController" />
+		</Root>
+	</Loggers>
+</Configuration>

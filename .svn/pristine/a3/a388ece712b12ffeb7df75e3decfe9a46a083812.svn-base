@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.contract.inquire.dao.InquireMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.contract.inquire.bean.Inquire" >
+    <id column="inquire_id" property="inquireId" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="in_date" property="inDate" jdbcType="TIMESTAMP" />
+    <result column="is_inquire" property="isInquire" jdbcType="INTEGER" />
+    <result column="has_procedure" property="hasProcedure" jdbcType="INTEGER" />
+    <result column="is_foreign" property="isForeign" jdbcType="INTEGER" />
+    <result column="is_craft_design" property="isCraftDesign" jdbcType="INTEGER" />
+    <result column="sales" property="sales" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+    <result column="designer" property="designer" jdbcType="VARCHAR" />
+    <result column="complete_time" property="completeTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="files" property="files" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.lyarc.tp.corp.contract.inquire.bean.Inquire" extends="BaseResultMap" >
+    <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+
+  <resultMap id="ResultMapWithDetail" type="com.lyarc.tp.corp.contract.inquire.dto.InquireDto" extends="BaseResultMap" >
+    <collection property="detailList" ofType="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" select="getDetails"
+                column="inquire_id">
+    </collection>
+  </resultMap>
+
+
+
+  <sql id="Base_Column_List" >
+    inquire_id, customer_id, in_date, is_inquire, has_procedure, is_foreign, is_craft_design, 
+    sales, creator, create_time, update_time, tmstamp,designer,complete_time,status,files
+  </sql>
+  <sql id="Blob_Column_List" >
+    remark
+  </sql>
+
+  <sql id="Base_Column_List_Join" >
+    i.inquire_id, i.customer_id, i.in_date, i.is_inquire, i.has_procedure, i.is_foreign, i.is_craft_design,
+    i.sales, i.creator, i.create_time, i.update_time, i.tmstamp,i.remark,i.designer,i.complete_time,i.status,i.files
+  </sql>
+
+  <!-- 自增类型的类型编号 -->
+  <select id="createSequence" parameterType="java.lang.String" resultType="java.lang.Integer" statementType="CALLABLE">
+    call sp_seq(concat(#{currentDate},'_t_material'),1)
+  </select>
+
+  <select id="getDetails" resultType="InquireDetail" parameterType="java.lang.String" >
+    select
+    *
+    from t_inquire_detail
+    where inquire_id = #{inquire_id}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_inquire
+    where inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectAndDetail" resultMap="ResultMapWithDetail" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List_Join" />
+    ,c.customer_name,emp.true_name sales_name,emp1.true_name designer_name
+    from t_inquire i left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    left join t_emp emp1 on i.designer = emp1.emp_id
+    where i.inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="InquireQueryBean" resultType="InquireDto">
+    SELECT
+    <include refid="Base_Column_List_Join" />
+    ,c.customer_name,emp.true_name sales_name,emp1.true_name designer_name
+    from t_inquire i left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    left join t_emp emp1 on i.designer = emp1.emp_id
+    where 1=1
+    <if test='customerName != null and customerName != ""'>
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="inquireId != null">
+      AND i.inquire_id LIKE concat('%',#{inquireId},'%')
+    </if>
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="startDate!=null and endDate!=null">
+      AND DATE_FORMAT(i.in_date, '%Y-%m-%d') between #{startDate} and #{endDate}
+    </if>
+    <if test="status != null">
+      AND i.status = #{status}
+    </if>
+    ORDER BY i.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="CustomerQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(1)
+    from t_inquire i left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    where 1=1
+    <if test='customerName != null and customerName != ""'>
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="inquireId != null">
+      AND i.inquire_id = #{inquireId}
+    </if>
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="startDate!=null and endDate!=null">
+      AND DATE_FORMAT(i.in_date, '%Y-%m-%d') between #{startDate} and #{endDate}
+    </if>
+    <if test="status != null">
+      AND i.status = #{status}
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_inquire
+    where inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.contract.inquire.bean.Inquire" >
+    insert into t_inquire (inquire_id, customer_id, in_date, 
+      is_inquire, has_procedure, is_foreign, 
+      is_craft_design, sales, creator, 
+      create_time, update_time, tmstamp, designer,complete_time,status,
+      remark,files)
+    values (#{inquireId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{inDate,jdbcType=TIMESTAMP}, 
+      #{isInquire,jdbcType=INTEGER}, #{hasProcedure,jdbcType=INTEGER}, #{isForeign,jdbcType=INTEGER}, 
+      #{isCraftDesign,jdbcType=INTEGER}, #{sales,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}, 
+      #{designer,jdbcType=VARCHAR},
+      #{completeTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
+      #{remark,jdbcType=LONGVARCHAR},#{files,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.contract.inquire.bean.Inquire" >
+    insert into t_inquire
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="inquireId != null" >
+        inquire_id,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="inDate != null" >
+        in_date,
+      </if>
+      <if test="isInquire != null" >
+        is_inquire,
+      </if>
+      <if test="hasProcedure != null" >
+        has_procedure,
+      </if>
+      <if test="isForeign != null" >
+        is_foreign,
+      </if>
+      <if test="isCraftDesign != null" >
+        is_craft_design,
+      </if>
+      <if test="sales != null" >
+        sales,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="designer != null" >
+        designer,
+      </if>
+      <if test="completeTime != null" >
+        complete_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="files != null" >
+        files,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inquireId != null" >
+        #{inquireId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="inDate != null" >
+        #{inDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isInquire != null" >
+        #{isInquire,jdbcType=INTEGER},
+      </if>
+      <if test="hasProcedure != null" >
+        #{hasProcedure,jdbcType=INTEGER},
+      </if>
+      <if test="isForeign != null" >
+        #{isForeign,jdbcType=INTEGER},
+      </if>
+      <if test="isCraftDesign != null" >
+        #{isCraftDesign,jdbcType=INTEGER},
+      </if>
+      <if test="sales != null" >
+        #{sales,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="designer != null" >
+        #{designer,jdbcType=VARCHAR},
+      </if>
+      <if test="completeTime != null" >
+        #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="files != null" >
+        #{files,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.contract.inquire.bean.Inquire" >
+    update t_inquire
+    <set >
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="inDate != null" >
+        in_date = #{inDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isInquire != null" >
+        is_inquire = #{isInquire,jdbcType=INTEGER},
+      </if>
+      <if test="hasProcedure != null" >
+        has_procedure = #{hasProcedure,jdbcType=INTEGER},
+      </if>
+      <if test="isForeign != null" >
+        is_foreign = #{isForeign,jdbcType=INTEGER},
+      </if>
+      <if test="isCraftDesign != null" >
+        is_craft_design = #{isCraftDesign,jdbcType=INTEGER},
+      </if>
+      <if test="sales != null" >
+        sales = #{sales,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="designer != null" >
+        designer = #{designer,jdbcType=VARCHAR},
+      </if>
+      <if test="completeTime != null" >
+        complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="files != null" >
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.lyarc.tp.corp.contract.inquire.bean.Inquire" >
+    update t_inquire
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      in_date = #{inDate,jdbcType=TIMESTAMP},
+      is_inquire = #{isInquire,jdbcType=INTEGER},
+      has_procedure = #{hasProcedure,jdbcType=INTEGER},
+      is_foreign = #{isForeign,jdbcType=INTEGER},
+      is_craft_design = #{isCraftDesign,jdbcType=INTEGER},
+      sales = #{sales,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      designer = #{designer,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.contract.inquire.bean.Inquire" >
+    update t_inquire
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      in_date = #{inDate,jdbcType=TIMESTAMP},
+      is_inquire = #{isInquire,jdbcType=INTEGER},
+      has_procedure = #{hasProcedure,jdbcType=INTEGER},
+      is_foreign = #{isForeign,jdbcType=INTEGER},
+      is_craft_design = #{isCraftDesign,jdbcType=INTEGER},
+      sales = #{sales,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      designer = #{designer,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </update>
+</mapper>

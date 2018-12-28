@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.contract.contract.dao.ContractMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.contract.contract.bean.Contract" >
+    <id column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="contract_no" property="contractNo" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="sign_date" property="signDate" jdbcType="TIMESTAMP" />
+    <result column="sign_address" property="signAddress" jdbcType="VARCHAR" />
+    <result column="has_procedure" property="hasProcedure" jdbcType="INTEGER" />
+    <result column="is_foreign" property="isForeign" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="delivery_address" property="deliveryAddress" jdbcType="VARCHAR" />
+    <result column="sales" property="sales" jdbcType="VARCHAR" />
+    <result column="in_date" property="inDate" jdbcType="TIMESTAMP" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="files" property="files" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_time" property="wfInstTime" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_remark" property="wfInstRemark" jdbcType="VARCHAR" />
+    <result column="revision_status" property="revisionStatus" jdbcType="INTEGER" />
+    <result column="revision_wf_inst_id" property="revisionWfInstId" jdbcType="VARCHAR" />
+    <result column="revision_wf_inst_time" property="revisionWfInstTime" jdbcType="TIMESTAMP" />
+    <result column="revision_wf_inst_remark" property="revisionWfInstRemark" jdbcType="VARCHAR" />
+    <result column="undo_status" property="undoStatus" jdbcType="INTEGER" />
+    <result column="undo_wf_inst_id" property="undoWfInstId" jdbcType="VARCHAR" />
+    <result column="undo_wf_inst_time" property="undoWfInstTime" jdbcType="TIMESTAMP" />
+    <result column="undo_wf_inst_remark" property="undoWfInstRemark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+    <result column="shipping_status" property="shippingStatus" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithDetail" type="com.lyarc.tp.corp.contract.contract.bean.Contract" extends="BaseResultMap" >
+    <collection property="detailList" ofType="com.lyarc.tp.corp.contract.contract.bean.ContractDetail" select="getDetails"
+                column="contract_id">
+    </collection>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    contract_id,contract_No, customer_id, sign_date, sign_address, is_foreign,has_procedure, amount, delivery_address,
+    sales, in_date, currency, files, remark, status, wf_inst_id, wf_inst_time, revision_status,
+    revision_wf_inst_id, revision_wf_inst_time, undo_status, undo_wf_inst_id, undo_wf_inst_time,
+    creator, create_time,
+    update_time, tmstamp,shipping_status,wf_inst_remark,revision_wf_inst_remark,undo_wf_inst_remark
+  </sql>
+
+  <sql id="Base_Column_List_Join" >
+    i.contract_id,i.contract_No, i.customer_id, i.sign_date, i.sign_address, i.is_foreign,i.has_procedure, i.amount, i.delivery_address,
+    i.sales, i.in_date, i.currency, i.files, i.remark, i.status, i.wf_inst_id, i.wf_inst_time, i.revision_status,
+    i.revision_wf_inst_id, i.revision_wf_inst_time, i.undo_status, i.undo_wf_inst_id, i.undo_wf_inst_time,
+    i.creator, i.create_time,
+    i.update_time, i.tmstamp,i.shipping_status,i.wf_inst_remark,i.revision_wf_inst_remark,i.undo_wf_inst_remark
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_contract
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getDetails" resultType="ContractDetailDto" parameterType="java.lang.String" >
+    select
+    a.*,ta.arg_text unitName
+    from t_contract_detail a
+    left join t_arg ta on ta.arg_code = a.unit and ta.arg_group = 'unit'
+    where contract_id = #{contract_id}
+  </select>
+
+  <select id="selectAndDetail" resultMap="ResultMapWithDetail" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List_Join" />,ta.arg_text currencyName,emp.true_name salesName,c.customer_name customerName
+    from t_contract i left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    left join t_arg ta on ta.arg_code = i.currency and ta.arg_group = 'currency'
+    where i.contract_id = #{contractId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="list" parameterType="ContractQueryBean" resultType="ContractDto">
+    SELECT distinct
+    <include refid="Base_Column_List_Join" />,ta.arg_text currencyName,emp.true_name salesName ,c.customer_name customerName
+    from t_contract i
+    left join t_contract_detail d on i.contract_id = d.contract_id
+    left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    left join t_arg ta on ta.arg_code = i.currency and ta.arg_group = 'currency'
+    where 1=1
+    <if test='keyword != null and keyword != ""'>
+      AND (c.customer_name LIKE concat('%',#{keyword},'%') or d.drawing LIKE concat('%',#{keyword},'%') or i.contract_no LIKE concat('%',#{keyword},'%'))
+    </if>
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="customerName != null">
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="contractId != null">
+      AND i.contract_id = #{contractId}
+    </if>
+    <if test="contractNo != null">
+      AND i.contract_no LIKE concat('%',#{contractNo},'%')
+    </if>
+    <if test="drawing != null">
+      AND d.drawing = #{drawing}
+    </if>
+    <if test="signBeginDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d') >= DATE_FORMAT(#{signBeginDate},'%Y-%m-%d')
+    </if>
+    <if test="signEndDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d') &lt;= DATE_FORMAT(#{signEndDate},'%Y-%m-%d')
+    </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(i.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(i.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+    <if test="creator != null">
+      AND i.creator = #{creator}
+    </if>
+    <if test="status != null">
+      AND i.status = #{status}
+    </if>
+    <if test="foreignFlag == 1">
+      AND i.is_foreign = #{foreignFlag}
+    </if>
+    ORDER BY i.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="ContractQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(distinct i.contract_id)
+    from t_contract i left join t_customer c on i.customer_id = c.customer_id
+    left join t_contract_detail d on i.contract_id = d.contract_id
+    where 1=1
+    <if test='keyword != null and keyword != ""'>
+      AND (c.customer_name LIKE concat('%',#{keyword},'%') or d.drawing LIKE concat('%',#{keyword},'%') or i.contract_no LIKE concat('%',#{keyword},'%'))
+    </if>
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="customerName != null">
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="signBeginDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d') >= DATE_FORMAT(#{signBeginDate},'%Y-%m-%d')
+    </if>
+    <if test="signEndDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d')&lt;= DATE_FORMAT(#{signEndDate},'%Y-%m-%d')
+    </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(i.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(i.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+    <if test="contractId != null">
+      AND i.contract_id = #{contractId}
+    </if>
+    <if test="contractNo != null">
+      AND i.contract_no = #{contractNo}
+    </if>
+    <if test="drawing != null">
+      AND d.drawing = #{drawing}
+    </if>
+    <if test="creator != null">
+      AND i.creator = #{creator}
+    </if>
+    <if test="status != null">
+      AND i.status = #{status}
+    </if>
+    <if test="foreignFlag == 1">
+      AND i.is_foreign = #{foreignFlag}
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_contract
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.contract.contract.bean.Contract" >
+    insert into t_contract (contract_id,contract_no, customer_id, sign_date,
+      sign_address, is_foreign,has_procedure, amount,
+      delivery_address, sales, in_date, 
+      currency, files, remark, 
+      status, wf_inst_id, wf_inst_time, 
+      revision_status, revision_wf_inst_id, revision_wf_inst_time, 
+      undo_status, undo_wf_inst_id, undo_wf_inst_time, 
+      creator, create_time, shipping_status,
+      wf_inst_remark,revision_wf_inst_remark,undo_wf_inst_remark,
+      update_time, tmstamp)
+    values (#{contractId,jdbcType=VARCHAR}, #{contractNo,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{signDate,jdbcType=TIMESTAMP},
+      #{signAddress,jdbcType=VARCHAR}, #{isForeign,jdbcType=INTEGER}, #{hasProcedure,jdbcType=INTEGER},#{amount,jdbcType=DECIMAL},
+      #{deliveryAddress,jdbcType=VARCHAR}, #{sales,jdbcType=VARCHAR}, #{inDate,jdbcType=TIMESTAMP}, 
+      #{currency,jdbcType=VARCHAR}, #{files,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{wfInstId,jdbcType=VARCHAR}, #{wfInstTime,jdbcType=TIMESTAMP}, 
+      #{revisionStatus,jdbcType=INTEGER}, #{revisionWfInstId,jdbcType=VARCHAR}, #{revisionWfInstTime,jdbcType=TIMESTAMP}, 
+      #{undoStatus,jdbcType=INTEGER}, #{undoWfInstId,jdbcType=VARCHAR}, #{undoWfInstTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},  #{shippingStatus,jdbcType=INTEGER},
+      #{wfInstRemark,jdbcType=VARCHAR}, #{revisionWfInstRemark,jdbcType=VARCHAR}, #{undoWfInstRemark,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.contract.contract.bean.Contract" >
+    insert into t_contract
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="contractNo != null" >
+        contract_no,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="signDate != null" >
+        sign_date,
+      </if>
+      <if test="signAddress != null" >
+        sign_address,
+      </if>
+      <if test="hasProcedure != null" >
+        has_procedure,
+      </if>
+      <if test="isForeign != null" >
+        is_foreign,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="deliveryAddress != null" >
+        delivery_address,
+      </if>
+      <if test="sales != null" >
+        sales,
+      </if>
+      <if test="inDate != null" >
+        in_date,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="files != null" >
+        files,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time,
+      </if>
+      <if test="revisionStatus != null" >
+        revision_status,
+      </if>
+      <if test="revisionWfInstId != null" >
+        revision_wf_inst_id,
+      </if>
+      <if test="revisionWfInstTime != null" >
+        revision_wf_inst_time,
+      </if>
+      <if test="undoStatus != null" >
+        undo_status,
+      </if>
+      <if test="undoWfInstId != null" >
+        undo_wf_inst_id,
+      </if>
+      <if test="undoWfInstTime != null" >
+        undo_wf_inst_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="shippingStatus != null" >
+        shippingStatus,
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark,
+      </if>
+      <if test="revisionWfInstRemark != null" >
+        revision_wf_inst_remark,
+      </if>
+      <if test="undoWfInstRemark != null" >
+        undo_wf_inst_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNo != null" >
+        #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null" >
+        #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signAddress != null" >
+        #{signAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hasProcedure != null" >
+        #{hasProcedure,jdbcType=INTEGER},
+      </if>
+      <if test="isForeign != null" >
+        #{isForeign,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryAddress != null" >
+        #{deliveryAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sales != null" >
+        #{sales,jdbcType=VARCHAR},
+      </if>
+      <if test="inDate != null" >
+        #{inDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null" >
+        #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="revisionStatus != null" >
+        #{revisionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="revisionWfInstId != null" >
+        #{revisionWfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionWfInstTime != null" >
+        #{revisionWfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="undoStatus != null" >
+        #{undoStatus,jdbcType=INTEGER},
+      </if>
+      <if test="undoWfInstId != null" >
+        #{undoWfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="undoWfInstTime != null" >
+        #{undoWfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shippingStatus != null" >
+        #{shippingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstRemark != null" >
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionWfInstRemark != null" >
+        #{revisionWfInstRemark,jdbcType=INTEGER},
+      </if>
+      <if test="undoWfInstRemark != null" >
+        #{undoWfInstRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.contract.contract.bean.Contract" >
+    update t_contract
+    <set >
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNo != null" >
+        contract_no = #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null" >
+        sign_date = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signAddress != null" >
+        sign_address = #{signAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hasProcedure != null" >
+        has_procedure = #{hasProcedure,jdbcType=INTEGER},
+      </if>
+      <if test="isForeign != null" >
+        is_foreign = #{isForeign,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryAddress != null" >
+        delivery_address = #{deliveryAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sales != null" >
+        sales = #{sales,jdbcType=VARCHAR},
+      </if>
+      <if test="inDate != null" >
+        in_date = #{inDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null" >
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="revisionStatus != null" >
+        revision_status = #{revisionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="revisionWfInstId != null" >
+        revision_wf_inst_id = #{revisionWfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionWfInstTime != null" >
+        revision_wf_inst_time = #{revisionWfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="undoStatus != null" >
+        undo_status = #{undoStatus,jdbcType=INTEGER},
+      </if>
+      <if test="undoWfInstId != null" >
+        undo_wf_inst_id = #{undoWfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="undoWfInstTime != null" >
+        undo_wf_inst_time = #{undoWfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shippingStatus != null" >
+        shipping_status = #{shippingStatus,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionWfInstRemark != null" >
+        revision_wf_inst_remark = #{revisionWfInstRemark,jdbcType=INTEGER},
+      </if>
+      <if test="undoWfInstRemark != null" >
+        undo_wf_inst_remark = #{undoWfInstRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.contract.contract.bean.Contract" >
+    update t_contract
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      contract_no = #{contractNo,jdbcType=VARCHAR},
+      sign_date = #{signDate,jdbcType=TIMESTAMP},
+      sign_address = #{signAddress,jdbcType=VARCHAR},
+      has_procedure = #{hasProcedure,jdbcType=INTEGER},
+      is_foreign = #{isForeign,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      delivery_address = #{deliveryAddress,jdbcType=VARCHAR},
+      sales = #{sales,jdbcType=VARCHAR},
+      in_date = #{inDate,jdbcType=TIMESTAMP},
+      currency = #{currency,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      revision_status = #{revisionStatus,jdbcType=INTEGER},
+      revision_wf_inst_id = #{revisionWfInstId,jdbcType=VARCHAR},
+      revision_wf_inst_time = #{revisionWfInstTime,jdbcType=TIMESTAMP},
+      undo_status = #{undoStatus,jdbcType=INTEGER},
+      undo_wf_inst_id = #{undoWfInstId,jdbcType=VARCHAR},
+      undo_wf_inst_time = #{undoWfInstTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=INTEGER},
+      shipping_status = #{shippingStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      revision_wf_inst_remark = #{revisionWfInstRemark,jdbcType=INTEGER},
+      undo_wf_inst_remark = #{undoWfInstRemark,jdbcType=VARCHAR},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getUnShippingCompleteCount" resultType="java.lang.Integer">
+  	select count(1) from t_contract_detail cd
+	left join (
+	select mater_id,sum(quantity) quantity from  t_shipping s 
+	join t_shipping_detail sd on s.shipping_id = sd.shipping_id 
+	where s.contract_id = #{contractId,jdbcType=VARCHAR} and s.status = 1
+	group by mater_id
+	) sum on cd.mater_id= sum.mater_id
+	where cd.quantity &lt;= sum.quantity 
+  </select>
+</mapper>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.contacts.dao.EmpMapper">
+    <sql id="allFields">
+        emp.id,
+        emp.emp_id,
+        emp.dept_id,
+        emp.true_name,
+        emp.ture_name_pinyin,
+        emp.pinyin_abbreviation,
+        emp.mobile,
+        emp.email,
+        emp.weixin,
+        emp.qq,
+        emp.sex,
+        emp.header,
+        emp.duty,
+        emp.birth_solar,
+        emp.birth_lunar,
+        emp.birth_reminder,
+        emp.join_date,
+        emp.area,
+        emp.address,
+        emp.remark,
+        emp.status,
+        emp.create_time,
+        emp.last_update,
+        emp.tmstamp,
+        emp.is_dimission as dimission
+    </sql>
+    <select id="list" parameterType="QueryEmpBean" resultType="EmployeeBean">
+        SELECT
+        <include refid="allFields"/>
+
+        FROM t_emp emp
+
+        WHERE 1=1
+        <if test="dimission != null">
+            AND emp.is_dimission=#{dimission}
+        </if>
+        <if test="status != null">
+            AND emp.status=#{status}
+        </if>
+        <if test="keyword != null">
+            AND (emp.true_name LIKE concat('%',#{keyword},'%') OR emp.mobile LIKE concat('%',#{keyword},'%')
+            OR emp.pinyin_abbreviation LIKE concat('%',#{keyword},'%'))
+        </if>
+        ORDER BY emp.ture_name_pinyin ASC
+    </select>
+
+    <select id="count" parameterType="QueryEmpBean" resultType="java.lang.Long">
+        SELECT COUNT(emp.id) FROM t_emp emp
+
+        WHERE 1=1
+        <if test="dimission != null">
+            AND emp.is_dimission=#{dimission}
+        </if>
+        <if test="status != -1">
+            AND emp.status=#{status}
+        </if>
+        <if test="keyword != null">
+            AND (emp.true_name LIKE concat('%',#{keyword},'%') OR emp.mobile LIKE concat('%',#{keyword},'%')
+            OR emp.pinyin_abbreviation LIKE concat('%',#{keyword},'%'))
+        </if>
+        <if test="deptId !=0 and deptId != null">
+            AND concat(',',dept_id,',') LIKE concat('%,',#{deptId},',%')
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="EmployeeBean"
+            useGeneratedKeys="true">
+        INSERT INTO t_emp
+        (emp_id,dept_id,true_name,ture_name_pinyin,pinyin_abbreviation,mobile,email,weixin,qq,sex,
+        header,duty,birth_solar,birth_lunar,birth_reminder,join_date,area,address,remark)
+        VALUES
+        (#{empId},#{deptId},#{trueName},#{tureNamePinyin},#{pinyinAbbreviation},#{mobile},#{email},#{weixin},#{qq},
+        #{sex},#{header},#{duty},#{birthSolar},#{birthLunar},#{birthReminder},#{joinDate},#{area},#{address},#{remark})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM t_emp
+        WHERE 1=1
+        AND emp_id IN
+        <foreach collection="empIds" close=")" open="("
+                 separator="," item="empId">
+            #{empId}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="EmployeeBean">
+        UPDATE t_emp
+        <set>
+            <if test="deptId != null">
+                dept_id=#{deptId},
+            </if>
+            <if test="trueName != null">
+                true_name=#{trueName},
+            </if>
+            <if test="tureNamePinyin != null">
+                ture_name_pinyin=#{tureNamePinyin},
+            </if>
+            <if test="pinyinAbbreviation != null">
+                pinyin_abbreviation=#{pinyinAbbreviation},
+            </if>
+            <if test="mobile != null">
+                mobile=#{mobile},
+            </if>
+            <if test="weixin != null">
+                weixin=#{weixin},
+            </if>
+            <if test="email != null">
+                email=#{email},
+            </if>
+            <if test="qq != null">
+                qq=#{qq},
+            </if>
+            <if test="sex != null">
+                sex=#{sex},
+            </if>
+            <if test="header != null">
+                header=#{header},
+            </if>
+            <if test="duty != null">
+                duty=#{duty},
+            </if>
+            <if test="birthSolar != null">
+                birth_solar=#{birthSolar},
+            </if>
+            <if test="birthLunar != null">
+                birth_lunar=#{birthLunar},
+            </if>
+            <if test="birthReminder!=null">
+                birth_reminder = #{birthReminder},
+            </if>
+            <if test="joinDate != null">
+                join_date=#{joinDate},
+            </if>
+            <if test="area != null">
+                area=#{area},
+            </if>
+            <if test="address != null">
+                address=#{address},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="lastUpdate != null">
+                last_update=#{lastUpdate}
+            </if>
+        </set>
+        WHERE emp_id=#{empId}
+    </update>
+
+    <update id="updateDept">
+        UPDATE t_emp
+        SET dept_id=#{deptId},last_update=now()
+        WHERE
+         emp_id IN
+        <foreach collection="empIds" item="empId" separator=","
+                 open="(" close=")">
+            #{empId}
+        </foreach>
+    </update>
+
+    <update id="updateDimissed">
+        UPDATE t_emp
+        SET is_dimission=#{dimissedStatus},last_update=now()
+        WHERE emp_id IN
+        <foreach collection="empIds" item="empId" separator=","
+                 open="(" close=")">
+            #{empId}
+        </foreach>
+    </update>
+
+    <select id="get" resultType="EmployeeBean">
+        SELECT
+        <include refid="allFields"/>
+
+        FROM t_emp emp
+        WHERE
+        emp.emp_id=#{empId}
+    </select>
+
+    <select id="getById" resultType="EmployeeBean">
+        SELECT
+        <include refid="allFields"/>
+
+        FROM t_emp emp
+        WHERE
+        emp.id=#{id}
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true">
+        insert into t_emp
+        (emp_id,dept_id,true_name,ture_name_pinyin,pinyin_abbreviation,mobile,duty,sex,email,header,status)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.empId},#{item.deptId},#{item.trueName},#{item.tureNamePinyin},#{item.pinyinAbbreviation},
+            <if test="item.mobile == null">
+                '',
+            </if>
+            <if test="item.mobile != null">
+                #{item.mobile},
+            </if>
+            #{item.duty},#{item.sex},#{item.email},#{item.header},#{item.status})
+        </foreach>
+    </insert>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"
+                 open="" close="" separator=";">
+            update t_emp
+            <set>
+                dept_id = #{item.deptId},true_name = #{item.trueName},ture_name_pinyin
+                =#{item.tureNamePinyin}
+                ,pinyin_abbreviation=#{item.pinyinAbbreviation},
+                <if test="item.mobile != null">
+                    mobile=#{item.mobile},
+                </if>
+                <if test="item.email != null">
+                    email=#{item.email},
+                </if>
+                
+                duty=#{item.duty},sex=#{item.sex},header=#{item.header},status = ${item.status}, last_update = now()
+            </set>
+            where  emp_id = #{item.empId}
+        </foreach>
+    </update>
+
+    <select id="getExistUserId" resultType="java.lang.String">
+        select emp_id from t_emp
+        where emp_id IN
+        <foreach collection="userIds" close=")" open="("
+                 separator="," item="empId">
+            #{empId}
+        </foreach>
+    </select>
+
+    <!--依据员工id获取员工信息  -->
+    <select id="getBaseInfoByEmpId" resultType="ContactDTO" parameterType="java.lang.String">
+        select emp_id,dept_id,true_name,header
+        from t_emp
+        where emp_id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--依据部门id获取员工信息  -->
+    <select id="getBaseInfoByDeptId" resultType="ContactDTO" parameterType="java.lang.String">
+  	select emp_id,dept_id,true_name,header
+  	from t_emp 
+  	where 1=1 and  FIND_IN_SET(#{deptId},dept_id)
+  </select>
+
+    <select id="getEmpByEmpIdArray" resultType="EmployeeBean">
+        select
+        <include refid="allFields"/>
+        from t_emp emp
+        where 1=1
+        <if test="empIds!=null">
+            AND emp.emp_id in
+            <foreach item="empId" index="index" collection="empIds" open="(" separator="," close=")">
+                #{empId}
+            </foreach>
+        </if>
+    </select>
+    
+     <select id="getListByEmpId" resultType="EmployeeBean">
+        select
+        <include refid="allFields"/>
+        from t_emp emp
+        where  emp.emp_id = #{empId}
+     </select>
+    
+    <select id="getExist" resultType="java.lang.Integer">
+        select count(emp_id)
+        from t_emp
+        where  emp_id = #{empId}
+    </select>
+
+    <select id="listByNameOrPinyin"  resultType="EmployeeBean">
+	    SELECT
+	    <include refid="allFields"/>
+	    FROM t_emp emp
+	    WHERE 1=1
+	    <if test="likeContent != null">
+	        AND (emp.true_name LIKE concat('%',#{likeContent},'%') OR emp.pinyin_abbreviation LIKE concat('%',#{likeContent},'%'))
+	    </if>
+	    <if test="deptId != null and deptId !=0">
+	         AND concat(',',dept_id,',') LIKE concat('%,',#{deptId},',%')
+	    </if>
+	    ORDER BY emp.ture_name_pinyin ASC
+	</select>
+    <select id="getByMobile" resultType="EmployeeBean">
+        select <include refid="allFields"/> from t_emp emp where  mobile = #{mobile}
+    </select>
+    <select id="getByEmail" resultType="EmployeeBean">
+        select <include refid="allFields"/> from t_emp emp 
+        where email = #{email}
+    </select>
+    <select id="getEmpsByDept" resultType="EmployeeBean">
+    	select <include refid="allFields"/> from t_emp emp 
+    	where concat(',',dept_id,',') like concat(',',#{deptId},',')
+    </select>
+</mapper>

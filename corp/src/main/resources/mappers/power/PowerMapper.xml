@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.power.dao.PowerMapper">
+    <sql id="baseFields">
+	    power_id,power_key,power_type,power_icon,power_caption,power_url,is_show,parent_id,
+        seq,creator,create_time,last_update
+    </sql>
+
+    <select id="list"  resultType="PowerBean">
+        SELECT
+        <include refid="baseFields"/>
+        FROM t_power
+        WHERE is_show=#{show}
+        ORDER BY seq
+    </select>
+    
+    <select id="getByPowerIds" resultType="java.lang.String">
+        select power_key from t_power where power_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach> 
+    </select>
+
+    <select id="getPowerkeysByUserId" resultType="java.lang.String">
+        select DISTINCT power_key from t_user_role ur left join t_role_power rp on ur.role_id = rp.role_id
+        left join t_power p on rp.power_id = p.power_id where user_id =#{userId}
+    </select>
+
+</mapper>

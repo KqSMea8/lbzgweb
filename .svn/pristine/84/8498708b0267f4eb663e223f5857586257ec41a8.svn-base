@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StorageAdminMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.warehouse.bean.StorageAdmin" >
+    <id column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    emp_id, creator, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_storage_admin
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list"  resultType="StorageAdminDto" >
+    select a.emp_id, b.true_name empName
+    from t_storage_admin a
+    left join t_emp b on a.emp_id  = b.emp_id
+    order by a.create_time DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_storage_admin
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAdmin" >
+    insert into t_storage_admin (emp_id, creator, create_time, 
+      update_time)
+    values (#{empId,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAdmin" >
+    insert into t_storage_admin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAdmin" >
+    update t_storage_admin
+    <set >
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAdmin" >
+    update t_storage_admin
+    set creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+</mapper>

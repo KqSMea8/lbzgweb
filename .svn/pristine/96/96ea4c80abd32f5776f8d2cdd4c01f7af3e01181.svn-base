@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StockBillDetailMapper" >
+
+  <!--  表; t_stock_bill_detail -->
+  <sql id="Base_Column_List" >
+    stock_bill_id, mater_id,  mater_name, spec, model, provider_id, place_id,place_name, 
+    arrival_date, origin, unit, price, quantity,
+    package_count,vehicle_no,rough_weight,take_out_weight,package_weight,
+    amount, origin_batch, batch, made_date, 
+    validity_date, quality_time, remark, creator, create_time, update_time, tmstamp
+  </sql>
+  
+
+  
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.InStockDetail" >
+    insert into t_stock_bill_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockBillId != null" >
+        stock_bill_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if> 
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="providerId != null" >
+        provider_id,
+      </if>
+      <if test="placeId != null" >
+        place_id,
+      </if>
+      <if test="relatedPlaceId != null" >
+        related_place_id,
+      </if>
+      <if test="arrivalDate != null" >
+        arrival_date,
+      </if>
+      <if test="origin != null" >
+        origin,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="packageCount != null" >
+        package_count,
+      </if>
+      <if test="vehicleNo != null" >
+        vehicle_no,
+      </if>
+      <if test="roughWeight != null" >
+        rough_weight,
+      </if>
+      <if test="takeOutWeight != null" >
+        take_out_weight,
+      </if>
+      <if test="packageWeight != null" >
+        package_weight,
+      </if> 
+      
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="originBatch != null" >
+        origin_batch,
+      </if>
+      <if test="batch != null" >
+        batch,
+      </if>
+      <if test="madeDate != null" >
+        made_date,
+      </if>
+      <if test="validityDate != null" >
+        validity_date,
+      </if>
+      <if test="qualityTime != null" >
+        quality_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockBillId != null" >
+        #{stockBillId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="placeId != null" >
+        #{placeId,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedPlaceId != null" >
+        #{relatedPlaceId,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivalDate != null" >
+        #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if> 
+      <if test="packageCount != null" >
+        #{packageCount,jdbcType=DECIMAL},
+      </if>
+      <if test="vehicleNo != null" >
+        #{vehicleNo,jdbcType=DECIMAL},
+      </if>
+      <if test="roughWeight != null" >
+        #{roughWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="takeOutWeight != null" >
+        #{takeOutWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="packageWeight != null" >
+        #{packageWeight,jdbcType=DECIMAL},
+      </if> 
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="originBatch != null" >
+        #{originBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null" >
+        #{batch,jdbcType=VARCHAR},
+      </if>
+      <if test="madeDate != null" >
+        #{madeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validityDate != null" >
+        #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qualityTime != null" >
+        #{qualityTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 先删除掉之前的旧数据    Integer deleteByInStockId(@Param("stockBillId") String stockBillId);-->
+   <delete id="deleteByInStockId" >
+    delete from t_stock_bill_detail
+    where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+  </delete>
+ 
+</mapper>

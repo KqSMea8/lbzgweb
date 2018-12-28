@@ -1,0 +1,281 @@
+<template>
+  <ListPage ref="page" title="售后处置单管理" api="/api/complaintDispose/list" 
+  :model="this" @onCurrentRowChange="curRowChg" :beforeLoad="beforeLoad">   
+    <div class="page-searchbox">
+      <table cellpadding="0" cellspacing="0">
+        <tr>
+          <!--  -->
+          <td>
+            <RadioGroup v-model="queryForm.status" type="button" @on-change="query">
+              <Radio :label="null">所有</Radio>
+              <Radio :label="0">待提交</Radio>
+              <Radio :label="1">审核中</Radio>
+              <Radio :label="2">通过</Radio>
+              <Radio :label="3">驳回</Radio>
+            </RadioGroup>
+          </td>
+          <!-- 竖线 -->
+          <td class="page-tools"><div class="split"></div></td>
+          <td class="page-tools">
+<<<<<<< HEAD
+            &nbsp;
+=======
+>>>>>>> fff1afcea1c3c5247751f2c9739138a00d3716ac
+            <Button @click="del" icon="android-delete" v-if="queryForm.status==0">删除</Button>
+          </td>
+        </tr>
+        
+      </table>
+    </div> 
+    <div class="page-searchbox">
+      <table cellpadding="0" cellspacing="0">
+        <tr> 
+          <td>
+            <Input v-model="queryForm.drawing" placeholder="图号" ></Input>
+          </td>
+          <td>
+            <Input v-model="queryForm.casting" placeholder="铸件号" ></Input>
+          </td>
+          <td>
+            <Input v-model="queryForm.contractId" placeholder="合同编号" ></Input>
+          </td>
+          <td>
+            <Input v-model="queryForm.customerName" placeholder="客户" ></Input>
+          </td>
+          <td>
+            <Input v-model="queryForm.materName" placeholder="产品名称" ></Input>
+          </td>
+          <td>
+            <Button @click="query"  type="primary" icon="ios-search">查询</Button>
+          </td>
+          <td>
+            <Button @click="reset" >重置</Button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </ListPage> 
+    
+</template>
+<script>
+  import ListPage from '@/components/page/ListPage';
+  import page from '@/assets/js/page';
+  import process from '@/components/process-start';
+    
+  export default {
+    components: { 
+      ListPage
+    },
+    data() {
+      let that = this;
+      return {
+        curRowId:'',
+        columns: [
+          {
+            type: 'selection',
+            width: 60,
+            align: 'center',
+            fixed: 'left',
+          },
+  /*        {
+            title: '投诉单号',
+            key: 'complaintId',
+            width: 140,
+            fixed: 'left',
+            align:'center',
+            render:(h,params)=>{
+              var row = params.row;
+              var text = row.complaintId;
+              text = text;
+              return h('a',{
+                props:{
+
+                },
+                on:{
+                  click:()=>{
+                    this.$router.push({path:'/complaint/view?id='+row.complaintId});
+                  }
+                }
+              },text);
+            }
+          },*/
+          {
+            title: '处置单号',
+            key: 'disposeId',
+            width: 140,
+            fixed: 'left',
+            align:'center',
+            render:(h,params)=>{
+              var row = params.row;
+              var text = row.disposeId;
+              text = text; 
+              return h('a',{ 
+                props:{
+                },
+                on:{
+                  click:()=>{
+                    this.$router.push({path:'/disposition/view?id='+row.disposeId});
+                    } 
+                  }
+                },text);
+            }
+          },
+          page.table.initDateColumn({
+            title: '受理时间',
+            key: 'createTime'
+          }),
+          {
+            title: '合同编号',
+            key: 'contractId',
+            align: 'center',
+            width: 140,
+          },
+          {
+            title: '客户',
+            key: 'customerName',
+            width: 200,
+            align: 'left',
+          },
+          {
+            title: '产品名称',
+            key: 'materName',
+            align: 'left',
+            width:120,
+          },
+          {
+            title: '图号',
+            key: 'drawing',
+            align: 'left',
+            width:120,
+          },
+          {
+            title: '铸件号',
+            key: 'casting',
+            align: 'left',
+            width:120,
+          },
+          {
+            title: '处置地点',
+            key: 'address',
+            align: 'left',
+            width:120,
+          },
+         /* {
+            title: '问题描述',
+            key: 'requireRemark',
+            align: 'left',
+            width:120,
+          },*/
+          {
+            title: '备注',
+            key: 'remark',
+            align: 'left',
+            width:120,
+          },
+          {
+            title: '金额',
+            key: 'amount',
+            align: 'right',
+            width: 120,
+          },
+          {
+            title: '金额说明',
+            key: 'amountRemark',
+            align: 'left',
+            width:120,
+          },
+          page.table.initMapColumn({
+            title: '状态',
+            key: 'status',
+            width: 120,
+            data:{
+              '0':'待提交',
+              '1':'审核中',
+              '2':'通过',
+              '3':'驳回',
+            }
+          }),
+        ],  
+        queryForm: {
+          disposeId:'',
+          drawing:'',
+          casting:'',
+          contractId:'',
+          customerName:'',
+          customerId:'',
+          materName:'',
+          status:0
+        },
+        loading: 0
+      } 
+    },
+    mounted: function () {
+      this.reset();
+    },
+    methods: {
+      query() { 
+        this.$refs.page.query();
+      },
+      beforeLoad(){
+        
+      }, 
+      reset() {
+        Object.assign(this.queryForm,{
+          disposeId:'',
+          drawing:'',
+          casting:'',
+          contractId:'',
+          customerName:'',
+          customerId:'',
+          materName:'',
+          status:0
+        });
+        this.query();
+      },
+      curRowChg(row){
+        if(row!=null){
+           this.curRow = row;
+           this.curRowId = row.disposeId;
+        }else{
+          this.curRow = null;
+          this.curRowId = null;
+        }
+      },
+      del(){
+          this.$Modal.confirm({
+          title: '删除确认',
+          content: '<p>删除后不能恢复，确定删除已选择的记录吗？</p>',
+          onOk: () => {
+            
+            if(this.curRow){
+            this.loading = 1;
+            this.$http.post('/api/complaintDispose/delete',{
+              disposeId:this.curRow.disposeId,
+            }).then((res) => {
+              this.loading = 0;
+              if (res.data.code === 0) {
+                this.$Message.success("删除成功");
+                this.$refs.page.load();
+              } else {
+                this.$Message.error(res.data.message)
+              }
+            }).catch((error) => {
+              this.loading = 0;
+              this.$Message.error(error.toString())
+            });
+            this.query();
+          }
+        }
+        });
+      },
+      goPage(page){
+        this.$router.push({path:page});
+      },
+    }
+  }
+
+</script>
+
+<style type="text/css">
+  
+</style>

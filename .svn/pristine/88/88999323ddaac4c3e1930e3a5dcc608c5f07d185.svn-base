@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.dao.InstrumentInspectionAcceptDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAcceptDetail" >
+    <id column="inspection_accept_id" property="inspectionAcceptId" jdbcType="VARCHAR" />
+    <result column="instrument_id" property="instrumentId" jdbcType="VARCHAR" />
+    <result column="counter_name" property="counterName" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="orgin" property="orgin" jdbcType="VARCHAR" />
+    <result column="internal_id" property="internalId" jdbcType="VARCHAR" />
+    <result column="installation_site" property="installationSite" jdbcType="VARCHAR" />
+    <result column="appraisal_date" property="appraisalDate" jdbcType="TIMESTAMP" />
+    <result column="retesting_period" property="retestingPeriod" jdbcType="VARCHAR" />
+    <result column="test_cost" property="testCost" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    inspection_accept_id, instrument_id, counter_name, model, orgin, internal_id, installation_site, 
+    appraisal_date, retesting_period, test_cost, create_time, update_time, tmstamp
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_instrument_inspection_accept_detail
+    where inspection_accept_id = #{inspectionAcceptId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_instrument_inspection_accept_detail 
+    where instrumentId = #{instrumentId,jdbcType=VARCHAR}
+  </delete>
+ 
+  <insert id="insert" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAcceptDetail" >
+    insert into t_instrument_inspection_accept_detail (inspection_accept_id, instrument_id, 
+      counter_name, model, orgin, 
+      internal_id, installation_site, appraisal_date, 
+      retesting_period, test_cost, create_time, 
+      update_time, tmstamp)
+    values (#{inspectionAcceptId,jdbcType=VARCHAR}, #{instrumentId,jdbcType=VARCHAR}, 
+      #{counterName,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{orgin,jdbcType=VARCHAR}, 
+      #{internalId,jdbcType=VARCHAR}, #{installationSite,jdbcType=VARCHAR}, #{appraisalDate,jdbcType=TIMESTAMP}, 
+      #{retestingPeriod,jdbcType=INTEGER}, #{testCost,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAcceptDetail" >
+    insert into t_instrument_inspection_accept_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="inspectionAcceptId != null" >
+        inspection_accept_id,
+      </if>
+      <if test="instrumentId != null" >
+        instrument_id,
+      </if>
+      <if test="counterName != null" >
+        counter_name,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="orgin != null" >
+        orgin,
+      </if>
+      <if test="internalId != null" >
+        internal_id,
+      </if>
+      <if test="installationSite != null" >
+        installation_site,
+      </if>
+      <if test="appraisalDate != null" >
+        appraisal_date,
+      </if>
+      <if test="retestingPeriod != null" >
+        retesting_period,
+      </if>
+      <if test="testCost != null" >
+        test_cost,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inspectionAcceptId != null" >
+        #{inspectionAcceptId,jdbcType=VARCHAR},
+      </if>
+      <if test="instrumentId != null" >
+        #{instrumentId,jdbcType=VARCHAR},
+      </if>
+      <if test="counterName != null" >
+        #{counterName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="orgin != null" >
+        #{orgin,jdbcType=VARCHAR},
+      </if>
+      <if test="internalId != null" >
+        #{internalId,jdbcType=VARCHAR},
+      </if>
+      <if test="installationSite != null" >
+        #{installationSite,jdbcType=VARCHAR},
+      </if>
+      <if test="appraisalDate != null" >
+        #{appraisalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="retestingPeriod != null" >
+        #{retestingPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="testCost != null" >
+        #{testCost,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+ 
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAcceptDetail" >
+    update t_instrument_inspection_accept_detail
+    <set >
+      <if test="instrumentId != null" >
+        instrument_id = #{instrumentId,jdbcType=VARCHAR},
+      </if>
+      <if test="counterName != null" >
+        counter_name = #{counterName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="orgin != null" >
+        orgin = #{orgin,jdbcType=VARCHAR},
+      </if>
+      <if test="internalId != null" >
+        internal_id = #{internalId,jdbcType=VARCHAR},
+      </if>
+      <if test="installationSite != null" >
+        installation_site = #{installationSite,jdbcType=VARCHAR},
+      </if>
+      <if test="appraisalDate != null" >
+        appraisal_date = #{appraisalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="retestingPeriod != null" >
+        retesting_period = #{retestingPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="testCost != null" >
+        test_cost = #{testCost,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where inspection_accept_id = #{inspectionAcceptId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAcceptDetail" >
+    update t_instrument_inspection_accept_detail
+    set instrument_id = #{instrumentId,jdbcType=VARCHAR},
+      counter_name = #{counterName,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      orgin = #{orgin,jdbcType=VARCHAR},
+      internal_id = #{internalId,jdbcType=VARCHAR},
+      installation_site = #{installationSite,jdbcType=VARCHAR},
+      appraisal_date = #{appraisalDate,jdbcType=TIMESTAMP},
+      retesting_period = #{retestingPeriod,jdbcType=INTEGER},
+      test_cost = #{testCost,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where inspection_accept_id = #{inspectionAcceptId,jdbcType=VARCHAR}
+  </update>
+</mapper>

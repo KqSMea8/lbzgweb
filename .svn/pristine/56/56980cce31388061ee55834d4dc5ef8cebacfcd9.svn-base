@@ -1,0 +1,43 @@
+logging:
+  config: classpath:log4j2-test.xml
+server:
+  port: 80
+  compression: 
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  basePath: http://192.168.2.30:50280/corp
+  
+wxconfig: 
+  callbackDomain: http://ty.tunnel.lyarc.com
+  providerSecret: LNEEmiyKp94r8bPx2lwdxaZMopincgb7T0ypmHjAeRLkT3yY3MKMaqTUkS2rAI2j
+  corpId: wx681bb0c5da87b426
+test: 1
+#是否是测试安装套件
+testSuite: 1
+
+wechat:
+  cp:
+    sync:
+      corpId: wxdca02fc5f641dabb
+      secret: nVVlmNSMwmbBmKpYWkVjy6aKaiYFGIwODtqNkqYEIyk
+    manage:
+      corpId: wxdca02fc5f641dabb
+      secret: O-ph1NeaqPNhSC02ejLhnNGvQZCeM4h4qmM5hPKMobk
+      agentId: 1000207
+    workflow:
+      corpId: wxdca02fc5f641dabb
+      secret: O-ph1NeaqPNhSC02ejLhnNGvQZCeM4h4qmM5hPKMobk
+      agentId: 1000207
+
+ # 上传文件配置
+spring:
+    http:
+      multipart:
+#        location: /files
+        location: /files/tmpfiles
+        max-file-size: 10MB
+        max-request-size: 100MB
+
+
+cronScanAuditEvent: 0/5 * * * * ?
+uploadDir: /files

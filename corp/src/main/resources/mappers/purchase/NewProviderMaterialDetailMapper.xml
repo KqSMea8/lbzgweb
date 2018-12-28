@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.purchase.provider.dao.NewProviderMaterialDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.purchase.provider.bean.NewProviderMaterialDetail" >
+    <id column="npm_id" property="npmId" jdbcType="VARCHAR" />
+    <id column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="mater_type" property="materType" jdbcType="VARCHAR" />
+    <result column="origin" property="origin" jdbcType="VARCHAR" />
+    <result column="use" property="use" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="files" property="files" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    npm_id, mater_id, mater_type, origin, `use`, price, quantity, amount, remark, creator,
+    create_time, update_time, tmstamp,files
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.purchase.provider.bean.NewProviderMaterialDetailKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_new_provider_material_detail
+    where npm_id = #{npmId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByNpmId" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from t_new_provider_material_detail
+    where npm_id = #{npmId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.provider.bean.NewProviderMaterialDetailKey" >
+    delete from t_new_provider_material_detail
+    where npm_id = #{npmId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByNpmId"  >
+    delete from t_new_provider_material_detail
+    where npm_id = #{npmId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.purchase.provider.bean.NewProviderMaterialDetail" >
+    insert into t_new_provider_material_detail (npm_id, mater_id, mater_type, 
+      origin, `use`, price,
+      quantity, amount, remark, files,
+      creator, create_time, update_time, 
+      tmstamp)
+    values (#{npmId,jdbcType=VARCHAR}, #{materId,jdbcType=VARCHAR}, #{materType,jdbcType=VARCHAR}, 
+      #{origin,jdbcType=VARCHAR}, #{use,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{quantity,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR},#{files,jdbcType=VARCHAR},
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.purchase.provider.bean.NewProviderMaterialDetail" >
+    insert into t_new_provider_material_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="npmId != null" >
+        npm_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="materType != null" >
+        mater_type,
+      </if>
+      <if test="origin != null" >
+        origin,
+      </if>
+      <if test="use != null" >
+        `use`,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="files != null" >
+        files,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="npmId != null" >
+        #{npmId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materType != null" >
+        #{materType,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="use != null" >
+        #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null" >
+        #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.purchase.provider.bean.NewProviderMaterialDetail" >
+    update t_new_provider_material_detail
+    <set >
+      <if test="materType != null" >
+        mater_type = #{materType,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        origin = #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="use != null" >
+        `use` = #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null" >
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where npm_id = #{npmId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.provider.bean.NewProviderMaterialDetail" >
+    update t_new_provider_material_detail
+    set mater_type = #{materType,jdbcType=VARCHAR},
+      origin = #{origin,jdbcType=VARCHAR},
+      `use` = #{use,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where npm_id = #{npmId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+</mapper>

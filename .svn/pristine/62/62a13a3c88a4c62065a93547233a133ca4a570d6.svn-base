@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.inspection.dao.InspectionDetailMapper" >
+
+  <!-- 表：t_inspection_apply_detail -->
+  <sql id="Base_Column_List" >
+     inspection_apply_id,mater_id,sub_type,mater_name,level,spec,model,use,provider_id,origin,
+     unit,need_date,price,quantity,amount,buyer,arrival_date,arrival_quantity,origin_batch,batch,made_date,validity_date,
+     quality_time,remark,creator, create_time, update_time, tmstamp
+  </sql>
+  <!-- 插入新建的部分 -->
+  <insert id="insertSelective" parameterType="StockBillBean">
+    insert into t_inspection_apply_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="inspectionApplyId != null" >
+        inspection_apply_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="subType != null" >
+        sub_type,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="use != null" >
+        `use`,
+      </if>
+      <if test="providerId != null" >
+        provider_id,
+      </if>
+      <if test="origin != null" >
+        origin,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="needDate != null" >
+        need_date,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="buyer != null" >
+        buyer,
+      </if>
+    
+      <if test="arrivalDate != null" >
+        arrival_date,
+      </if>
+      <if test="arrivalQuantity != null" >
+        arrival_quantity,
+      </if>
+      <if test="originBatch != null" >
+        origin_batch,
+      </if>
+      <if test="batch != null" >
+        batch,
+      </if>
+      <if test="madeDate != null" >
+        made_date,
+      </if>
+      <if test="validityDate != null" >
+        validity_date,
+      </if>
+      <if test="qualityTime != null" >
+        quality_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inspectionApplyId != null" >
+        #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="subType != null" >
+        #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+       <if test="use != null" >
+        #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+     
+      <if test="needDate != null" >
+        #{needDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="buyer != null" >
+        #{buyer,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivalDate != null" >
+        #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arrivalQuantity != null" >
+        #{arrivalQuantity,jdbcType=VARCHAR},
+      </if>
+      <if test="originBatch != null" >
+        #{originBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null" >
+        #{batch,jdbcType=VARCHAR},
+      </if>
+      <if test="madeDate != null" >
+        #{madeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validityDate != null" >
+        #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qualityTime != null" >
+        #{qualityTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+ 
+  <!-- 先删除掉之前的旧数据    Integer deleteByInspectionApplyId(@Param("inspectionApplyId") String inspectionApplyId);-->
+   <delete id="deleteByInspectionApplyId" >
+    delete from t_inspection_apply_detail
+    where inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+  </delete>
+ 
+</mapper>

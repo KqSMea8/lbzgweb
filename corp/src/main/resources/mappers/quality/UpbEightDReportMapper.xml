@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.dao.UpbEightDReportMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UpbEightDReport">
+    <id column="file_id" jdbcType="VARCHAR" property="fileId" />
+    <result column="unqualified_id" jdbcType="VARCHAR" property="unqualifiedId" />
+    <result column="not_conform_report" jdbcType="INTEGER" property="notConformReport" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="reject_id" jdbcType="VARCHAR" property="rejectId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+    <result column="one_d" jdbcType="LONGVARCHAR" property="oneD" />
+    <result column="two_d" jdbcType="LONGVARCHAR" property="twoD" />
+    <result column="three_d" jdbcType="LONGVARCHAR" property="threeD" />
+    <result column="four_d" jdbcType="LONGVARCHAR" property="fourD" />
+    <result column="five_d" jdbcType="LONGVARCHAR" property="fiveD" />
+    <result column="six_d" jdbcType="LONGVARCHAR" property="sixD" />
+    <result column="seven_d" jdbcType="LONGVARCHAR" property="sevenD" />
+    <result column="eight_d" jdbcType="LONGVARCHAR" property="eightD" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    file_id, unqualified_id, not_conform_report, type_name, reject_id, create_time, update_time, 
+    tmstamp,
+    one_d, two_d, three_d, four_d, five_d, six_d, seven_d, eight_d
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_upb_eight_d_report
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_upb_eight_d_report
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UpbEightDReport">
+    insert into t_upb_eight_d_report (file_id, unqualified_id, not_conform_report, 
+      type_name, reject_id, create_time, 
+      update_time, tmstamp, one_d, 
+      two_d, three_d, four_d, 
+      five_d, six_d, seven_d, 
+      eight_d)
+    values (#{fileId,jdbcType=VARCHAR}, #{unqualifiedId,jdbcType=VARCHAR}, #{notConformReport,jdbcType=INTEGER}, 
+      #{typeName,jdbcType=VARCHAR}, #{rejectId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}, #{oneD,jdbcType=LONGVARCHAR}, 
+      #{twoD,jdbcType=LONGVARCHAR}, #{threeD,jdbcType=LONGVARCHAR}, #{fourD,jdbcType=LONGVARCHAR}, 
+      #{fiveD,jdbcType=LONGVARCHAR}, #{sixD,jdbcType=LONGVARCHAR}, #{sevenD,jdbcType=LONGVARCHAR}, 
+      #{eightD,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertUpbEightD" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UpbEightDReport">
+    insert into t_upb_eight_d_report
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        file_id,
+      </if>
+      <if test="unqualifiedId != null">
+        unqualified_id,
+      </if>
+      <if test="notConformReport != null">
+        not_conform_report,
+      </if>
+      <if test="typeName != null">
+        type_name,
+      </if>
+      <if test="rejectId != null">
+        reject_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+      <if test="oneD != null">
+        one_d,
+      </if>
+      <if test="twoD != null">
+        two_d,
+      </if>
+      <if test="threeD != null">
+        three_d,
+      </if>
+      <if test="fourD != null">
+        four_d,
+      </if>
+      <if test="fiveD != null">
+        five_d,
+      </if>
+      <if test="sixD != null">
+        six_d,
+      </if>
+      <if test="sevenD != null">
+        seven_d,
+      </if>
+      <if test="eightD != null">
+        eight_d,
+      </if>
+      <if test="specialRequest != null">
+        special_request,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifiedId != null">
+        #{unqualifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="notConformReport != null">
+        #{notConformReport,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null">
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="rejectId != null">
+        #{rejectId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oneD != null">
+        #{oneD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="twoD != null">
+        #{twoD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="threeD != null">
+        #{threeD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fourD != null">
+        #{fourD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fiveD != null">
+        #{fiveD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sixD != null">
+        #{sixD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sevenD != null">
+        #{sevenD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="eightD != null">
+        #{eightD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="specialRequest != null">
+        #{specialRequest,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UpbEightDReport">
+    update t_upb_eight_d_report
+    <set>
+      <if test="unqualifiedId != null">
+        unqualified_id = #{unqualifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="notConformReport != null">
+        not_conform_report = #{notConformReport,jdbcType=INTEGER},
+      </if>
+      <if test="typeName != null">
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="rejectId != null">
+        reject_id = #{rejectId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oneD != null">
+        one_d = #{oneD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="twoD != null">
+        two_d = #{twoD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="threeD != null">
+        three_d = #{threeD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fourD != null">
+        four_d = #{fourD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fiveD != null">
+        five_d = #{fiveD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sixD != null">
+        six_d = #{sixD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sevenD != null">
+        seven_d = #{sevenD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="eightD != null">
+        eight_d = #{eightD,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UpbEightDReport">
+    update t_upb_eight_d_report
+    set unqualified_id = #{unqualifiedId,jdbcType=VARCHAR},
+      not_conform_report = #{notConformReport,jdbcType=INTEGER},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      reject_id = #{rejectId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      one_d = #{oneD,jdbcType=LONGVARCHAR},
+      two_d = #{twoD,jdbcType=LONGVARCHAR},
+      three_d = #{threeD,jdbcType=LONGVARCHAR},
+      four_d = #{fourD,jdbcType=LONGVARCHAR},
+      five_d = #{fiveD,jdbcType=LONGVARCHAR},
+      six_d = #{sixD,jdbcType=LONGVARCHAR},
+      seven_d = #{sevenD,jdbcType=LONGVARCHAR},
+      eight_d = #{eightD,jdbcType=LONGVARCHAR}
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UpbEightDReport">
+    update t_upb_eight_d_report
+    set unqualified_id = #{unqualifiedId,jdbcType=VARCHAR},
+      not_conform_report = #{notConformReport,jdbcType=INTEGER},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      reject_id = #{rejectId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.lyarc.tp.corp.quality.Instrument.dao.InstrumentMapper">
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.quality.Instrument.bean.Instrument">
+		<id column="instrument_id" jdbcType="VARCHAR"
+			property="instrumentId" />
+		<result column="mater_id" jdbcType="VARCHAR" property="materId" />
+		<result column="counter_name" jdbcType="VARCHAR"
+			property="counterName" />
+		<result column="spec" jdbcType="VARCHAR" property="spec" />
+		<result column="model" jdbcType="VARCHAR" property="model" />
+		<result column="orgin" jdbcType="VARCHAR" property="orgin" />
+		<result column="factory_id" jdbcType="VARCHAR"
+			property="factoryId" />
+		<result column="internal_id" jdbcType="VARCHAR"
+			property="internalId" />
+		<result column="installation_site" jdbcType="VARCHAR"
+			property="installationSite" />
+		<result column="get_time" jdbcType="TIMESTAMP"
+			property="getTime" />
+		<result column="use_case" jdbcType="VARCHAR" property="useCase" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="retesting_period" jdbcType="VARCHAR"
+			property="retestingPeriod" />
+		<result column="testing_time" jdbcType="TIMESTAMP"
+			property="testingTime" />
+		<result column="next_testing_time" jdbcType="TIMESTAMP"
+			property="nextTestingTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="wf_inst_id" jdbcType="VARCHAR"
+			property="wfInstId" />
+			<result column="wf_inst_date" jdbcType="TIMESTAMP"
+			property="wfInstDate" />
+			<result column="wf_inst_remark" jdbcType="VARCHAR"
+			property="wfInstRemark" />
+		<result column="quality_time" jdbcType="VARCHAR"
+			property="qualityTime" />
+		<result column="report_time" jdbcType="TIMESTAMP"
+			property="reportTime" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+		<result column="tmstamp" jdbcType="TIMESTAMP"
+			property="tmstamp" />
+		<result column="stock_bill_id" jdbcType="TIMESTAMP"
+			property="stockBillId" />			
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.lyarc.tp.corp.quality.Instrument.bean.Instrument">
+		<result column="remark" jdbcType="LONGVARCHAR"
+			property="remark" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		instrument_id, mater_id, counter_name, spec, model, orgin,
+		factory_id, internal_id,
+		installation_site, get_time, use_case, type,
+		retesting_period,
+		testing_time, next_testing_time, 
+		status, report_time,quality_time,wf_inst_id,wf_inst_date,wf_inst_remark,create_time, update_time, tmstamp  
+	</sql>
+	<sql id="Blob_Column_List">
+		remark
+	</sql>
+	<!-- 报废 -->
+	<update id="updateUseCase" parameterType="com.lyarc.tp.corp.quality.Instrument.form.InstrumentForm">
+		update t_instrument
+		<set>
+			<if test="useCase != null">
+				use_case = #{useCase,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where instrument_id = #{instrumentId,jdbcType=VARCHAR}
+	</update>
+	<!-- 选择物料 -->
+	<select id="find" resultType="com.lyarc.tp.corp.warehouse.bean.StockBillDetail">
+	select *
+	 from t_stock_bill_detail sd
+	 where 1=1
+		<if test=' materId != null and materId !=""'>
+			AND sd.mater_id LIKE concat('%',#{materId},'%')
+		</if>
+		<if test=' materName != null and materName !=""'>
+			AND sd.mater_name LIKE concat('%',#{materName},'%')
+		</if>
+		<if test=' spec != null and spec !=""'>
+			AND sd.spec LIKE concat('%',#{spec},'%')
+		</if>
+		<if test=' model != null and model !=""'>
+			AND sd.model = #{model}
+		</if>
+		ORDER BY sd.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<select id="countSBD" parameterType="InStrumentQueryBean" resultType="java.lang.Long">
+    select count(sd.stock_bill_id)
+    from t_stock_bill_detail sd 
+	 where 1=1
+    <if test=' materId != null and materId !=""'>
+			AND sd.mater_id LIKE concat('%',#{materId},'%')
+		</if>
+		<if test=' materName != null and materName !=""'>
+			AND sd.mater_name LIKE concat('%',#{materName},'%')
+		</if>
+		<if test=' spec != null and spec !=""'>
+			AND sd.spec LIKE concat('%',#{spec},'%')
+		</if>
+		<if test=' model != null and model !=""'>
+			AND sd.model = #{model}
+		</if>
+  </select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="ResultMapWithBLOBs">
+		select 
+		<include refid="Base_Column_List" /> , <include refid="Blob_Column_List"/>
+		from t_instrument
+		where 	
+		instrument_id = #{instrumentId,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据计量器具编码查询 -->
+	<select id="selectId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from t_instrument where instrument_id =
+		#{instrumentId,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据物料名称查询 -->
+	<select id="selectMaterId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select mater_id from t_instrument where mater_id =
+		#{materId,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据计量器具名称删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		t_instrument
+		where instrument_id = #{instrumentId,jdbcType=VARCHAR}
+	</delete>
+	<!-- 计量器具列表 -->
+	<select id="listInstrument" parameterType="InstrumentQueryBean"
+		resultType="Instrument">
+		select ti.instrument_id, ti.mater_id, ti.counter_name, ti.spec, ti.model, ti.orgin,
+		ti.factory_id, ti.internal_id,
+		ti.installation_site, ti.get_time, ti.use_case, ti.type,
+		ti.retesting_period,
+		ti.testing_time, ti.next_testing_time,
+		ti.status, ti.report_time,ti.quality_time,ti.create_time,ti.wf_inst_id,ti.wf_inst_date,ti.wf_inst_remark,ti.remark,ti.update_time,ti.tmstamp
+		from t_instrument ti  left join t_stock
+		on t_stock.mater_id = ti.mater_id
+ 		where 1=1
+		<if test='counterName != null and counterName !=""'>
+			AND ti.counter_name LIKE concat('%',#{counterName},'%')
+		</if>
+		<if test='internalId != null and internalId !=""'>
+			AND ti.internal_id LIKE concat('%',#{internalId},'%')
+		</if>
+		<if test='installationSite !=null and installationSite !=""'>
+			AND ti.installation_site LIKE concat('%',#{installationSite},'%')
+		</if>
+		<if test='useCase !=null and useCase !=""'>
+			AND ti.use_case= #{useCase}
+		</if>
+		<if test='type !=null and type !=""'>
+			AND ti.type= #{type}
+		</if>
+		<if test='instrumentId !=null and instrumentId !=""'>
+			AND ti.instrument_id= #{instrumentId}
+		</if>
+		<if test="status !=null">
+			AND ti.status= #{status}
+		</if>
+		<if test="instrumentIdStr !=null">
+			AND ti.instrument_id in 	
+	<foreach collection="instrumentIdStrArr" item="id" index="index" open="(" close=")" separator=",">
+	  #{id}
+	</foreach>
+		</if>
+		ORDER BY ti.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 传递报审日期 -->
+	<update id="updateAdd" parameterType="com.lyarc.tp.corp.quality.Instrument.form.InstrumentForm">
+		update t_instrument
+			set	report_time = #{reportTime,jdbcType=TIMESTAMP}
+		where instrument_id = #{instrumentId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="countInstrument" parameterType="InstrumentQueryBean"
+		resultType="java.lang.Long">
+		select count(ti.instrument_id)
+		from t_instrument ti  left join t_stock
+		on t_stock.mater_id = ti.mater_id
+ 		where 1=1
+		 <if test='counterName != null and counterName !=""'>
+			AND ti.counter_name LIKE concat('%',#{counterName},'%')
+		</if>
+		<if test='internalId != null and internalId !=""'>
+			AND ti.internal_id LIKE concat('%',#{internalId},'%')
+		</if>
+		<if test='installationSite !=null and installationSite !=""'>
+			AND ti.installation_site LIKE concat('%',#{installationSite},'%')
+		</if>
+		<if test='useCase !=null and useCase !=""'>
+			AND ti.use_case= #{useCase}
+		</if>
+		<if test='type !=null and type !=""'>
+			AND ti.type= #{type}
+		</if>
+		<if test='instrumentId !=null and instrumentId !=""'>
+			AND ti.instrument_id= #{instrumentId}
+		</if>
+		<if test="status !=null">
+			AND ti.status= #{status}
+		</if>
+		<if test="instrumentIdStr !=null">
+			AND ti.instrument_id in 
+			
+	<foreach collection="instrumentIdStrArr" item="id" index="index" open="(" close=")" separator=",">
+	  #{id}
+	</foreach>
+		</if>
+	</select>
+	<!-- 添加计量器具 -->
+	<insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.Instrument.form.InstrumentForm">
+		insert into t_instrument
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="instrumentId != null">
+				instrument_id,
+			</if>
+			<if test="materId != null">
+				mater_id,
+			</if>
+			<if test="counterName != null">
+				counter_name,
+			</if>
+			<if test="qualityTime != null">
+				quality_time,
+			</if>
+			<if test="spec != null">
+				spec,
+			</if>
+			<if test="model != null">
+				model,
+			</if>
+			<if test="orgin != null">
+				orgin,
+			</if>
+			<if test="factoryId != null">
+				factory_id,
+			</if>
+			<if test="internalId != null">
+				internal_id,
+			</if>
+			<if test="installationSite != null">
+				installation_site,
+			</if>
+			<if test="getTime != null">
+				get_time,
+			</if>
+			<if test="useCase != null">
+				use_case,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="retestingPeriod != null">
+				retesting_period,
+			</if>
+			<if test="testingTime != null">
+				testing_time,
+			</if>
+			<if test="nextTestingTime != null">
+				next_testing_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="reportTime != null">
+				report_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if> 
+			<if test="wf_inst_id != null">
+				wfInstId,
+			</if>
+			<if test="wf_inst_date != null">
+				wfInstDate,
+			</if>
+			<if test="wf_inst_remark != null">
+				wfInstRemark
+			</if> 
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="instrumentId != null">
+				#{instrumentId,jdbcType=VARCHAR},
+			</if>
+			<if test="materId != null">
+				#{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="counterName != null">
+				#{counterName,jdbcType=VARCHAR},
+			</if>
+			<if test="qualityTime != null">
+				#{qualityTime,jdbcType=VARCHAR},
+			</if>
+			<if test="spec != null">
+				#{spec,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				#{model,jdbcType=VARCHAR},
+			</if>
+			<if test="orgin != null">
+				#{orgin,jdbcType=VARCHAR},
+			</if>
+			<if test="factoryId != null">
+				#{factoryId,jdbcType=VARCHAR},
+			</if>
+			<if test="internalId != null">
+				#{internalId,jdbcType=VARCHAR},
+			</if>
+			<if test="installationSite != null">
+				#{installationSite,jdbcType=VARCHAR},
+			</if>
+			<if test="getTime != null">
+				#{getTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useCase != null">
+				#{useCase,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="retestingPeriod != null">
+				#{retestingPeriod,jdbcType=VARCHAR},
+			</if>
+			<if test="testingTime != null">
+				#{testingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="nextTestingTime != null">
+				#{nextTestingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="reportTime != null">
+				#{reportTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=LONGVARCHAR},
+			</if> 
+			<if test="wfInstId != null">
+				#{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstDate != null">
+				#{wfInstDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wfInstRemark != null">
+				#{wfInstRemark,jdbcType=VARCHAR}
+			</if> 
+		</trim>
+	</insert>
+
+	<!-- 编辑计量器具 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.Instrument.form.InstrumentForm">
+		update t_instrument
+		<set>
+			<if test="instrumentId != null">
+				instrument_id = #{instrumentId,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="materId != null">
+				mater_id = #{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="counterName != null">
+				counter_name = #{counterName,jdbcType=VARCHAR},
+			</if>
+			<if test="qualityTime != null">
+				quality_time=#{qualityTime,jdbcType=VARCHAR},
+			</if>
+			<if test="spec != null">
+				spec = #{spec,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				model = #{model,jdbcType=VARCHAR},
+			</if>
+			<if test="orgin != null">
+				orgin = #{orgin,jdbcType=VARCHAR},
+			</if>
+			<if test="factoryId != null">
+				factory_id = #{factoryId,jdbcType=VARCHAR},
+			</if>
+			<if test="internalId != null">
+				internal_id = #{internalId,jdbcType=VARCHAR},
+			</if>
+			<if test="installationSite != null">
+				installation_site = #{installationSite,jdbcType=VARCHAR},
+			</if>
+
+			<if test="getTime != null">
+				get_time = #{getTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useCase != null">
+				use_case = #{useCase,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="retestingPeriod != null">
+				retesting_period = #{retestingPeriod,jdbcType=VARCHAR},
+			</if>
+			<if test="testingTime != null">
+				testing_time = #{testingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="nextTestingTime != null">
+				next_testing_time =
+				#{nextTestingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="reportTime != null">
+				report_time = #{reportTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=LONGVARCHAR},
+			</if> 
+			<if test="wfInstId != null">
+				wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstDate != null">
+				wf_inst_date = #{wfInstDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+			</if> 
+		</set>
+		where instrument_id = #{instrumentId,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

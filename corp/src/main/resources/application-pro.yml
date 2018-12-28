@@ -1,0 +1,32 @@
+logging:
+  config: classpath:log4j2-pro.xml 
+#gizp    
+server:
+  port: 8089
+  compression: 
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain  
+wxconfig: 
+  callbackDomain: http://ty.lyarc.com
+  providerSecret: LNEEmiyKp94r8bPx2lwdxaZMopincgb7T0ypmHjAeRLkT3yY3MKMaqTUkS2rAI2j
+  corpId: wx681bb0c5da87b426 
+
+test: 0
+#是否是测试安装套件
+testSuite: 0
+
+ # 上传文件配置
+spring:
+  http:
+    multipart:
+      location: /tmpfiles
+      max-file-size: 10MB
+      max-request-size: 12MB
+  datasource:
+    url: jdbc:mysql://rm-bp126jg0691j74t72.mysql.rds.aliyuncs.com/ty1_db?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&useSSL=false&allowMultiQueries=true
+    username: sqladmin
+    password: Arc@123456
+
+
+cronScanAuditEvent: 0/5 * * * * ?
+uploadDir: /files

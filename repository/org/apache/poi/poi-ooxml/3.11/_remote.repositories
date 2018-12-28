@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Dec 26 16:31:23 CST 2018
+poi-ooxml-3.11-sources.jar>public=
+poi-ooxml-3.11.pom>public=
+poi-ooxml-3.11.pom>aliyun=
+poi-ooxml-3.11.jar>aliyun=
+poi-ooxml-3.11.jar>public=

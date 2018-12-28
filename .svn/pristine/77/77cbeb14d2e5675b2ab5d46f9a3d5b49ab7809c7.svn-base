@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.certification.dao.CastingCertificateMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.certification.bean.CastingCertificate" >
+  	<id column="certificate_id" property="certificateId" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="certificate_id" property="certificateId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="test_people" property="testPeople" jdbcType="VARCHAR" />
+    <result column="checked_by" property="checkedBy" jdbcType="VARCHAR" />
+    <result column="approved_by" property="approvedBy" jdbcType="VARCHAR" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_time" property="wfInstTime" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_remark" property="wfInstRemark" jdbcType="VARCHAR" />
+    <result column="audit" property="audit" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+    <result column="test_item" property="testItem" jdbcType="LONGVARCHAR" />
+    <result column="chemical_component" property="chemicalComponent" jdbcType="LONGVARCHAR" />
+    <result column="mechanical_property" property="mechanicalProperty" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <!-- 根据id从查询 -->
+  <select id="selectByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.certification.bean.CastingCertificate"
+		resultType="com.lyarc.tp.corp.quality.certification.bean.CastingCertificate" >
+    select * from t_casting_certificate where 1=1
+    <if test='certificateId != null and certificateId !=""'>
+      AND certificate_id = #{certificateId}
+    </if>
+  </select>
+  
+  <!-- 分页查询 -->
+  <select id="list" resultType="com.lyarc.tp.corp.quality.certification.bean.ContractDetailQueryBean">
+    select ts.casting,tc.customer_name,cd.*,tt.contract_no contractId
+    from t_contract_detail cd 
+		left join t_contract tt  on tt.contract_id = cd.contract_id
+		left join t_customer tc  on tc.customer_id = tt.customer_id
+		left join t_product_stock ts on ts.customer_id = tc.customer_id
+    where 1=1
+    <if test='customerName != null and customerName !=""'>
+      AND cd.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test='drawing != null and drawing !=""'>
+      AND cd.drawing = #{drawing}
+    </if>
+    <if test='contractId != null and contractId !=""'>
+      AND cd.contract_id = #{contractId}
+    </if>
+
+    ORDER BY cd.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+	<select id="selcetById" resultType="com.lyarc.tp.corp.quality.certification.bean.ContractDetailQueryBean">
+	  select tc.certificate_id from t_contract tt join t_casting_certificate tc on tc.contract_id = tt.contract_id 
+	  where 1=1
+	</select>
+	<select id="findLine" resultType="com.lyarc.tp.corp.quality.certification.bean.ContractDetailQueryBean">
+		select count(td.mater_id ) as line from
+		t_contract_detail td inner join t_contract tt on
+		tt.contract_id = td.contract_id
+	</select>
+
+  <!-- 列表附带的计数 -->
+  <select id="count" parameterType="com.lyarc.tp.corp.quality.certification.bean.ContractDetailQueryBean" resultType="java.lang.Long">
+    select count(cd.contract_id)
+    from t_contract_detail cd 
+		left join t_contract tt  on tt.contract_id = cd.contract_id
+		left join t_customer tc  on tc.customer_id = tt.customer_id
+		left join t_product_stock ts on ts.customer_id = tc.customer_id
+    where 1=1
+
+    <if test='customerName != null and customerName !=""'>
+      AND cd.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test='drawing != null and drawing !=""'>
+      AND cd.drawing = #{drawing}
+    </if>
+    <if test='contractId != null and contractId !=""'>
+      AND cd.contract_id = #{contractId}
+    </if>
+  </select>
+  <!-- 查询所有 -->
+  <select id="selectByPrimaryKeys" resultType="com.lyarc.tp.corp.quality.certification.bean.CastingCertificate">
+    select 
+    *
+    from t_casting_certificate  
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_casting_certificate
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 选择添加 -->
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.CastingCertificate" >
+    insert into t_casting_certificate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="certificateId != null" >
+        certificate_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time,
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark,
+      </if>
+      <if test="audit != null" >
+        audit,
+      </if>
+      <if test="testPeople != null" >
+        test_people,
+      </if>
+      <if test="checkedBy != null" >
+        checked_by,
+      </if>
+      <if test="approvedBy != null" >
+        approved_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="testItem != null" >
+        test_item,
+      </if>
+      <if test="chemicalComponent != null" >
+        chemical_component,
+      </if>
+      <if test="mechanicalProperty != null" >
+        mechanical_property,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateId != null" >
+        #{certificateId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="testPeople != null" >
+        #{testPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedBy != null" >
+        #{checkedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedBy != null" >
+        #{approvedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstId != null" >
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="audit != null" >
+        #{audit,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="testItem != null" >
+        #{testItem,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="chemicalComponent != null" >
+        #{chemicalComponent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mechanicalProperty != null" >
+        #{mechanicalProperty,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.CastingCertificate" >
+    update t_casting_certificate
+    <set >
+      <if test="id != null" >
+        id = #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateId != null" >
+        certificate_id = #{certificateId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="audit != null" >
+        audit = #{audit,jdbcType=VARCHAR},
+      </if>
+      <if test="testPeople != null" >
+       test_people = #{testPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedBy != null" >
+      checked_by = #{checkedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedBy != null" >
+      approved_by = #{approvedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="testItem != null" >
+        test_item = #{testItem,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="chemicalComponent != null" >
+        chemical_component = #{chemicalComponent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mechanicalProperty != null" >
+        mechanical_property = #{mechanicalProperty,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </update>
+  <update id="updStatusC" parameterType="com.lyarc.tp.corp.quality.certification.bean.CastingCertificate" >
+    update t_casting_certificate
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="testPeople != null" >
+       test_people = #{testPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedBy != null" >
+      checked_by = #{checkedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedBy != null" >
+      approved_by = #{approvedBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where certificate_id = #{certificateId,jdbcType=VARCHAR},
+  </update>
+</mapper>

@@ -1,0 +1,150 @@
+<template>
+  <Modal v-model="show" :title="title" :closable="false" :mask-closable="false">
+    <div class="page customeredit">
+      <Loading :loading="loading">
+      <div class="page-form">
+        <Form ref="form" :label-width="100" :rules="ruleValidate" class="form-item">
+
+          <div class="form-sub-title">
+            <Icon type="compose"></Icon>
+            报废申请
+          </div>
+          <Input v-model="formItem.instrumentId" type="hidden" style="width: 100%"></Input>
+          <FormItem label="器具报废原因" prop="remark">
+            <br/>
+            <Input v-model="formItem.remark" type="textarea" :rows="6" style="width: 100%"></Input>
+          </FormItem>
+          <FormItem label="记录人员" prop="linkMan">
+            <Input v-model="formItem.linkMan" readonly="readonly" placeholder="" class="width-1"/>
+          </FormItem>
+          <FormItem label="记录日期" prop="getTime">
+            <DatePicker type="date" placeholder="" readonly="readonly" v-model="formItem.getTime" format="yyyy-MM-dd" style="width:120px"></DatePicker>
+          </FormItem>
+          <FormItem>
+            <Button type="primary" icon="checkmark" @click="save">保存</Button>
+            <Button type="ghost" @click="reset" style="margin-left: 8px" >重置</Button>
+            <Button type="ghost" @click="close" style="margin-left: 8px">取消</Button>
+          </FormItem>
+        </Form>
+      </div>
+      </Loading>
+    </div>
+<!--    <SelContacts ref="selContacts"></SelContacts>-->
+    <div slot="footer"></div>
+
+  </Modal>
+</template>
+<script>
+  import Loading from '@/components/loading';
+  import SelArea from '@/components/selarea';//区域插件
+  import page from '@/assets/js/page';
+  export default {
+    components: {
+      Loading, SelArea,  //声明新组件
+    },
+    data() {
+      return {
+        loading:0,
+        show: false,
+        //是否编辑 0 添加 1 编辑
+        isEdit: false,
+        industry: [],
+        //表单对象
+        formItem: {
+          instrumentId:"",
+          remark:"",
+          linkMan:"",
+          getTime:"",
+        },
+        oriItem: {},
+				ruleValidate:{}
+      };
+    },
+    computed: {
+      title() {
+        return "计量器具报废确认";
+      },
+    },
+    mounted(){
+      //this.loadGroups();
+      this.initNew();
+    },
+    methods: {
+      save() {
+        if(this.formItem.instrumentId){
+          this.saveItem();
+        }else {
+          this.$Message.info("未知错误，请返回重试");
+        }
+        /*this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.saveItem();
+          } else {
+            return;
+          }
+        });*/
+      },
+
+      saveItem() {
+        let url = '/api/instrument/updateUseCase';
+        let msg = '报废成功';
+        this.loading=1;
+        this.formItem.getTime=page.formatDate( this.formItem.getTime);
+        this.$http.post(url, this.formItem).then((res) => {
+          this.loading=0;
+          if (res.data.code === 0) {
+            this.$Message.success(msg);
+            this.close();
+						setTimeout(function(){
+							window.location.reload();
+						},2000);
+						
+
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        }).catch((error) => {
+          this.loading=0;
+          this.$Message.error(error.message)
+        });
+      },
+      initNew(){
+        this.formItem.getTime = page.formatDate(new Date(),'yyyy-MM-dd');
+        this.formItem.linkMan = this.$user.empInfo.trueName;
+        if(this.$user.empInfo){
+          this.formItem.linkMan = this.$user.empInfo.trueName;
+        }
+      },
+      open(item) {//判断编辑页面，新建页面
+        this.show = true;
+        if (item.instrumentId && item.instrumentId !== '') {
+          this.formItem.instrumentId = item.instrumentId;
+        } else {
+            this.$Message.error("未知错误");
+          this.$refs.page.load();
+        }
+      },
+
+      close() {
+        this.show = false;
+      },
+
+      reset() {
+        $.extend(this.formItem,this.oriItem);
+      },
+    }
+  }
+
+</script>
+
+<style type="text/css">
+  .form-sub-title {
+    font-size: 14px;
+    margin: 0 0 12px 18px;
+    color: #2b85e4;
+  }
+
+  .customeredit .width-1{
+    width: 160px;
+  }
+</style>

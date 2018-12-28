@@ -1,0 +1,5 @@
+#Tue Oct 23 19:47:32 CST 2018
+central|https\://repo.maven.apache.org/maven2|javadoc=1540295252737
+central|https\://repo.maven.apache.org/maven2|sources=1540294813457
+public|http\://192.168.2.34\:8081/nexus/content/groups/public/|javadoc=1540295252737
+public|http\://192.168.2.34\:8081/nexus/content/groups/public/|sources=1540294813457

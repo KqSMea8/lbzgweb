@@ -1,0 +1,833 @@
+<template>
+    <div class="page purchase-order-edit">
+        <div class="page-bar">
+            <div class="page-bar-title">{{pageTitle}}</div>
+        </div>
+        <table  cellspacing="20px;" cellpadding="0">
+            <tr>
+                <td><i-button type="info" @click="save" size="large">保存</i-button></td>
+                <td><i-button type="primary" size="large">清除</i-button></td>
+                <td><i-button type="daush" size="large" @click="goBack">退出</i-button></td>
+            </tr>
+        </table>
+        <table  cellspacing="20px;" cellpadding="0">
+            <tr>
+                <td>文件编号：</td>
+                <td><Input v-model="formItem.fileId" placeholder="文件编号"></Input></td>
+            </tr>
+        </table>
+        <Loading :loading="loading">
+            <div class="baseinfo">
+                <table   cellspacing="0" cellpadding="0" border >
+                    <tr>
+                        <td align="center">发布部门：</td>
+                        <td><Input v-model="this.department" placeholder="发布部门"></Input></td>
+                        <td align="center">发布日期：</td>
+                        <td><DatePicker type="date" placeholder="零部件名称/图号" v-model="formItem.createTime" format="yyyy-MM-dd" style="width:120px"></DatePicker><!--<Input v-model="formItem.createTime" placeholder="发布日期"></Input>--></td>
+                        <td align="center">发起人/电话：</td>
+                        <td><Input v-model="formItem.inspectionApplyId" placeholder="发起人/电话"></Input></td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="2">机型/名称：</td>
+                        <td colspan="1"><Input v-model="formItem.typeName" placeholder="机型/名称"></Input></td>
+                        <td align="center" colspan="2">零部件名称/图号：</td>
+                        <td><Input v-model="this.drawing" ></Input></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">不符合报告类型</td>
+                        <td colspan="2">
+                            <div style="margin: 2px 20px; float: left"> <i-switch v-model="data0.numberOne.A"/>技术</div>
+                            <div style="margin: 2px 20px; float: left"> <i-switch v-model="data0.numberOne.B"/>管理</div>
+                            <div style="margin: 2px 20px; float: left"> <i-switch v-model="data0.numberOne.C"/>包装</div>
+                            <div style="margin: 2px 20px; float: left"> <i-switch v-model="data0.numberOne.D"/>信息</div>
+                        </td>
+                        <td>特别要求</td>
+                        <td><Input v-model="formItem.specialRequest" placeholder="特别要求"></Input></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            1D：团队（解决该不良问题的团队，包括现场管理人员、操作人、品质担当、技术担当）
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="3">团队组织</td>
+                        <td colspan="2">责任人/职务</td>
+                        <td colspan="1">所属部门</td>
+                    </tr>
+                    <tr v-for="(item,index) in data1" >
+                        <td colspan="3" >
+                            <Input v-model="item.organization" />
+                        </td>
+                        <td colspan="2" >
+                            <Input v-model="item.duty" />
+                        </td>
+                        <td colspan="1" >
+                            <Input v-model="item.department" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            2D：问题描述：何时发现，在哪里发现，谁反馈，为什么会发现，什么问题，不合格和可疑品多少数量（可疑品数量：客户、在途、成品、在制品、半成品的数量）；同时，对不良发生的部位、形式详细地描述，并以图片+文字的形通报
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            图片附件：
+                        </td>
+                        <td colspan="4">
+                            <UploadBox v-model="formItem.files" :readonly="!editable"></UploadBox>   <!-- formItem.files 调用上传附件的控件 -->
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            3D：防堵措施（不良品的处理及库存检查、隔离情况等）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            a：该不良品如何处理？
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <Input v-model="threeD.threeA" style="margin-top: 10px" type="textarea" rows="2" placeholder="该不良品如何处理？..." />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                          b：客户处的库存品有无排查？结果如何？
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <Input v-model="threeD.threeB" style="margin-top: 10px" type="textarea" rows="2" placeholder="客户处的库存品有无排查？结果如何？..." />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            c：公司内部成品、半成品是否排查？有无隔离？结果如何？
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <Input v-model="threeD.threeC" style="margin-top: 10px" type="textarea" rows="2" placeholder="
+c：公司内部成品、半成品是否排查？有无隔离？结果如何？..." />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            d：短期的遏制措施、截止时间要求和实施人，并通知相关人员监控生产遏制。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <Input v-model="threeD.threeD" style="margin-top: 10px" type="textarea" rows="2" placeholder="短期的遏制措施、截止时间要求和实施人，并通知相关人员监控生产遏制。..." />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            4D：根本原因分析（利用5WHY、鱼骨图、5M1E、头脑风暴法对不良的发生原因根本分析）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <img :src="require('@/assets/img/u54628.png')" style="vertical-align: middle;"/>
+                        </td>
+                    </tr>
+
+                            <!--<Table border height="200" :columns="columns2" :data="data2.viewResult"></Table>-->
+                    <tr align="center">
+                        <td colspan="4">根本原因清单</td>
+                        <td colspan="2">根本原因分类编号</td>
+                    </tr>
+                    <tr v-for="(item,index) in data2.viewResult">
+                        <td colspan="4" >
+                            <Input v-model="item.view" />
+                        </td>
+                        <td colspan="2" >
+                            <Input v-model="item.number" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">原因分类编号：</td>
+                        <td colspan="4">
+                               <div style="margin: 2px 20px; width: 60px; float: left"> <i-switch v-model="data2.numberOne.A"/>A加工尺寸</div>
+                               <div style="margin: 2px 20px;  width: 60px;float: left"> <i-switch v-model="data2.numberOne.B"/>B焊接尺寸</div>
+                               <div style="margin: 2px 20px;  width: 60px;float: left"> <i-switch v-model="data2.numberOne.C"/>C焊接性能</div>
+                               <div style="margin: 2px 20px; width: 60px; float: left"> <i-switch v-model="data2.numberOne.D"/>D焊接外观</div>
+                               <div style="margin: 2px 20px;  width: 60px;float: left"> <i-switch v-model="data2.numberOne.E"/>E喷漆指标</div>
+                               <div style="margin: 2px 20px;  width: 60px;float: left"> <i-switch v-model="data2.numberOne.F"/>F喷漆外观</div>
+                               <div style="margin: 2px 20px; width: 60px; float: left"> <i-switch v-model="data2.numberOne.G"/>G运输</div>
+                               <div style="margin: 2px 20px;  width: 60px;float: left"> <i-switch v-model="data2.numberOne.H"/>H防护</div>
+                               <div style="margin: 2px 20px; width: 60px; float: left"> <i-switch v-model="data2.numberOne.K"/>K培训</div>
+                               <div style="margin: 2px 20px;  width: 60px;float: left"> <i-switch v-model="data2.numberOne.L"/>L管理</div>
+                               <div style="margin: 2px 20px; width: 60px; float: left"> <i-switch v-model="data2.numberOne.N"/>N工装</div>
+                               <div style="margin: 2px 20px; width: 60px; float: left"> <i-switch v-model="data2.numberOne.U"/>U设备</div>
+                               <div style="margin: 2px 20px;  width: 60px;float: left"> <i-switch v-model="data2.numberOne.V"/>V其它</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">原因分类编号：</td>
+                        <td colspan="4">
+                               <div style="margin: 2px 20px; float: left"> <i-switch v-model="data2.numberTwo.M"/> M 人</div>
+                               <div style="margin: 2px 20px; float: left"> <i-switch v-model="data2.numberTwo.P"/>P 机</div>
+                               <div style="margin: 2px 20px; float: left"> <i-switch v-model="data2.numberTwo.Q"/>Q 料</div>
+                               <div style="margin: 2px 20px; float: left"> <i-switch v-model="data2.numberTwo.R"/>R 法</div>
+                               <div style="margin: 2px 20px; float: left"> <i-switch v-model="data2.numberTwo.S"/>S 环境</div>
+                               <div style="margin: 2px 20px; float: left"> <i-switch v-model="data2.numberTwo.T"/>T 测量/检测</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            5D：根本对策（对问题发生的根本原因进行根本对策，防呆防错和预防措施，水平展开等）
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td colspan="4">行动计划</td>
+                        <td colspan="1">担当</td>
+                        <td colspan="1">完成时间</td>
+                    </tr>
+                    <tr v-for="(item,index) in data3" >
+                        <td colspan="4" >
+                            <Input v-model="item.name" />
+                        </td>
+                        <td colspan="1" >
+                            <Input v-model="item.view" />
+                        </td>
+                        <td colspan="1" >
+                            <Input v-model="item.time" />
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        &lt;!&ndash;<td colspan="6">
+                        <tr v-for="(item,index) in data3" >&ndash;&gt;
+                        <td colspan="3" >
+                            <Input v-model="item.name" />
+                        </td>
+                        <td colspan="2" >
+                            <Input v-model="item.view" />
+                        </td>
+                        <td colspan="1" >
+                            <Input v-model="item.time" />
+                        </td>
+                    </tr>-->
+                    <tr>
+                        <td colspan="6">
+                            6D：效果确认：（在一段时间内跟踪该批产品整改后的质量状况，验证对策的有效性）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" v-for="(item,index) in data6"><Input v-model="item.remark"    type="textarea" rows="2" ></Input></td>
+                        <td colspan="1" v-for="(item,index) in data6"><Input v-model="item.operator"    placeholder="验证/报告人"></Input></td>
+                        <td colspan="1" v-for="(item,index) in data6"><Input v-model="item.time"    placeholder="确认日期"></Input></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            7D：标准化文件更改：（是否需要对作业指导书、QC 工程表进行修改并固化）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <table  cellspacing="0" cellpadding="0" border>
+                                <tr>
+                                <td>预防重复发生的措施</td>
+                                <td>需要更改的产品/过程/体系文件清单</td>
+                                <td>责任人</td>
+                                <td>完成日期</td>
+                                </tr>
+                                <tr>
+                                    <td>1.过程流程表</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.one.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.one.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.one.address"   rows="2" ></Input></td>
+                                </tr>
+                                <tr>
+                                    <td>2.失效模式分析</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.two.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.two.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.two.address"   rows="2" ></Input></td>
+                                </tr>
+                                <tr>
+                                    <td>3.过程/质量指导书</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.three.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.three.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.three.address"   rows="2" ></Input></td>
+                                </tr>
+                                <tr>
+                                    <td>4.工艺、技术标准/规范</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.four.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.four.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.four.address"   rows="2" ></Input></td>
+                                </tr>
+                                <tr>
+                                    <td>5.控制计划</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.five.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.five.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.five.address"   rows="2" ></Input></td>
+                                </tr>
+                                <tr>
+                                    <td>6.配套供应商审核</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.six.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.six.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.six.address"   rows="2" ></Input></td>
+                                </tr>
+                                <tr>
+                                    <td>7.内部工作流程/管理文件修改</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.seven.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.seven.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.seven.address"   rows="2" ></Input></td>
+                                </tr>
+                                <tr>
+                                    <td>8.新产品或其它产品的同类改进</td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.eight.name"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.eight.age"   rows="2" ></Input></td>
+                                    <td v-for="(item,index) in data7"><Input v-model="item.eight.address"   rows="2" ></Input></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            8D：总结（整个活动取得的效果，并进行小组总结）
+                        </td>
+                        <td colspan="2">
+                            品证验证关闭日期
+                        </td>
+                        <td colspan="1">
+                          &nbsp;&nbsp;  年    &nbsp;&nbsp;       月       &nbsp;&nbsp;    日
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            团队组长总结与签名：
+                            <Input v-model="eightD.one" style="margin-top: 10px" type="textarea" rows="2" />
+                        </td>
+                        <td colspan="2">
+                            品证部验证意见与签名：
+                            <Input v-model="eightD.two" style="margin-top: 10px" type="textarea" rows="2" />
+                        </td>
+                        <td colspan="1">
+                            领导批准签名:
+                            <Input v-model="eightD.three" style="margin-top: 10px" type="textarea" rows="2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                    </tr>
+
+
+
+                </table>
+            </div>
+        </Loading>
+        <SelContacts ref="selContacts"></SelContacts>
+    </div>
+</template>
+<script>
+  import Loading from '@/components/loading';
+  import LayoutHor from '@/components/layout/LayoutHor';
+  import AddDetailEditable from './d_reportEditable';
+  import page from '@/assets/js/page';
+  import SelContacts from '@/components/selcontacts';
+  import UploadBox from '@/components/upload/Index';//上传附件
+  export default {
+    components: {
+      Loading,
+      LayoutHor,
+      AddDetailEditable,
+      SelContacts,
+      UploadBox,
+    },
+    data() {
+      return {
+
+          threeD:{
+              threeA: "",
+              threeB: "",
+              threeC: "",
+              threeD:""
+          },
+          eightD:{
+              one: "",
+              two: "",
+              three: ""
+              },
+          columns1: [
+          {
+            title: '团队组织',
+            key: 'name',
+            align:'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.name)
+              ]);
+            }
+          },
+          {
+            title: '责任人/职务',
+            key: 'age',
+            align:'center'
+          },
+          {
+            title: '所属部门',
+            key: 'address',
+            align:'center'
+          }
+          ],
+        columns2: [
+          {
+            title: '根本原因清单',
+            key: 'view',
+            align:'center',
+          },
+          {
+            title: '根本原因分类编号',
+            key: 'number',
+            align:'center',
+          }
+        ],
+        columns3: [
+          {
+            title: '行动计划',
+            key: 'name',
+            align:'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.name)
+              ]);
+            }
+          },
+          {
+            title: '担当',
+            key: 'view',
+            align:'center'
+          },
+          {
+            title: '完成时间',
+            key: 'time',
+            align:'center'
+          }
+        ],
+          data0:{
+              "numberOne":{
+                "A": true,
+                "B": false,
+                "C": false,
+                "D": false,
+                }
+          },
+        data1:[{
+                "organization": "",
+                "duty": "",
+                "department": ""
+        }, {
+
+                "organization": "",
+                "duty": "",
+                "department": ""
+
+        },{
+                "organization": "",
+                 "duty": "",
+                 "department": ""
+        },{
+                 "organization": "",
+                 "duty": "",
+                 "department": ""
+            }
+        ],
+        data2:{
+              "viewResult":[
+                  {
+                      "view": "",
+                      "number": " "
+                  }, {
+                      "view": "",
+                      "number": ""
+                  }, {
+                      "view": "",
+                      "number": ""
+                  }, {
+                      "view": "",
+                      "number": ""
+                  },
+                  {
+                      "view": "",
+                      "number": ""
+                  }
+              ],
+            "numberOne":{
+                "A": true,
+                "B": false,
+                "C": false,
+                "D": false,
+                "E": false,
+                "F": false,
+                "G": false,
+                "H": false,
+                "K": false,
+                "L": false,
+                "N": false,
+                "U": false,
+                "V": false
+            },
+            "numberTwo": {
+                "M": false,
+                "P": false,
+                "Q": false,
+                "R": false,
+                "S": false,
+                "T": false
+            }
+        },
+        data3: [
+          {
+              "name": "",
+              "view": "",
+              "time": ""
+          },
+          {
+              "name": "",
+              "view": "",
+              "time": ""
+          },
+          {
+              "name": "",
+              "view": "",
+              "time": ""
+          },
+          {
+              "name": "",
+              "view": "",
+              "time": ""
+          }
+        ],
+          data6: [
+              {
+                  "remark": "",
+                  "operator": "",
+                  "time": ""
+              }
+
+          ],
+          data7:[{
+              "one": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              },
+              "two": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              },
+              "three": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              },
+              "four": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              },
+              "five": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              },
+              "six": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              },
+              "seven": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              },
+              "eight": {
+                  "name": "",
+                  "age": "",
+                  "address": ""
+              }
+          }],
+        loading: 0,
+        purchaseOrderId:'',
+        pageFlag:1,//1.新建 2.带入
+        formItem:{
+          "fileId":"",
+          "specialRequest":"",
+          "createTime":"",
+          "inspectionApplyId":"",
+          "operatorName":"",
+          "applyDate":"",
+          "departmentName":"",
+          "remark":"",
+          "switch":"",
+
+        },
+        list:[],
+        currencyArgs:[],
+        oriItem:{},
+        remark:'',
+        editable:true,
+        instrumentId:"",
+        curIndex:0,
+        "files":null, //输入附件的选项
+      }
+    },
+    mounted: function () {
+      this.instrumentId = this.$route.query.id;
+      this.unqualifiedId= this.$route.query.id;
+       this.department=this.$route.query.department;
+       /*console.log(data1)*/
+        /*alert(this.department)*/
+      this.pageFlag = 1;
+      if(this.instrumentId){
+        this.pageFlag = 2;
+      }
+      if(this.pageFlag == 1){
+        this.initNew();
+        this.load();
+      }
+      if(this.pageFlag == 2){
+        this.load();
+      }
+    },
+    computed: {
+      pageTitle(){
+          return '8D报告';
+      }
+    },
+
+    methods: {
+      load() {
+        this.loading = 1;
+        var itemDetail= this.$refs.editable;//引用到其他控件，赋给对象
+        this.$http.post("/api/UnqualifiedProductBill/list",{unqualifiedId:this.$rIoute.query.unqualifiedId}).then((res) => {
+          this.loading = 0;
+          var def=res.data.data.rows[0];
+          this.list.push(def);
+          /*if (res.data.code == 0) {
+            if(res.data.data){
+
+              this.oriItem = eval('('+JSON.stringify(res.data.data)+')');
+
+              Object.assign(this.formItem,res.data.data);
+              this.list =[];
+              res.data.data.detailList.map(item=>{
+                this.list.push(Object.assign(itemDetail.listNewRow(),item));//该对象引用自己的方法listNewRow();该方法取到的值放入item
+              });
+              this.formItem.departmentName = this.$args.getArgText('deptList',this.formItem.department);
+            }else{
+              this.$Message.error('订单不存在！');
+              this.goBack();
+            }
+          } else {
+            this.$Message.error(res.data.message);
+          }*/
+        }).catch((error) => {
+          this.loading = 0;
+          this.$Message.error("操作失败！")
+        });
+      },
+
+      initNew(){
+        Object.assign(this.formItem,{
+          "inspectionApplyId":"",
+          "operatorName":"",
+          "applyDate":"",
+          "departmentName":"",
+          "remark":"",
+        });
+        this.formItem.applyDate = page.formatDate(new Date(),'yyyy-MM-dd');
+        if(this.$user.empInfo){
+          this.formItem.proposer = this.$user.empInfo.empId;
+          this.formItem.operatorName = this.$user.empInfo.trueName;
+        }
+        //this.list = [];
+        //this.list.push(this.$refs.editable.listNewRow());
+        //this.list.push(this.$refs.editable.listNewRow());
+      },
+
+      selDept(){
+        var sel = this.$refs.selContacts;
+        sel.show({
+          isMulti:false,
+          selectPerson:false,
+          selectDept:true,
+          ok:()=>{
+            if(sel.select.length>0){
+              this.formItem.departmentName = sel.select[0].title;
+              this.formItem.department = sel.select[0].key;
+            }
+          }
+        });
+      },
+
+      selEmp(){
+        var sel = this.$refs.selContacts;
+        sel.show({
+          isMulti:false,
+          selectPerson:true,
+          selectDept:false,
+          ok:()=>{
+            if(sel.select.length>0){
+              this.formItem.proposer = sel.select[0].key;
+              this.formItem.operator = sel.select[0].key;
+            }
+          }
+        });
+      },
+
+      //保存并提交
+      save(){
+         var form = {
+            unqualifiedId:this.unqualifiedId,
+            /*notConformReport:this.formItem.switch,*/
+            notConformReport:JSON.stringify(this.data0),
+            oneD:JSON.stringify(this.data1),
+            twoD:JSON.stringify(this.formItem.files),
+            threeD:JSON.stringify(this.threeD),
+            fourD:JSON.stringify(this.data2),
+            fiveD:JSON.stringify(this.data3),
+            sixD:JSON.stringify(this.data6),
+            sevenD:JSON.stringify(this.data7),
+            eightD:JSON.stringify(this.eightD),
+          /*detailList:[]*/
+        };
+
+        Object.assign(form,this.formItem);
+        form.applyDate = page.formatDate(form.createTime);
+
+        /*form.detailList = [];*/
+        // 明细
+        /*for(var i = 0;i<this.list.length;i++){
+          var item = this.list[i];
+          if(item.materId != ''){
+            if(item.quantity == 0){
+              this.$Message.error('物料 ' + item.materId + ' ,请录入数量');
+              return;
+            }
+            item.needDate = page.formatDate(item.needDate);
+            form.detailList.push(item);
+          }
+        }*/
+
+        // 提交
+        this.loading = 1;
+        var uri = '/api/UnqualifiedProductBill/addU';
+
+        this.$http.post(uri, form).then((res) => {
+          this.loading = 0;
+          if (res.data.code == 0) {
+            this.$Message.success("操作成功！");
+            this.goBack();
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        }).catch((error) => {
+          this.loading = 0;
+          this.$Message.error("请求失败，请重新操作")
+        });
+      },
+
+      onAmountChange(val){
+        this.formItem.amount = val;
+      },
+      reset(){
+        if(this.pageFlag == 1){
+          this.initNew();
+        }else {
+          Object.assign(this.formItem,this.oriItem);
+        }
+      },
+      goBack(){
+        this.$router.go(-1);
+      },
+    }
+  }
+
+</script>
+
+<style type="text/css">
+    .purchase-order-edit.page{
+        width: 1200px;
+        margin: 0 auto;
+        padding: 10px 0px;
+        position: relative;
+    }
+    .purchase-order-edit .subheader{
+        height: 34px;line-height: 34px;
+        font-size:14px;
+        border-bottom: 0px solid #efefef;
+        margin-bottom: 10px;
+        color:#20bfee;
+    }
+    .purchase-order-edit .baseinfo{
+
+    }
+    .purchase-order-edit .baseinfo .label{
+        width: 80px;text-align: right;
+        padding-right: 8px;
+    }
+    .purchase-order-edit .baseinfo table{
+        width: 100%;
+    }
+    .purchase-order-edit .baseinfo table td{
+        height: 40px;padding-right:4px;
+    }
+
+    .purchase-order-edit .savebar{
+        margin-top: 10px;
+        height: 40px;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .purchase-order-edit .savebar td{
+        border: 1px solid #fefefe;
+        font-size: 14px;
+    }
+    .purchase-order-edit .savebar .save{
+        width: 120px;
+        border: 1px solid #20bfee;
+        background-color: #20bfee;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+    .purchase-order-edit .savebar .reset{
+        width: 60px;
+        border: 1px solid #a1e7f8;
+        background-color: #a1e7f8;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .selectinput{
+        cursor: pointer;
+    }
+
+    .purchase-order-edit .tooltip{
+        padding:10px;
+        background-color: #fafafa;
+        border:1px solid #efefef;
+        border-radius: 3px;
+        color:#666;
+        margin-top: 10px;
+    }
+</style>

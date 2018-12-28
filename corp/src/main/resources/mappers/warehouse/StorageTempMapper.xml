@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StorageTempMapper">
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.warehouse.dao.StorageTempMapper">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="storage_id" jdbcType="VARCHAR" property="storageId" />
+		<result column="coll_time" jdbcType="TIMESTAMP" property="collTime" />
+		<result column="temp" jdbcType="DECIMAL" property="temp" />
+		<result column="humi" jdbcType="DECIMAL" property="humi" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="creator" jdbcType="INTEGER" property="creator" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="tmstamp" jdbcType="TIMESTAMP" property="tmStamp" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,storage_id,coll_time,temp, humi,remark,creator,
+		create_time, update_time,
+		tmstamp
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_storage_temp
+		where
+		storage_id=#{storageId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="list" parameterType="StorageTempQueryBean"
+		resultType="StorageTempDto">
+		select
+		<include refid="Base_Column_List" />
+		from t_storage_temp t
+		where 1=1
+		<if test='storageId != null and storageId !=""'>
+			AND t.storage_id =#{storageId}
+		</if>
+		<if test="collTimeStart != null">
+			AND DATE_FORMAT(t.coll_time,'%Y-%m-%d') >= DATE_FORMAT(#{collTimeStart},'%Y-%m-%d')
+		</if>
+		<if test="collTimeEnd1 != null">
+			AND DATE_FORMAT(t.coll_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{collTimeEnd1},'%Y-%m-%d')
+		</if>
+		
+		ORDER BY t.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<select id="count" parameterType="StorageTempQueryBean"
+		resultType="java.lang.Long">
+		select count(1)
+		from t_storage_temp t where 1=1
+		<if test='storageId != null and storageId !=""'>
+			AND t.storage_id =#{storageId}
+		</if>
+		<if test="collTimeStart != null">
+			AND DATE_FORMAT(t.coll_time,'%Y-%m-%d') >= DATE_FORMAT(#{collTimeStart},'%Y-%m-%d')
+		</if>
+		<if test="collTimeEnd1 != null">
+			AND DATE_FORMAT(t.coll_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{collTimeEnd1},'%Y-%m-%d')
+		</if>
+	</select>
+
+	<insert id="insert"
+		parameterType="com.lyarc.tp.corp.warehouse.bean.StorageTempQueryBean">
+		insert into t_storage_temp
+		(storage_id,temp,humi,remark,creator,create_time,
+		update_time,tmstamp)
+		values
+		(#{storageId,jdbcType=VARCHAR},#{temp,jdbcType=DECIMAL},
+		#{humi,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR},#{creator,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},#{tmStamp,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.lyarc.tp.corp.warehouse.bean.StorageTempQueryBean">
+		insert into t_storage_temp
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="storageId != null">
+				storage_id,
+			</if>
+			<if test="temp != null">
+				temp,
+			</if>
+			<if test="humi != null">
+				humi,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmStamp != null">
+				tmstamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="storageId != null">
+				#{storageId,jdbcType=VARCHAR},
+			</if>
+			<if test="temp != null">
+				#{temp,jdbcType=DECIMAL},
+			</if>
+			<if test="humi != null">
+				#{humi,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmStamp != null">
+				#{tmStamp,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterType="com.lyarc.tp.corp.warehouse.bean.StorageTempQueryBean">
+		update t_storage_temp
+		set
+		storage_id=#{storageId,jdbcType=VARCHAR},
+		temp=#{temp,jdbcType=DECIMAL},
+		humi=#{humi,jdbcType=DECIMAL},
+		remark=#{remark,jdbcType=VARCHAR},
+		creator=#{creator,jdbcType=INTEGER},
+		update_time=#{updateTime,jdbcType=TIMESTAMP},
+		tmstamp=#{tmStamp,jdbcType=TIMESTAMP}
+		where id=#{id,jdbcType=INTEGER}
+	</update>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_storage_temp
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+</mapper>

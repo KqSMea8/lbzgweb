@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.lyarc.tp.corp.productstock.dao.ProductStockBillDetailMapper">
+
+	<insert id="insertSelective"
+		parameterType="com.lyarc.tp.corp.productstock.bean.InProductStockDetail">
+		insert into t_product_stock_bill_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="stockBillId != null">
+				stock_bill_id,
+			</if>
+			<if test="materId != null">
+				mater_id,
+			</if>
+			<if test="materName != null">
+				mater_name,
+			</if>
+			<if test="drawing != null">
+				drawing,
+			</if>
+			<if test="casting != null">
+				casting,
+			</if>
+			<if test="texture != null">
+				texture,
+			</if>
+			<if test="certification != null">
+				certification,
+			</if>
+			<if test="deliveryType != null">
+				delivery_type,
+			</if>
+			<if test="origin != null">
+				origin,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			<if test="weight != null">
+				weight,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="totalWeight != null">
+				total_weight,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+		</trim>
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="stockBillId != null">
+				#{stockBillId,jdbcType=VARCHAR},
+			</if>
+			<if test="materId != null">
+				#{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="materName != null">
+				#{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="drawing != null">
+				#{drawing,jdbcType=VARCHAR},
+			</if>
+			<if test="casting != null">
+				#{casting,jdbcType=VARCHAR},
+			</if>
+			<if test="texture != null">
+				#{texture,jdbcType=VARCHAR},
+			</if>
+			<if test="certification != null">
+				#{certification,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryType != null">
+				#{deliveryType,jdbcType=VARCHAR},
+			</if>
+			<if test="origin != null">
+				#{origin,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="weight != null">
+				#{weight,jdbcType=DECIMAL},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="totalWeight != null">
+				#{totalWeight,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	  <!-- 先删除掉之前的旧数据    Integer deleteByInStockId(@Param("stockBillId") String stockBillId);-->
+   <delete id="deleteByInStockId" >
+    delete from t_product_stock_bill_detail
+    where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+  </delete>
+</mapper>

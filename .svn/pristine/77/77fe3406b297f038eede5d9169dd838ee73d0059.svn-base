@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Oct 23 19:40:18 CST 2018
+commons-dbcp-1.4.jar>public=
+commons-dbcp-1.4-sources.jar>public=
+commons-dbcp-1.4.pom>public=

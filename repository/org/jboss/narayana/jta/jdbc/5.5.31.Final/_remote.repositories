@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Dec 26 16:31:25 CST 2018
+jdbc-5.5.31.Final.jar>aliyun=
+jdbc-5.5.31.Final.jar>public=
+jdbc-5.5.31.Final-sources.jar>public=
+jdbc-5.5.31.Final.pom>aliyun=
+jdbc-5.5.31.Final.pom>public=

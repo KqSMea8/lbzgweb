@@ -1,0 +1,114 @@
+import utils from './utils'
+
+
+// 发起合同审核 
+function startExternalApplyAudit(data,callback){  
+	/* debugger */
+  var conf = {
+  	"form_id":50,
+		"业务对象":"fp_field_businessObj",
+    "计量器具编号":"fp_field_instrumentId",
+  	"申请人":"fp_field_operatorName",
+  	"申请日期":"fp_field_applicationDate",
+  	"申请部门":"fp_field_departmentName",//has_procedure、is_foreign 
+  	"签订日期":"fp_field_createTime",
+  	"备注":"fp_field_remark", 
+  	"明细Html":"fp_field_detailsHTML", 
+  };
+  var fd = {
+  	processKey:conf.form_id
+  };
+	/* alert(fd.processKey) */
+  fd.businessKey = data.instrumnetId;
+	fd[conf["计量器具编号"]] = data.instrumentId;
+  fd[conf["外检申请单编号"]] = data.externalApplyId;
+  fd[conf["申请人"]] = data.operatorName;
+  fd[conf["申请部门"]] = data.departmentName;
+  fd[conf["标识"]] = (()=>{
+  	var retVal = [];
+  	if(data.hasProcedure){
+  		retVal.push('has_procedure');
+  	}
+  	if(data.isForeign){
+  		retVal.push('is_foreign');
+  	}
+  	return retVal.join(',');
+  })();;
+  fd[conf["申请日期"]] = data.applicationDate;
+  fd[conf["签订日期"]] = data.createTime;
+  fd[conf["备注"]] = data.remark;
+  fd[conf["业务对象"]] = JSON.stringify(data);
+  fd[conf["明细Html"]] = utils.buildTableHtml([
+  	
+  	{
+  		title:'外检申请单编号',
+  		key:'externalApplyId'
+  	},
+  	{
+  		title:'申请人',
+  		key:'operatorName'
+  	},
+  	{
+  		title:'申请日期',
+  		key:'applicationDate'
+  	},
+  	{
+  		title:'申请部门',
+  		key:'departmentName'
+  	},
+  	{
+  		title:'备注',
+  		key:'remark'
+  	},
+		{
+			title:'序号',
+			render:(index,row)=>{
+				return index + 1;
+			}
+		},
+  	{
+  		title:'计量器具名称',
+  		key:'counterName'
+  	},
+  	{
+  		title:'规格型号',
+  		key:'model'
+  	},
+  	{
+  		title:'生产厂家',
+  		key:'orgin'
+  	},
+  	{
+  		title:'内部编号',
+  		key:'internalId'
+  	}, 
+  	{
+  		title:'安装位置',
+  		key:'installationSite'
+  	}, 
+  	{
+  		title:'检定周期',
+  		key:'retestingPeriod'
+  	}, 
+  	{
+  		title:'上次鉴定时间',
+  		key:'lastTestingTime'
+  	}, 
+  	{
+  		title:'备注',
+  		key:'remark'
+  	}, 
+  ],data.detailList);
+   
+  utils.start(fd,(err,dt)=>{
+  	if(err){
+  		callback(err);
+  	}else{
+			
+				debugger
+  		callback(null,dt.procInstId);
+  	}
+  });
+}
+ 
+export default startExternalApplyAudit;

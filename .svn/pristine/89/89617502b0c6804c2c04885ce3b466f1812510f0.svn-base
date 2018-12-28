@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.dao.CorrectiveActionMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.CorrectiveAction" >
+    <id column="remedial_action_id" property="remedialActionId" jdbcType="VARCHAR" />
+    <result column="unqualified_id" property="unqualifiedId" jdbcType="VARCHAR" />
+    <result column="inspection_id" property="inspectionId" jdbcType="VARCHAR" />
+    <result column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="spec" property="spec" jdbcType="VARCHAR" />
+    <result column="drawing" property="drawing" jdbcType="VARCHAR" />
+    <result column="casting" property="casting" jdbcType="VARCHAR" />
+    <result column="provider_id" property="providerId" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="check_quantity" property="checkQuantity" jdbcType="DECIMAL" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="inspector" property="inspector" jdbcType="VARCHAR" />
+    <result column="bill_date" property="billDate" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="nonconforming_description" property="nonconformingDescription" jdbcType="VARCHAR" />
+    <result column="purchase_order_id" property="purchaseOrderId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_time" property="wfInstTime" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_remark" property="wfInstRemark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    remedial_action_id, unqualified_id, inspection_id, mater_id, mater_name, spec, drawing, 
+    casting, provider_id, quantity, check_quantity, unit, inspector, bill_date, operator, 
+    nonconforming_description, purchase_order_id, status, wf_inst_id, wf_inst_time, wf_inst_remark, 
+    create_time, update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_corrective_action
+    where remedial_action_id = #{remedialActionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_corrective_action
+    where remedial_action_id = #{remedialActionId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertCorrertive" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.CorrectiveAction" >
+    insert into t_corrective_action
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="remedialActionId != null" >
+        remedial_action_id,
+      </if>
+      <if test="unqualifiedId != null" >
+        unqualified_id,
+      </if>
+      <if test="inspectionId != null" >
+        inspection_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="drawing != null" >
+        drawing,
+      </if>
+      <if test="casting != null" >
+        casting,
+      </if>
+      <if test="providerId != null" >
+        provider_id,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="checkQuantity != null" >
+        check_quantity,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="inspector != null" >
+        inspector,
+      </if>
+      <if test="billDate != null" >
+        bill_date,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="nonconformingDescription != null" >
+        nonconforming_description,
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time,
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="remedialActionId != null" >
+        #{remedialActionId,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifiedId != null" >
+        #{unqualifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionId != null" >
+        #{inspectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="casting != null" >
+        #{casting,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="checkQuantity != null" >
+        #{checkQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+        #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="billDate != null" >
+        #{billDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="nonconformingDescription != null" >
+        #{nonconformingDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.CorrectiveAction" >
+    update t_corrective_action
+    <set >
+      <if test="unqualifiedId != null" >
+        unqualified_id = #{unqualifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionId != null" >
+        inspection_id = #{inspectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        mater_id = #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        spec = #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        drawing = #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="casting != null" >
+        casting = #{casting,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+        provider_id = #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="checkQuantity != null" >
+        check_quantity = #{checkQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+        inspector = #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="billDate != null" >
+        bill_date = #{billDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="nonconformingDescription != null" >
+        nonconforming_description = #{nonconformingDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where remedial_action_id = #{remedialActionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.CorrectiveAction" >
+    update t_corrective_action
+    set unqualified_id = #{unqualifiedId,jdbcType=VARCHAR},
+      inspection_id = #{inspectionId,jdbcType=VARCHAR},
+      mater_id = #{materId,jdbcType=VARCHAR},
+      mater_name = #{materName,jdbcType=VARCHAR},
+      spec = #{spec,jdbcType=VARCHAR},
+      drawing = #{drawing,jdbcType=VARCHAR},
+      casting = #{casting,jdbcType=VARCHAR},
+      provider_id = #{providerId,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      check_quantity = #{checkQuantity,jdbcType=DECIMAL},
+      unit = #{unit,jdbcType=VARCHAR},
+      inspector = #{inspector,jdbcType=VARCHAR},
+      bill_date = #{billDate,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      nonconforming_description = #{nonconformingDescription,jdbcType=VARCHAR},
+      purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where remedial_action_id = #{remedialActionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

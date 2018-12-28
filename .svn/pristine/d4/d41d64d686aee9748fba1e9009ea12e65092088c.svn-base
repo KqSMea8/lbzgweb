@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Oct 23 19:40:29 CST 2018
+jsr250-api-1.0.pom>public=
+jsr250-api-1.0.jar>public=
+jsr250-api-1.0-sources.jar>public=

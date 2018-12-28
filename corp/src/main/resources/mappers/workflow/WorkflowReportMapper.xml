@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.workflow.dao.WorkflowReportMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.workflow.bean.WorkflowReport" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="form_id" property="formId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />   
+    <result column="auth_emp_ids" property="authEmpIds" jdbcType="VARCHAR" />
+    <result column="rift" property="rift" jdbcType="INTEGER" /> 
+    <result column="filter_json" property="filterJson" jdbcType="VARCHAR" />
+    <result column="datas" property="datas" jdbcType="VARCHAR" />
+    <result column="querys" property="querys" jdbcType="VARCHAR" />
+    <result column="groups" property="groups" jdbcType="VARCHAR" />
+    <result column="crosses" property="crosses" jdbcType="VARCHAR" />
+    <result column="summation_json" property="summationJson" jdbcType="VARCHAR" />
+    <result column="row_summation_json" property="rowSummationJson" jdbcType="VARCHAR" />
+    <result column="chart" property="chart" jdbcType="INTEGER" /> 
+    <result column="allow_switch" property="allowSwitch" jdbcType="INTEGER" /> 
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="fields_json" property="fieldsJson" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, form_id, title, type, auth_emp_ids, rift, filter_json, datas, querys, groups, crosses, summation_json,row_summation_json, 
+    chart,allow_switch,create_time, update_time
+  </sql>
+  <sql id="Base_Column_List_Join" >
+    r.id, r.form_id, r.title, r.type, r.auth_emp_ids, r.rift, r.filter_json, r.datas, r.querys, r.groups, r.crosses, r.summation_json, r.row_summation_json,
+    chart,allow_switch,r.create_time, r.update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List_Join" />
+      , f.fields_json
+    from t_wf_report r left join t_wf_form f on r.form_id = f.id
+      where r.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectReportById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List_Join" />
+    from t_wf_report r left join t_wf_form f on r.form_id = f.id
+    where r.id = #{id,jdbcType=INTEGER} and f.corp_id = #{corpId,jdbcType=VARCHAR}
+  </select>
+  <select id="list" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_wf_report
+    where form_id = #{formId,jdbcType=INTEGER}
+  </select>
+  <select id="query" resultType="WorkflowReportDTO" parameterType="java.lang.String" >
+    select wfp.id,form_id,wff.title as formTitle, wfp.title, wfp.type, wfp.auth_emp_ids, wfp.rift, wfp.filter_json, wfp.datas, wfp.querys, wfp.groups, wfp.crosses, 
+    wfp.summation_json,wfp.row_summation_json, wfp.chart,wfp.allow_switch,wfp.create_time, wfp.update_time
+    from t_wf_report wfp
+    left join t_wf_form  wff on wfp.form_id = wff.id 
+    where concat(',',auth_emp_ids,',') LIKE concat('%,',#{empId},',%')
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_wf_report
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowReport" useGeneratedKeys="true" keyProperty="id">
+    insert into t_wf_report (id, form_id, title, type, auth_emp_ids, rift, 
+    filter_json, datas, querys, groups, crosses, 
+    summation_json,row_summation_json, 
+    chart,allow_switch,create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{formId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{authEmpIds,jdbcType=VARCHAR},#{rift,jdbcType=INTEGER}, #{filterJson,jdbcType=VARCHAR}, #{datas,jdbcType=VARCHAR},
+      #{querys,jdbcType=VARCHAR},#{groups,jdbcType=VARCHAR},#{crosses,jdbcType=VARCHAR},#{summationJson,jdbcType=VARCHAR},
+      #{rowSummationJson,jdbcType=VARCHAR},#{chart,jdbcType=INTEGER},#{allowSwitch,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowReport" useGeneratedKeys="true" keyProperty="id">
+    insert into t_wf_report
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="formId != null" >
+        form_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="authEmpIds != null" >
+        auth_emp_ids,
+      </if>
+      <if test="rift != null" >
+        rift,
+      </if>
+       <if test="filterJson != null" >
+        filter_json,
+      </if>
+       <if test="datas != null" >
+        datas,
+      </if>
+       <if test="querys != null" >
+        querys,
+      </if>
+       <if test="groups != null" >
+        groups,
+      </if>
+      <if test="crosses != null" >  
+        crosses,
+      </if>
+      <if test="summationJson != null" >  
+        summation_json,
+      </if>
+      <if test="rowSummationJson != null" >  
+        row_summation_json,
+      </if>
+      <if test="chart != null" >  
+        chart,
+      </if>
+      <if test="allowSwitch != null" >  
+        allow_switch,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+       <if test="formId != null" >
+        #{formId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+         #{type,jdbcType=INTEGER},
+      </if>
+      <if test="authEmpIds != null" >
+        #{authEmpIds,jdbcType=VARCHAR},
+      </if>
+      <if test="rift != null" >
+         #{rift,jdbcType=INTEGER},
+      </if>
+       <if test="filterJson != null" >
+        #{filterJson,jdbcType=VARCHAR},
+      </if>
+       <if test="datas != null" >
+        #{datas,jdbcType=VARCHAR},
+      </if>
+       <if test="querys != null" >
+        #{querys,jdbcType=VARCHAR},
+      </if>
+       <if test="groups != null" >
+        #{groups,jdbcType=VARCHAR},
+      </if>
+      <if test="crosses != null" >  
+        #{crosses,jdbcType=VARCHAR},
+      </if>
+      <if test="summationJson != null" >  
+        #{summationJson,jdbcType=VARCHAR},
+      </if>
+      <if test="rowSummationJson != null" >  
+        #{rowSummationJson,jdbcType=VARCHAR},
+      </if>
+      <if test="chart != null" >  
+        #{chart,jdbcType=INTEGER},
+      </if>
+      <if test="allowSwitch != null" >  
+         #{allowSwitch,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowReport" >
+    update t_wf_report
+    <set>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+         type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="authEmpIds != null" >
+        auth_emp_ids = #{authEmpIds,jdbcType=VARCHAR},
+      </if>
+      <if test="rift != null" >
+         rift = #{rift,jdbcType=INTEGER},
+      </if>
+       <if test="filterJson != null" >
+        filter_json = #{filterJson,jdbcType=VARCHAR},
+      </if>
+       <if test="datas != null" >
+        datas = #{datas,jdbcType=VARCHAR},
+      </if>
+       <if test="querys != null" >
+        querys = #{querys,jdbcType=VARCHAR},
+      </if>
+       <if test="groups != null" >
+        groups = #{groups,jdbcType=VARCHAR},
+      </if>
+      <if test="crosses != null" >  
+        crosses = #{crosses,jdbcType=VARCHAR},
+      </if>
+      <if test="summationJson != null" >  
+       summation_json = #{summationJson,jdbcType=VARCHAR},
+      </if>
+      <if test="rowSummationJson != null" >  
+       row_summation_json = #{rowSummationJson,jdbcType=VARCHAR},
+      </if>
+      <if test="chart != null" >  
+        chart = #{chart,jdbcType=INTEGER},
+      </if>
+      <if test="allowSwitch != null" >  
+         allow_switch = #{allowSwitch,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowReport" >
+    update t_wf_report
+    set title = #{title,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
+        auth_emp_ids = #{authEmpIds,jdbcType=VARCHAR},
+        rift = #{rift,jdbcType=INTEGER},
+        filter_json = #{filterJson,jdbcType=VARCHAR},
+        datas = #{datas,jdbcType=VARCHAR},
+        querys = #{querys,jdbcType=VARCHAR},
+        groups = #{groups,jdbcType=VARCHAR},
+        crosses = #{crosses,jdbcType=VARCHAR},
+        summation_json = #{summationJson,jdbcType=VARCHAR},
+        row_summation_json = #{rowSummationJson,jdbcType=VARCHAR},
+        chart = #{chart,jdbcType=INTEGER},
+        allow_switch = #{allowSwitch,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

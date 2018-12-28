@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.corp.dao.CorpMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.corp.bean.Corp" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="corp_id" property="corpId" jdbcType="VARCHAR" />
+    <result column="corp_name" property="corpName" jdbcType="VARCHAR" />
+    <result column="corp_short_name" property="corpShortName" jdbcType="VARCHAR" />
+    <result column="corp_wxqrcode" property="corpWxqrcode" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, corp_id, corp_name, corp_short_name, corp_wxqrcode, description, create_time, 
+    last_update, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_corp
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_corp
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.corp.bean.Corp" >
+    insert into t_corp (id, corp_id, corp_name, 
+      corp_short_name, corp_wxqrcode, description, 
+      create_time, last_update, tmstamp
+      )
+    values (#{id,jdbcType=INTEGER}, #{corpId,jdbcType=VARCHAR}, #{corpName,jdbcType=VARCHAR}, 
+      #{corpShortName,jdbcType=VARCHAR}, #{corpWxqrcode,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.corp.bean.Corp" >
+    insert into t_corp
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="corpId != null" >
+        corp_id,
+      </if>
+      <if test="corpName != null" >
+        corp_name,
+      </if>
+      <if test="corpShortName != null" >
+        corp_short_name,
+      </if>
+      <if test="corpWxqrcode != null" >
+        corp_wxqrcode,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastUpdate != null" >
+        last_update,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="corpId != null" >
+        #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null" >
+        #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="corpShortName != null" >
+        #{corpShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="corpWxqrcode != null" >
+        #{corpWxqrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdate != null" >
+        #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.corp.bean.Corp" >
+    update t_corp
+    <set >
+      <if test="corpId != null" >
+        corp_id = #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null" >
+        corp_name = #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="corpShortName != null" >
+        corp_short_name = #{corpShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="corpWxqrcode != null" >
+        corp_wxqrcode = #{corpWxqrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdate != null" >
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.corp.bean.Corp" >
+    update t_corp
+    set corp_id = #{corpId,jdbcType=VARCHAR},
+      corp_name = #{corpName,jdbcType=VARCHAR},
+      corp_short_name = #{corpShortName,jdbcType=VARCHAR},
+      corp_wxqrcode = #{corpWxqrcode,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="list" resultType="Corp">
+    select
+    <include refid="Base_Column_List" />
+    FROM t_corp
+  </select>
+
+  <select id="get" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_corp
+    where corp_id = #{corpId,jdbcType=INTEGER}
+  </select>
+
+  <select id="count" resultType="java.lang.Integer">
+
+    select COUNT(1)
+    from t_corp
+    where corp_id = #{corpId}
+  </select>
+
+  <delete id="delete">
+    delete from t_corp where corp_id = #{corpId}
+  </delete>
+
+  <select id="clearCorp" parameterType="java.lang.String" statementType="CALLABLE" resultType="Integer">
+    call sp_corp_clear(#{corpId})
+  </select>
+
+</mapper>

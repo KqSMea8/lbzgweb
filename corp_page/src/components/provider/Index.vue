@@ -1,0 +1,186 @@
+<template>
+  <ListPage ref="page" title="供应商" api="/api/provider/list"
+  :model="this" :beforeLoad="beforeLoad" class="customerlist">
+    <div class="page-tools">
+      <table cellpadding="0" cellspacing="0">
+        <tr>
+          <td><Button @click="add" icon="plus">新建</Button></td>
+        </tr>
+      </table>
+    </div>
+    <div class="page-searchbox">
+      <table cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <Input v-model="queryForm.keyword" placeholder="供应商名称"></Input>
+          </td>
+          <td>
+            <Button @click="query"  type="primary" icon="ios-search">查询</Button>
+          </td>
+          <td>
+            <Button @click="reset" >重置</Button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <ProviderEdit ref="edit" @on-save="query"></ProviderEdit>
+  </ListPage>
+</template>
+<script>
+  import ListPage from '@/components/page/ListPage';
+  import DataRowOperateBar from '@/components/commons/DataRowOperateBar';
+  import ProviderEdit from './ProviderEdit';
+
+  export default {
+    components: {
+      ListPage,
+      DataRowOperateBar,
+      ProviderEdit
+    },
+    data() {
+      let that = this;
+      return {
+        columns: [
+          {
+            title: '供应商代码',
+            key: 'providerId',
+            width: 100,
+          },
+          {
+            title: '名称',
+            key: 'providerName',
+            align: 'left'
+          },
+          {
+            title: '地址',
+            key: 'address',
+            align: 'left'
+          },
+          {
+            title: '联系人',
+            key: 'linkMan',
+            width: 120,
+            align: 'center',
+          },
+          {
+            title: '联系电话',
+            key: 'linkPhone',
+            width: 120,
+            align: 'center',
+          },
+          {
+            title: '状态', //文字状态显示
+            key: 'status',
+            align: 'center',
+            width:60,
+            render:(h,params)=>{
+              var status = params.row.status;
+              var setButton = "正常";
+              if (status == 2) {
+                setButton = "禁用";
+              }
+              return h('span',{class:'status-'+status},setButton);
+            }
+          },
+          {
+            title: '操作',//操作按钮列表
+            width: 80,
+            align: 'center',
+            render(h, params) {
+              let status = params.row.status;
+              let setButton = "禁用";
+              if (status === 2) {
+                setButton = "启用";
+              }
+              return h(DataRowOperateBar, {
+                props: {
+                  commands: setButton + ',编辑'
+                },
+                on: {
+                  'on-command': (name) => {
+                    that.rowCommand(name, params)
+                  }
+                }
+              });
+            }
+          }
+        ],
+        list: [],
+        total:0,
+        queryParam: {},
+        queryForm: {
+          keyword: ''
+        },
+        industry:[],
+        loading: 0
+      }
+    },
+    mounted() {
+      this.reset();
+    },
+    computed: {},
+    methods: {
+      query() {
+        this.$refs.page.query();
+      },
+      reset() {
+        Object.assign(this.queryForm,{
+          keyword: ''
+        });
+        this.query();
+      },
+      beforeLoad(){
+
+      },
+      rowCommand(name, params) {
+        if (name === '编辑') {
+          if(!this.$user.hasPower('cggl.gys.edit')){
+            this.$Message.error('暂无权限！');
+            return;
+          }
+
+          this.update(params.row);
+          return;
+        }
+
+        if(name === '启用' || name === '禁用'){
+          if(!this.$user.hasPower('cggl.gys.disable')){
+            this.$Message.error('暂无权限！');
+            return;
+          }
+
+          var status = 1;
+          if(params.row.status === 1 ) {
+             status = 2
+        }
+        this.$http.post('/api/provider/updateStatus', {
+          providerId: params.row.providerId,
+          status: status
+          }).then((res) => {
+              if (res.data.code === 0) {
+                this.query();
+              } else {
+                this.$Message.error(res.data.message)
+              }
+            }).catch((error) => {
+                this.$Message.error(error.toString())
+         });
+        }
+      },
+      add() {
+      },
+      update(item) {
+      },
+      goPage(url){
+        this.$router.push(url);
+      }
+    }
+  }
+
+</script>
+
+<style type="text/css">
+  .customerlist .status-2{
+    color:#ff6600;
+  }
+</style>

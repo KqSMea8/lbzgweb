@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.dao.UnqualifiedProductBillMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UnqualifiedProductBill" >
+    <id column="unqualified_id" property="unqualifiedId" jdbcType="VARCHAR" />
+    <id column="inspection_id" property="inspectionId" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="inspection_apply_id" property="inspectionApplyId" jdbcType="VARCHAR" />
+    <result column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="spec" property="spec" jdbcType="VARCHAR" />
+    <result column="sub_type" property="subType" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="VARCHAR" />
+    <result column="provider_id" property="providerId" jdbcType="VARCHAR" />
+    <result column="uses" property="uses" jdbcType="VARCHAR" />
+    <result column="origin" property="origin" jdbcType="VARCHAR" />
+    <result column="buyer" property="buyer" jdbcType="VARCHAR" />
+    <result column="arrival_date" property="arrivalDate" jdbcType="TIMESTAMP" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="arrival_quantity" property="arrivalQuantity" jdbcType="VARCHAR" />
+    <result column="origin_batch" property="originBatch" jdbcType="VARCHAR" />
+    <result column="batch" property="batch" jdbcType="VARCHAR" />
+    <result column="package_count" property="packageCount" jdbcType="VARCHAR" />
+    <result column="vehicle_no" property="vehicleNo" jdbcType="VARCHAR" />
+    <result column="rough_weight" property="roughWeight" jdbcType="DECIMAL" />
+    <result column="take_out_weight" property="takeOutWeight" jdbcType="DECIMAL" />
+    <result column="package_weight" property="packageWeight" jdbcType="DECIMAL" />
+    <result column="validity_date" property="validityDate" jdbcType="TIMESTAMP" />
+    <result column="quality_time" property="qualityTime" jdbcType="VARCHAR" />
+    <result column="drawing" property="drawing" jdbcType="VARCHAR" />
+    <result column="texture" property="texture" jdbcType="VARCHAR" />
+    <result column="casting" property="casting" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="inspector" property="inspector" jdbcType="VARCHAR" />
+    <result column="report_date" property="reportDate" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="purchase_order_id" property="purchaseOrderId" jdbcType="VARCHAR" />
+    <result column="lnventory_status" property="lnventoryStatus" jdbcType="INTEGER" />
+    <result column="lnvoicing_status" property="lnvoicingStatus" jdbcType="INTEGER" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_time" property="wfInstTime" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_remark" property="wfInstRemark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    contract_id,unqualified_id, inspection_id, inspection_apply_id, mater_id, mater_name, spec, sub_type, 
+    level, unit, quantity, uses, origin, buyer, arrival_date, price, amount, arrival_quantity, 
+    origin_batch, batch, package_count, vehicle_no, rough_weight, take_out_weight, package_weight, 
+    validity_date, quality_time, drawing, texture, casting, department, inspector, report_date, 
+    remark, purchase_order_id,provider_id, lnventory_status, lnvoicing_status, wf_inst_id, wf_inst_time, 
+    wf_inst_remark, creator, create_time, update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UnqualifiedProductBillKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_unqualified_product_bill
+    where unqualified_id = #{unqualifiedId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 列表查询 -->
+  <select id="list" resultType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UnqualifiedPeoductBillQueryBean" >
+    select distinct o.*
+    from t_unqualified_product_bill o
+    where 1=1
+    <if test='unqualifiedId != null and unqualifiedId !=""'>
+      AND o.unqualified_id = #{unqualifiedId}
+    </if>
+    <if test='department != null and department !=""'>
+      AND o.department = #{operId}
+    </if>
+    <if test='department != null and inspector !=""'>
+      AND o.inspector = #{inspector}
+    </if>
+    <if test="createTime != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTime},'%Y-%m-%d')
+    </if>
+    <if test="createTime != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTime},'%Y-%m-%d')
+    </if>
+
+    ORDER BY o.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!-- 列表附带的计数 -->
+  <select id="count" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UnqualifiedPeoductBillQueryBean" resultType="java.lang.Long">
+    select count(o.unqualified_id)
+    from t_unqualified_product_bill o
+    where 1=1
+    <if test='unqualifiedId != null and unqualifiedId !=""'>
+      AND o.unqualified_id = #{unqualifiedId}
+    </if>
+    <if test='department != null and department !=""'>
+      AND o.department = #{operId}
+    </if>
+    <if test='department != null and inspector !=""'>
+      AND o.inspector = #{inspector}
+    </if>
+    <if test="createTime != null">
+      AND DATE_FORMAT(o.createTime,'%Y-%m-%d') >= DATE_FORMAT(#{createTime},'%Y-%m-%d')
+    </if>
+    <if test="createTime != null">
+      AND DATE_FORMAT(o.createTime,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTime},'%Y-%m-%d')
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UnqualifiedProductBillKey" >
+    delete from t_unqualified_product_bill
+    where unqualified_id = #{unqualifiedId,jdbcType=VARCHAR}
+      and inspection_id = #{inspectionId,jdbcType=VARCHAR}
+  </delete>
+ 
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UnqualifiedProductBill" >
+    insert into t_unqualified_product_bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="unqualifiedId != null" >
+        unqualified_id,
+      </if>
+      <if test="inspectionId != null" >
+        inspection_id,
+      </if>
+      <if test="inspectionApplyId != null" >
+        inspection_apply_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="providerId != null" >
+        provider_id,
+      </if>
+      <if test="subType != null" >
+        sub_type,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="uses != null" >
+        uses,
+      </if>
+      <if test="origin != null" >
+        origin,
+      </if>
+      <if test="buyer != null" >
+        buyer,
+      </if>
+      <if test="arrivalDate != null" >
+        arrival_date,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="arrivalQuantity != null" >
+        arrival_quantity,
+      </if>
+      <if test="originBatch != null" >
+        origin_batch,
+      </if>
+      <if test="batch != null" >
+        batch,
+      </if>
+      <if test="packageCount != null" >
+        package_count,
+      </if>
+      <if test="vehicleNo != null" >
+        vehicle_no,
+      </if>
+      <if test="roughWeight != null" >
+        rough_weight,
+      </if>
+      <if test="takeOutWeight != null" >
+        take_out_weight,
+      </if>
+      <if test="packageWeight != null" >
+        package_weight,
+      </if>
+      <if test="validityDate != null" >
+        validity_date,
+      </if>
+      <if test="qualityTime != null" >
+        quality_time,
+      </if>
+      <if test="drawing != null" >
+        drawing,
+      </if>
+      <if test="texture != null" >
+        texture,
+      </if>
+      <if test="casting != null" >
+        casting,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="inspector != null" >
+        inspector,
+      </if>
+      <if test="reportDate != null" >
+        report_date,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id,
+      </if>
+      <if test="lnventoryStatus != null" >
+        lnventory_status,
+      </if>
+      <if test="lnvoicingStatus != null" >
+        lnvoicing_status,
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time,
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifiedId != null" >
+        #{unqualifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionId != null" >
+        #{inspectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionApplyId != null" >
+        #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="subType != null" >
+        #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=VARCHAR},
+      </if>
+      <if test="uses != null" >
+        #{uses,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="buyer != null" >
+        #{buyer,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivalDate != null" >
+        #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalQuantity != null" >
+        #{arrivalQuantity,jdbcType=VARCHAR},
+      </if>
+      <if test="originBatch != null" >
+        #{originBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null" >
+        #{batch,jdbcType=VARCHAR},
+      </if>
+      <if test="packageCount != null" >
+        #{packageCount,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleNo != null" >
+        #{vehicleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="roughWeight != null" >
+        #{roughWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="takeOutWeight != null" >
+        #{takeOutWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="packageWeight != null" >
+        #{packageWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="validityDate != null" >
+        #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qualityTime != null" >
+        #{qualityTime,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="casting != null" >
+        #{casting,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+        #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDate != null" >
+        #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="lnventoryStatus != null" >
+        #{lnventoryStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lnvoicingStatus != null" >
+        #{lnvoicingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.UnqualifiedProductBill.bean.UnqualifiedProductBill" >
+    update t_unqualified_product_bill
+    <trim prefix="set" suffixOverrides=","> 
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionApplyId != null" >
+        inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        mater_id = #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        spec = #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="subType != null" >
+        sub_type = #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+       provider_id = #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=VARCHAR},
+      </if>
+      <if test="uses != null" >
+        uses = #{uses,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        origin = #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="buyer != null" >
+        buyer = #{buyer,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivalDate != null" >
+        arrival_date = #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalQuantity != null" >
+        arrival_quantity = #{arrivalQuantity,jdbcType=VARCHAR},
+      </if>
+      <if test="originBatch != null" >
+        origin_batch = #{originBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null" >
+        batch = #{batch,jdbcType=VARCHAR},
+      </if>
+      <if test="packageCount != null" >
+        package_count = #{packageCount,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleNo != null" >
+        vehicle_no = #{vehicleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="roughWeight != null" >
+        rough_weight = #{roughWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="takeOutWeight != null" >
+        take_out_weight = #{takeOutWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="packageWeight != null" >
+        package_weight = #{packageWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="validityDate != null" >
+        validity_date = #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qualityTime != null" >
+        quality_time = #{qualityTime,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        drawing = #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        texture = #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="casting != null" >
+        casting = #{casting,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+        inspector = #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDate != null" >
+        report_date = #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="lnventoryStatus != null" >
+        lnventory_status = #{lnventoryStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lnvoicingStatus != null" >
+        lnvoicing_status = #{lnvoicingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    
+    </trim>
+    where unqualified_id = #{unqualifiedId,jdbcType=VARCHAR}
+      and inspection_id = #{inspectionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

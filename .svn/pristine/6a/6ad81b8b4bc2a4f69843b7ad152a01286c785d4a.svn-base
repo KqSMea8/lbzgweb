@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.arg.dao.ArgMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.arg.bean.Arg" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="arg_group" property="argGroup" jdbcType="VARCHAR" />
+    <result column="arg_code" property="argCode" jdbcType="VARCHAR" />
+    <result column="arg_text" property="argText" jdbcType="VARCHAR" />
+    <result column="arg_remark" property="argRemark" jdbcType="VARCHAR" />
+    <result column="is_init" property="isInit" jdbcType="INTEGER" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, arg_group, arg_code, arg_text, arg_remark, seq, is_init, creator, create_time, last_update,
+    tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_arg
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="list" parameterType="ArgQueryBean" resultType="Arg">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_arg
+    <where>
+      <if test="argGroup !=null">
+        AND arg_group = #{argGroup}
+      </if>
+      <if test="argCode != null">
+        AND arg_code = #{argCode}
+      </if>
+    </where>
+    order by seq
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_arg
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.arg.bean.Arg" >
+    insert into t_arg (id, arg_group, arg_code, 
+      arg_text, arg_remark, is_init,seq,
+      creator, create_time, last_update, 
+      tmstamp)
+    values (#{id,jdbcType=INTEGER}, #{argGroup,jdbcType=VARCHAR}, #{argCode,jdbcType=VARCHAR}, 
+      #{argText,jdbcType=VARCHAR}, #{argRemark,jdbcType=VARCHAR}, #{isInit,jdbcType=INTEGER}, #{seq,jdbcType=INTEGER},
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.arg.bean.Arg" useGeneratedKeys="true" keyColumn="id">
+    insert into t_arg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="argGroup != null" >
+        arg_group,
+      </if>
+      <if test="argCode != null" >
+        arg_code,
+      </if>
+      <if test="argText != null" >
+        arg_text,
+      </if>
+      <if test="argRemark != null" >
+        arg_remark,
+      </if>
+      <if test="isInit != null" >
+        is_init,
+      </if>
+      <if test="seq != null" >
+        seq,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastUpdate != null" >
+        last_update,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="argGroup != null" >
+        #{argGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="argCode != null" >
+        #{argCode,jdbcType=VARCHAR},
+      </if>
+      <if test="argText != null" >
+        #{argText,jdbcType=VARCHAR},
+      </if>
+      <if test="argRemark != null" >
+        #{argRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isInit != null" >
+        #{isInit,jdbcType=INTEGER},
+      </if>
+      <if test="seq != null" >
+        #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdate != null" >
+        #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.arg.bean.Arg" >
+    update t_arg
+    <set >
+      <if test="argGroup != null" >
+        arg_group = #{argGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="argCode != null" >
+        arg_code = #{argCode,jdbcType=VARCHAR},
+      </if>
+      <if test="argText != null" >
+        arg_text = #{argText,jdbcType=VARCHAR},
+      </if>
+      <if test="argRemark != null" >
+        arg_remark = #{argRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isInit != null" >
+        is_init = #{isInit,jdbcType=INTEGER},
+      </if>
+      <if test="seq != null" >
+        seq = #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdate != null" >
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.arg.bean.Arg" >
+    update t_arg
+    set arg_group = #{argGroup,jdbcType=VARCHAR},
+      arg_code = #{argCode,jdbcType=VARCHAR},
+      arg_text = #{argText,jdbcType=VARCHAR},
+      arg_remark = #{argRemark,jdbcType=VARCHAR},
+      is_init = #{isInit,jdbcType=INTEGER},
+      seq = #{seq,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

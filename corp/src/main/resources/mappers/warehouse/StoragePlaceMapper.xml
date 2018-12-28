@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StoragePlaceMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.warehouse.bean.StoragePlace">
+    <id column="storage_id" jdbcType="VARCHAR" property="storageId" />
+    <id column="place_id" jdbcType="VARCHAR" property="placeId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="parent_place_id" jdbcType="VARCHAR" property="parentPlaceId" />
+    <result column="creator" jdbcType="INTEGER" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    storage_id, place_id, name, description, parent_place_id, creator, create_time, update_time, 
+    tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlaceKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_storage_place
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and place_id = #{placeId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectChildPlace" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlaceKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_storage_place
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and parent_place_id = #{placeId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlaceQueryBean" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_storage_place
+    where 1=1
+    <if test="storageId != null">
+      AND storage_id = #{storageId,jdbcType=VARCHAR}
+    </if>
+    <if test="placeId != null">
+      and place_id = #{placeId,jdbcType=VARCHAR}
+    </if>
+    <if test="parentPlaceId != null">
+      AND parent_place_id = #{parentPlaceId,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null">
+      AND name = #{name,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlaceKey">
+    delete from t_storage_place
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and place_id = #{placeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlace">
+    insert into t_storage_place (storage_id, place_id, name, 
+      description, parent_place_id, creator, 
+      create_time, update_time, tmstamp
+      )
+    values (#{storageId,jdbcType=VARCHAR}, #{placeId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{parentPlaceId,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlace">
+    insert into t_storage_place
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="storageId != null">
+        storage_id,
+      </if>
+      <if test="placeId != null">
+        place_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="parentPlaceId != null">
+        parent_place_id,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="storageId != null">
+        #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="placeId != null">
+        #{placeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentPlaceId != null">
+        #{parentPlaceId,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlace">
+    update t_storage_place
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentPlaceId != null">
+        parent_place_id = #{parentPlaceId,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and place_id = #{placeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlace">
+    update t_storage_place
+    set name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      parent_place_id = #{parentPlaceId,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and place_id = #{placeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

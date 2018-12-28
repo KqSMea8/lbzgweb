@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.contract.shipping.dao.ShippingMapper">
+	<select id="list"
+		parameterType="com.lyarc.tp.corp.contract.shipping.bean.ShippingQueryBean"
+		resultType="com.lyarc.tp.corp.contract.shipping.bean.ShippingBean">
+		select s.*,c.customer_name from t_shipping s
+		left join
+		t_customer c on
+		s.customer_id=c.customer_id
+		where 1=1
+		<if test='contractId != null and contractId !=""'>
+			AND s.contract_id = #{contractId}
+		</if>
+		<if test='customerId != null and customerId !=""'>
+			AND s.customer_id = #{customerId}
+		</if>
+		<if test='shippingId != null and shippingId !=""'>
+		    AND s.shipping_id = #{shippingId}
+		</if>
+		<if test='status != null'>
+		    AND s.status = #{status}
+		</if>
+		<if test="createTimeStart != null">
+			AND DATE_FORMAT(s.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+		</if>
+		<if test="createTimeEnd != null">
+			AND DATE_FORMAT(s.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+		</if>
+		ORDER BY s.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<select id="count" parameterType="ShippingQueryBean" resultType="java.lang.Long">
+		select count(1) from t_shipping s
+		left join
+		t_customer c on
+		s.customer_id=c.customer_id
+		where 1=1
+		<if test='contractId != null and contractId !=""'>
+			AND s.contract_id = #{contractId}
+		</if>
+		<if test='customerId != null and customerId !=""'>
+			AND s.customer_id = #{customerId}
+		</if>
+		<if test="createTimeStart != null">
+			AND DATE_FORMAT(s.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+		</if>
+		<if test="createTimeEnd != null">
+			AND DATE_FORMAT(s.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+		</if>
+	</select>
+
+
+
+	<!-- 插入新建的部分 -->
+	<insert id="insertSelective" parameterType="ShippingBean">
+		insert into t_shipping
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="shippingId != null">
+				shipping_id,
+			</if>
+			<if test="contractId != null">
+				contract_id,
+			</if>
+			<if test="customerId != null">
+				customer_id,
+			</if>
+			<if test="deliveryAddress != null">
+				delivery_address,
+			</if>
+			<if test="sales != null">
+				sales,
+			</if>
+			<if test="proposer != null">
+				proposer,
+			</if>
+			<if test="currency != null">
+				currency,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+		
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="wfInstId != null">
+				wf_inst_id,
+			</if>
+			<if test="wfInstTime != null">
+				wf_inst_time,
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="shippingId != null">
+				#{shippingId,jdbcType=VARCHAR},
+			</if>
+			<if test="contractId != null">
+				#{contractId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryAddress != null">
+				#{deliveryAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="sales != null">
+				#{sales,jdbcType=VARCHAR},
+			</if>
+			<if test="proposer != null">
+				#{proposer,jdbcType=VARCHAR},
+			</if>
+			<if test="currency != null">
+				#{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="wfInstId != null">
+				#{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstTime != null">
+				#{wfInstTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wfInstRemark != null">
+				#{wfInstRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="selectedObject"
+		resultType="com.lyarc.tp.corp.contract.shipping.bean.ShippingBean"
+		parameterType="java.lang.String" flushCache="true">
+		select *  from
+		t_shipping
+		where shipping_id =
+		#{shippingId,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateByPrimaryKeySelective" parameterType="ShippingBean">
+		update t_shipping
+		<set>
+			<if test="contractId != null">
+				contract_id = #{contractId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryAddress != null">
+				delivery_address = #{deliveryAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="sales != null">
+				sales = #{sales,jdbcType=VARCHAR},
+			</if>
+			<if test="proposer != null">
+				proposer = #{proposer,jdbcType=VARCHAR},
+			</if>
+			<if test="currency != null">
+				currency = #{currency ,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				amount = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="files != null">
+				files = #{files,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="wfInstId != null">
+				wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstTime != null">
+				wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				creator = #{creator,jdbcType=INTEGER},
+			</if>
+		</set>
+		where shipping_id = #{shippingId,jdbcType=VARCHAR}
+	</update>
+	<resultMap id="getBillDetailResultMap"
+		type="com.lyarc.tp.corp.contract.shipping.bean.ShippingBean">
+		<collection property="detailList"
+			ofType="com.lyarc.tp.corp.contract.shipping.bean.ShippingDetail"
+			select="getBillDetails" column="shipping_id">
+		</collection>
+	</resultMap>
+
+	<select id="getBill" resultMap="getBillDetailResultMap"
+		parameterType="java.lang.String">
+		select s.*,c.customer_name,h.contract_no
+		from t_shipping s left join t_customer c
+		on s.customer_id=c.customer_id
+		left join t_contract h
+		on s.contract_id=h.contract_id
+		where shipping_id =
+		#{shippingId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getBillDetails"
+		resultType="com.lyarc.tp.corp.contract.shipping.bean.ShippingDetail"
+		parameterType="java.lang.String">
+		select * from t_shipping_detail
+		where
+		shipping_id = #{shippingId,jdbcType=VARCHAR}
+	</select>
+</mapper>

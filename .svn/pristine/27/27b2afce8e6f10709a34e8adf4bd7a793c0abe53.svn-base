@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Oct 23 19:39:02 CST 2018
+dom4j-1.6.1-sources.jar>public=
+dom4j-1.6.1.pom>public=
+dom4j-1.6.1.jar>public=

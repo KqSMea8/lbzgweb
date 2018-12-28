@@ -1,0 +1,569 @@
+<template>
+  <div class="page page-bill outcontractedit">
+    <div class="page-bar">
+      <LayoutHor>
+        <div slot="left">
+          <Button size="small" @click="goBack" icon="chevron-left"  type="warning">返回</Button>
+        </div>
+        <div class="page-bar-title">{{pageTitle}}</div>
+      </LayoutHor>
+    </div>
+    <Loading :loading="loading">
+      <div class="baseinfo"> 
+        <div class="page-tools">
+        </div>
+        <div class="subheader">
+          外委合同加工
+        </div>
+        <Form ref="form" class="page-form" :model="formItem" :rules="ruleValidate" :label-width="120"> 
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <FormItem prop="partA" label="定做人">
+                  <Input v-model="formItem.partA" placeholder="洛阳洛北重工机械有限公司"></Input>
+                </FormItem>
+                <FormItem prop="partB" label="承揽人">
+                  <Input v-model="formItem.partB" readonly="readonly" style="cursor: default;" icon="search" @on-click="selProvider"></Input>
+                </FormItem>
+                <FormItem prop="contractNo" label="合同编号">
+                  <Input v-model="formItem.contractNo" style="cursor: default;"></Input>
+                </FormItem>
+              </td>
+              <td rowspan="2" style="vertical-align: top;">
+                <FormItem prop="signDate" label="签订日期">
+                  <Input v-model="formItem.signDate"></Input>
+                </FormItem>
+                <FormItem prop="signAddress" label="签订地点">
+                  <Input v-model="formItem.signAddress"></Input>
+                </FormItem>
+              </td>
+            </tr>
+          </table>
+        </Form>
+      </div>
+      <div>   
+          <div>
+            <div class="content">
+              第一条    定做物件明细表
+            </div>
+            <Editable ref="editable"
+            :list="list"
+            :editable="true"
+            :storageId="formItem.storageId"
+            @on-amount-change="onAmountChange"></Editable>
+            注：单价中含16%增值税<br>
+            <div>
+              <table style="width: 100%">
+                <tr>
+                  <td width="50%">合计人民币金额（大写）：{{formItem.amountBig}}</td>
+                  <td>金额：{{formItem.amount}} 元</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="content"> 
+              第二条    定做人提供
+              <Input v-model="formItem.provide" style="cursor: default;width: 200px;"></Input>
+              。
+            </div>
+            <div class="content">
+              第三条    定做物件的质量要求、技术标准（特殊要求必须在图纸中一并注明）：
+              <Input v-model="formItem.ask" style="cursor: default;width: 350px;"></Input>
+              。
+            </div>
+            <div class="content">
+              第四条    承揽人义务：<br>
+              <Input v-model="formItem.duty" type="textarea" style="cursor: default;"></Input>
+            </div>
+            <div class="content">
+              第五条    交货、验收地点：交货地点：<span style="color: red;" >✲</span>
+              <Input v-model="formItem.deliveryAddress" style="cursor: default;width: 300px;"></Input>
+              。
+            </div>
+            <div class="content">
+              第六条    定做物的防护、包装规格要求与费用：<br>
+              <Input v-model="formItem.materDefendPackFee" type="textarea" style="cursor: default;"></Input>
+            </div>
+            <div class="content">
+              第七条    定做物质量要求与质量责任：<br>
+              <Input v-model="formItem.materQuality" type="textarea" style="cursor: default;"></Input>
+            </div>
+            <div class="content">
+              第八条    违约责任：
+              <Input v-model="formItem.breach" style="cursor: default;width: 300px;"></Input>
+              。
+            </div>
+            <div class="content">
+              第九条    合同争议的解决方式：本合同在履行过程中发生争议，有双方当事人协商解决，协商或调解不成时，按下列第
+              <Input v-model="formItem.dispute" style="cursor: default;width: 50px;"></Input>
+              种方式解决：（一）提交洛阳市仲裁委员会仲裁；（二）依法向洛阳市西工人民法院起诉。
+            </div>
+            <div class="content">
+              第十条    本合同自
+              <Input v-model="formItem.fromStart" style="cursor: default;width: 300px;"></Input>
+              起生效。
+            </div>
+            <div class="content">
+              第十一条    其它约定事项：
+              <Input v-model="formItem.other" style="cursor: default;width: 600px;"></Input>
+              。
+            </div>
+            <div class="content">
+              <table style="width: 900px;">
+                <tr>
+                  <td style="width: 300px;">定做人</td>
+                  <td style="width: 300px;">承揽人</td>
+                  <td style="width: 300px;">鉴（公）证意见</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="foot-item">
+                      定做人（章）：<Input v-model="formItem.partA" style="cursor: default;width: 160px;"></Input>
+                    </div> 
+                    <div class="foot-item">
+                      地址：<Input v-model="formItem.partAAddress" style="cursor: default;width: 216px;"></Input>
+                    </div> 
+                    <div class="foot-item">
+                      法人代表人：<Input v-model="formItem.partALegalPerson" style="cursor: default;width: 175px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      委托代理人：<Input v-model="formItem.partAAgent" style="cursor: default;width: 175px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      电话：<Input v-model="formItem.partATelphone" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      传真：<Input v-model="formItem.partAFaxNo" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      开户银行：<Input v-model="formItem.partABank" style="cursor: default;width: 189px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      账号：<Input v-model="formItem.partACardNo" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      邮编：<Input v-model="formItem.partAPostcode" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="foot-item">
+                      承揽人（章）：<Input v-model="formItem.partB" style="cursor: default;width: 160px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      地址：<Input v-model="formItem.partBAddress" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      法人代表人：<Input v-model="formItem.partBLegalPerson" style="cursor: default;width: 175px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      委托代理人：<Input v-model="formItem.partBAgent" style="cursor: default;width: 175px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      电话：<Input v-model="formItem.partBTelphone" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      传真：<Input v-model="formItem.partBFaxNo" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      开户银行：<Input v-model="formItem.partBBank" style="cursor: default;width: 189px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      账号：<Input v-model="formItem.partBCardNo" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                    <div class="foot-item">
+                      邮编：<Input v-model="formItem.partBPostcode" style="cursor: default;width: 216px;"></Input>
+                    </div>
+                  </td>
+                  <td>
+                    <br><br><br><br><br><br><br><br><br><br><br>鉴（公）证机关（章）
+                    <br><br><br>经办人：
+                    <br><br><br>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp年
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp月
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp日
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div> 
+      </div>
+      <table class="savebar" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="save" @click="save" v-if="pageFlag<=2">
+            保存
+          </td> 
+          <td class="reset" @click="reset">
+            重置
+          </td>
+          <td></td>
+        </tr>
+      </table>
+    </Loading> 
+    <SelInStockApply ref="selInStockApply"></SelInStockApply>
+    <SelProvider ref="selProvider"></SelProvider>
+  </div>
+</template>
+<script>
+  import Loading from '@/components/loading';
+  import LayoutHor from '@/components/layout/LayoutHor';
+  import Editable from './DetailEditable'; 
+  import page from '@/assets/js/page';
+  import floatObj from '@/assets/js/floatObj';  
+  import SelStorage from '@/components/storage/input/SelStorage'; 
+  import SelStockOperType from '@/components/storage/input/SelStockOperType'; 
+  import SelDeptInput from '@/components/selcontacts/SelDeptInput'; 
+  import SelPersonInput from '@/components/selcontacts/SelPersonInput'; 
+  import SelInStockApply from '@/components/purchase/purchase-order-mgr/SelInStockApply';
+
+  import SelProvider from '@/components/outprovider/SelectProvider'; //导入选供应商的控件
+  export default {
+    components: {
+      Loading,
+      LayoutHor,
+      Editable, 
+      SelStorage,
+      SelProvider,
+      SelStockOperType,
+      SelDeptInput,
+      SelPersonInput,
+      SelInStockApply
+    },
+    data() {
+      return {
+        loading: 0,
+        contractId:'',
+        pageFlag:1,//1.新建 2.编辑 3.修订
+        formItem:{
+          providerName:'',
+          provide:'',
+          ask:'',
+          duty:'',
+          deliveryAddress:'',
+          materDefendPackFee:'',
+          materQuality:'',
+          breach:'',
+          dispute:'',
+          fromStart:'',
+          other:'',
+          contractId:'',
+          materId:'',
+          materName:'',
+          spec:'',
+          model:'',
+          subType:'',
+          use:'',
+          price:'',
+          afterPrice:'',
+          remark:'',
+          amount:0,
+          amountBig:'',
+          //createTime:page.formatDate(new Date(),'yyyy-MM-dd'),
+
+          providerId:'',
+          signAddress:'洛阳洛北重工机械有限公司',
+          partA:'洛阳洛北重工机械有限公司',
+
+          partB:'',
+          partBAddress:'',
+          partBLegalPerson:'',
+          //    委托代理人            联系人
+          partBAgent:'',
+          partBTelphone:'',
+          partBFaxNo:'',
+
+          partBBank:'',
+          partBCardNo:'',
+          partBPostcode:'',
+        },
+        list:[],  
+        oriItem:{},
+        storage:[],
+         //验证
+         ruleValidate: {
+          sales: [
+          {required: true, whitespace: true, message: '定作人不能为空', trigger: 'blur'},
+          {type: 'string', max: 100, message: '不能超过100个字', trigger: 'blur'}
+          ],
+          partB: [
+          {required: true, message: '承揽人不能为空'}
+          ],
+          contractNo: [
+          {required: true, whitespace: true, message: '合同编号不能为空', trigger: 'blur'},
+          {type: 'string', max: 50, message: '不能超过50个字', trigger: 'blur'}
+          ],
+          signDate: [
+          {required: true, whitespace: true, message: '签订日期不能为空', trigger: 'blur'},
+          ],
+          signAddress: [
+          {required: true, whitespace: true, message: '签订地点不能为空', trigger: 'blur'},
+          {type: 'string', max: 100, message: '不能超过100个字', trigger: 'blur'}
+          ],
+          deliveryAddress: [
+          {required: true, whitespace: true, message: '交货、验收地点不能为空', trigger: 'blur'},
+          {type: 'string', max: 100, message: '不能超过100个字', trigger: 'blur'}
+          ],
+        }
+      }
+    },
+    mounted: function () { 
+      this.contractId = this.$route.query.id;
+      if(this.contractId){
+        this.pageFlag = 2;
+        this.load();
+      }else{
+        this.pageFlag = 1;
+        this.initNew();
+      }
+    },
+    computed: {
+      pageTitle(){
+        if(this.pageFlag == 1){
+          return '外委合同加工 - 创建';
+        }
+        if(this.pageFlag == 2){
+          return '外委合同加工 - 编辑';
+        }
+      }
+    },
+    methods: {
+      load() {
+        this.loading = 1;
+        this.$http.post("/api/outcontract/get?contractId=" + this.contractId,{}).then((res) => {
+          this.loading = 0;
+          if (res.data.code == 0) {
+            if(res.data.data){
+              this.oriItem = eval('('+JSON.stringify(res.data.data)+')');
+              Object.assign(this.formItem,res.data.data);
+              this.list = res.data.data.outContractDetailList;
+              this.formItem.amountBig = this.digitUppercase(this.formItem.amount);
+            }else{
+              this.$Message.error('订单不存在！');
+              this.goBack();
+            }
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        }).catch((error) => {
+          this.loading = 0;
+          this.$Message.error("操作失败！")
+        });
+      }, 
+      initNew(){
+        this.loading = 1;
+        this.$http.post("/api/outcontract/getPrevious",{}).then((res) => {
+          this.loading = 0;
+          debugger;
+          if (res.data.code == 0) {
+            if(res.data.data){
+              this.oriItem = eval('('+JSON.stringify(res.data.data)+')');
+              //Object.assign(this.formItem,res.data.data);
+              Object.assign(this.formItem,{
+                provide:res.data.data.provide,
+                ask:res.data.data.ask,
+                duty:res.data.data.duty,
+                deliveryAddress:res.data.data.deliveryAddress,
+                materDefendPackFee:res.data.data.materDefendPackFee,
+                materQuality:res.data.data.materQuality,
+                breach:res.data.data.breach,
+                dispute:res.data.data.dispute,
+                fromStart:res.data.data.fromStart,
+                other:res.data.data.other,
+                partA:res.data.data.partA,
+                partAAddress:res.data.data.partAAddress,
+                partALegalPerson:res.data.data.partALegalPerson,
+                partAAgent:res.data.data.partAAgent,
+                partATelphone:res.data.data.partATelphone,
+                partAFaxNo:res.data.data.partAFaxNo,
+                partABank:res.data.data.partABank,
+                partACardNo:res.data.data.partACardNo,
+                partAPostcode:res.data.data.partAPostcode,
+                createTime:page.formatDate(new Date(),'yyyy-MM-dd'),
+              });
+              this.formItem.signDate = page.formatDate(new Date(),'yyyy-MM-dd');
+              if(this.$user.empInfo){
+                this.formItem.sales = this.$user.empInfo.empId;
+                this.formItem.sales = this.$user.empInfo.trueName;
+              }
+              this.list = [];
+              this.list.push(this.$refs.editable.listNewRow());
+
+            }else{
+              this.$Message.error('订单不存在！');
+              this.goBack();
+            }
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        }).catch((error) => {
+          this.loading = 0;
+          this.$Message.error("操作失败！")
+        });
+
+
+        //this.list.push(this.$refs.editable.listNewRow());
+      }, 
+      save(){
+        var form = {
+          outContractDetailList:[]
+        };
+
+        Object.assign(form,this.formItem);
+
+
+        if(form.deliveryAddress == null || form.deliveryAddress == ''){
+         this.$Message.error('请选择交货、验收地点！');
+         return;
+       }
+        // if(this.list.length<1){
+        //   this.$Message.error('请至少添加一行物件明细！');
+        //   return;
+        // }
+        var pass = true;
+        this.$refs.form.validate((valid) => {
+          pass = valid;
+        })
+        
+        if (!pass) {
+          this.$Message.error('验证未通过！');
+          return;
+        }
+
+        form.outContractDetailList = [];
+        // 明细
+        for(var i = 0;i<this.list.length;i++){
+          var item = this.list[i];
+          var msg = '明细第 ' + (i+1) + ' 行，';
+          if(item.materName != ''&&item.drawing != ''){
+            // 日期格式转换
+            item.deliveryDate = page.formatDate(item.deliveryDate);
+            form.outContractDetailList.push(item);
+          }else{
+            this.$Message.error(msg + '名称和图号不能为空！或者去掉当前物件明细行，并至少保留一行物件明细！');
+            return;
+          }
+        }
+        // 提交
+        this.loading = 1;
+        var uri = '/api/outcontract/add';
+        if(this.pageFlag == 2){
+          uri = '/api/outcontract/update';
+        }
+
+        this.$http.post(uri, form).then((res) => {
+          this.loading = 0;
+          if (res.data.code == 0) {
+            this.$Message.info("操作成功！");
+            this.goBack();
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        }).catch((error) => {
+          this.loading = 0;
+          this.$Message.error("请求失败，请重新操作")
+        });
+      },   
+      onAmountChange(val){
+        this.formItem.amount = val;
+        this.formItem.amountBig=this.digitUppercase(val);
+      },
+      datePickerChange(val){
+        this.formItem.signDate = val;
+      },
+      switStorage(){
+
+      },
+      reset(){
+        if(this.pageFlag == 1){
+          this.initNew();
+        }else {
+          Object.assign(this.formItem,this.oriItem);
+        }
+      },
+      selProvider(){
+       var sel = this.$refs.selProvider;//引用该控件，赋值给变量对象
+       sel.show({
+        ok:(data)=>{
+          if(data){
+            this.formItem.providerId = data.providerId;
+
+            this.formItem.partB = data.providerName;
+            this.formItem.partBAddress = data.address;
+            this.formItem.partBLegalPerson = data.legalPerson;
+            //    委托代理人            联系人
+            this.formItem.partBAgent = data.linkMan;
+            this.formItem.partBTelphone = data.linkPhone;
+            this.formItem.partBFaxNo = data.faxNo;
+
+            this.formItem.partBBank = data.bank;
+            this.formItem.partBCardNo = data.bankCardNo;
+            this.formItem.partBPostcode = data.postcode;
+          }
+        }
+      });
+     },
+     goBack(){
+      this.$router.push('/outcontract');
+    },
+    goImport(){
+      var sel = this.$refs.selInStockApply;
+      sel.show({
+        isMulti:false,
+        selectPerson:false,
+        selectDept:true,
+        ok:(select)=>{ 
+          if(select){
+            this.formItem.relatedBillId = select.relatedBillId;
+            this.formItem.relatedBillId1 = select.relatedBillId1;
+
+          }
+        }
+      });
+    },
+    digitUppercase(n) {
+     var fraction = ['角', '分'];
+     var digit = [
+     '零', '壹', '贰', '叁', '肆',
+     '伍', '陆', '柒', '捌', '玖'
+     ];
+     var unit = [
+     ['圆', '万', '亿'],
+     ['', '拾', '佰', '仟']
+     ];
+     var head = n < 0 ? '欠' : '';
+     n = Math.abs(n);
+     var s = '';
+     for (var i = 0; i < fraction.length; i++) {
+      s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+    }
+    s = s || '整';
+    n = Math.floor(n);
+    for (var i = 0; i < unit[0].length && n > 0; i++) {
+      var p = '';
+      for (var j = 0; j < unit[1].length && n > 0; j++) {
+        p = digit[n % 10] + unit[1][j] + p;
+        n = Math.floor(n / 10);
+      }
+      s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+    }
+    return head + s.replace(/(零.)*零分/, '分')
+    .replace(/(零.)+/g, '零')
+    .replace(/^整$/, '整');
+
+  }
+}
+}
+
+</script>
+
+<style type="text/css">
+.outcontractedit .foot-item{
+  line-height: 40px;
+}
+
+.outcontractedit{
+  line-height: 14px;
+}
+
+</style>

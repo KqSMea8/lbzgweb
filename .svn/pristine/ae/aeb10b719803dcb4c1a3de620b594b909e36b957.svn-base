@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Oct 23 19:39:24 CST 2018
+okhttp-3.2.0.jar>public=
+okhttp-3.2.0-sources.jar>public=
+okhttp-3.2.0.pom>public=

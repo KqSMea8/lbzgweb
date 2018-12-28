@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.purchase.provider.dao.ProviderAdjustPriceDetailMapper" >
+
+  <!--  表; t_pm_adjust_price_detail -->
+  <sql id="Base_Column_List" >
+    pamp_id,mater_id,mater_name,spec,model,sub_type,use,price,after_price,
+		remark,creator,create_time,update_time,tmstamp
+  </sql>
+  
+
+  
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderAdjustPriceDetail" >
+    insert into t_pm_adjust_price_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pmapId != null" >
+        pmap_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="subType != null" >
+        sub_type,
+      </if>
+     <if test="use != null" >
+        `use`,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="afterPrice != null" >
+        after_price,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmStamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pmapId != null" >
+        #{pmapId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="subType != null" >
+        #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="use != null" >
+        #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="afterPrice != null" >
+        #{afterPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmStamp != null" >
+        #{tmStamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 先删除掉之前的旧数据;-->
+   <delete id="deleteByInStockId" >
+    delete from t_pm_adjust_price_detail
+    where pmap_id = #{pmapId,jdbcType=VARCHAR}
+  </delete>
+</mapper>

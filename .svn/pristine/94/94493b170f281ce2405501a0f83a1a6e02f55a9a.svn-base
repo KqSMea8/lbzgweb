@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.contract.contract.dao.ContractProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.contract.contract.bean.ContractProject" >
+    <id column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="VARCHAR" />
+    <result column="designer" property="designer" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_time" property="wfInstTime" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_remark" property="wfInstRemark" jdbcType="VARCHAR" />
+    <result column="revision_status" property="revisionStatus" jdbcType="INTEGER" />
+    <result column="revision_wf_inst_id" property="revisionWfInstId" jdbcType="VARCHAR" />
+    <result column="revision_wf_inst_time" property="revisionWfInstTime" jdbcType="TIMESTAMP" />
+    <result column="revision_wf_inst_remark" property="revisionWfInstRemark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithDetail" type="com.lyarc.tp.corp.contract.contract.dto.ContractProjectDto">
+    <id column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="contract_no" property="contractNo" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="sign_date" property="signDate" jdbcType="TIMESTAMP" />
+    <result column="sign_address" property="signAddress" jdbcType="VARCHAR" />
+    <result column="has_procedure" property="hasProcedure" jdbcType="INTEGER" />
+    <result column="is_foreign" property="isForeign" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="delivery_address" property="deliveryAddress" jdbcType="VARCHAR" />
+    <result column="sales" property="sales" jdbcType="VARCHAR" />
+    <result column="in_date" property="inDate" jdbcType="TIMESTAMP" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="files" property="files" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="shipping_status" property="shippingStatus" jdbcType="INTEGER" />
+
+    <result column="project_type" property="projectType" jdbcType="VARCHAR" />
+    <result column="designer" property="designer" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="pro_status" property="proStatus" jdbcType="INTEGER" />
+    <result column="pro_wf_inst_id" property="proWfInstId" jdbcType="VARCHAR" />
+    <result column="pro_wf_inst_time" property="proWfInstTime" jdbcType="TIMESTAMP" />
+    <result column="pro_wf_inst_remark" property="proWfInstRemark" jdbcType="VARCHAR" />
+    <result column="pro_revision_status" property="proRevisionStatus" jdbcType="INTEGER" />
+    <result column="pro_revision_wf_inst_id" property="proRevisionWfInstId" jdbcType="VARCHAR" />
+    <result column="pro_revision_wf_inst_time" property="proRevisionWfInstTime" jdbcType="TIMESTAMP" />
+    <result column="pro_revision_wf_inst_remark" property="proRevisionWfInstRemark" jdbcType="VARCHAR" />
+    <collection property="projectDetailList" ofType="com.lyarc.tp.corp.contract.contract.dto.ContractProjectDetailDto" select="getProjectDetails"
+                column="contract_id">
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    contract_id, project_type, designer, quantity, status, wf_inst_id, wf_inst_time, 
+    wf_inst_remark, revision_status, revision_wf_inst_id, revision_wf_inst_time, revision_wf_inst_remark, 
+    creator, create_time, update_time, tmstamp
+  </sql>
+  <sql id="Base_Column_List_Join" >
+    a.contract_id, a.project_type, a.designer, a.quantity, a.status pro_status, a.wf_inst_id pro_wf_inst_id, a.wf_inst_time pro_wf_inst_time,
+    a.wf_inst_remark pro_wf_inst_time, a.revision_status pro_revision_status,
+    a.revision_wf_inst_id pro_revision_wf_inst_id, a.revision_wf_inst_time pro_revision_wf_inst_time,
+    a.revision_wf_inst_remark pro_revision_wf_inst_remark,
+    a.creator, a.create_time, a.update_time, a.tmstamp,
+    i.contract_no, i.customer_id, i.sign_date, i.sign_address, i.is_foreign,i.has_procedure, i.amount, i.delivery_address,
+    i.sales, i.in_date, i.currency, i.files, i.remark,i.shipping_status
+  </sql>
+
+
+  <sql id="Wait_Change_List_Join" >
+    a.project_type, a.designer, a.quantity, a.status pro_status, a.wf_inst_id pro_wf_inst_id, a.wf_inst_time pro_wf_inst_time,
+    a.wf_inst_remark pro_wf_inst_time, a.revision_status pro_revision_status,
+    a.revision_wf_inst_id pro_revision_wf_inst_id, a.revision_wf_inst_time pro_revision_wf_inst_time,
+    a.revision_wf_inst_remark pro_revision_wf_inst_remark,
+    a.creator, a.create_time, a.update_time, a.tmstamp,
+    i.contract_no, i.customer_id, i.sign_date, i.sign_address, i.is_foreign,i.has_procedure, i.amount, i.delivery_address,
+    i.sales, i.in_date, i.currency, i.files, i.remark,i.shipping_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_contract_project
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="selectAndDetail" resultMap="ResultMapWithDetail" parameterType="java.lang.String" >
+    select
+    <include refid="Wait_Change_List_Join" />,ta.arg_text currencyName,emp.true_name salesName ,c.customer_name customerName,i.contract_id,
+    ta1.arg_text projectTypeName
+    from t_contract i left join t_contract_project a on a.contract_id = i.contract_id
+    left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    left join t_arg ta on ta.arg_code = i.currency and ta.arg_group = 'currency'
+    left join t_arg ta1 on ta1.arg_code = a.project_type and ta1.arg_group = 'contract_project_type'
+    where i.contract_id = #{contract_id}
+  </select>
+
+  <select id="getProjectDetails" resultType="ContractProjectDetailDto" parameterType="java.lang.String" >
+    select
+    a.*,
+    mater_id, drawing, mater_name, texture, hardness, delivery_type,
+    unit, quantity, weight, weight_total, workblank, workblank_fee, process_fee, packing_fee,
+    freight_fee, port_fee, model_fee, amount, delivery_date, b.remark
+    from t_contract_project_detail a left join t_contract_detail b on a.id = b.id
+    where a.contract_id = #{contract_id}
+  </select>
+
+
+  <select id="list" parameterType="ContractProjectQueryBean" resultMap="ResultMapWithDetail">
+    SELECT
+    <include refid="Base_Column_List_Join" />,ta.arg_text currencyName,emp.true_name salesName ,c.customer_name customerName,
+    ta1.arg_text projectTypeName,emp.true_name designerName
+    from t_contract_project a
+    left join t_contract i on a.contract_id = i.contract_id
+    left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    left join t_emp emp1 on a.designer = emp1.emp_id
+    left join t_arg ta on ta.arg_code = i.currency and ta.arg_group = 'currency'
+    left join t_arg ta1 on ta1.arg_code = a.project_type and ta1.arg_group = 'contract_project_type'
+    where 1=1
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="customerName != null">
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="contractId != null">
+      AND i.contract_id = #{contractId}
+    </if>
+    <if test="drawing != null">
+      AND i.drawing = #{drawing}
+    </if>
+    <if test="signBeginDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d') >= DATE_FORMAT(#{signBeginDate},'%Y-%m-%d')
+    </if>
+    <if test="signEndDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d')&lt;= DATE_FORMAT(#{signEndDate},'%Y-%m-%d')
+    </if>
+    <if test="creator != null">
+      AND i.creator = #{creator}
+    </if>
+    <if test="foreignFlag == 1">
+      AND i.is_foreign = #{foreignFlag}
+    </if>
+    ORDER BY i.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="ContractProjectQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(1)
+    from t_contract_project a
+    left join t_contract i on a.contract_id = i.contract_id
+    left join t_customer c on i.customer_id = c.customer_id
+    where 1=1
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="customerName != null">
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="signBeginDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d') >= DATE_FORMAT(#{signBeginDate},'%Y-%m-%d')
+    </if>
+    <if test="signEndDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d')&lt;= DATE_FORMAT(#{signEndDate},'%Y-%m-%d')
+    </if>
+    <if test="contractId != null">
+      AND i.contract_id = #{contractId}
+    </if>
+    <if test="drawing != null">
+      AND i.drawing = #{drawing}
+    </if>
+    <if test="creator != null">
+      AND i.creator = #{creator}
+    </if>
+    <if test="foreignFlag == 1">
+      AND i.is_foreign = #{foreignFlag}
+    </if>
+  </select>
+
+  <select id="waitChangeList" parameterType="ContractProjectQueryBean" resultMap="ResultMapWithDetail">
+    SELECT
+    <include refid="Wait_Change_List_Join" />,ta.arg_text currencyName,emp.true_name salesName ,c.customer_name customerName,i.contract_id
+    from t_contract i
+    left join t_contract_project a on a.contract_id = i.contract_id
+    left join t_customer c on i.customer_id = c.customer_id
+    left join t_emp emp on i.sales = emp.emp_id
+    left join t_arg ta on ta.arg_code = i.currency and ta.arg_group = 'currency'
+    where a.contract_id is null and i.status = 2
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="customerName != null">
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="contractId != null">
+      AND i.contract_id = #{contractId}
+    </if>
+    <if test="drawing != null">
+      AND i.drawing = #{drawing}
+    </if>
+    <if test="signBeginDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d') >= DATE_FORMAT(#{signBeginDate},'%Y-%m-%d')
+    </if>
+    <if test="signEndDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d')&lt;= DATE_FORMAT(#{signEndDate},'%Y-%m-%d')
+    </if>
+    <if test="creator != null">
+      AND i.creator = #{creator}
+    </if>
+    <if test="foreignFlag == 1">
+      AND i.is_foreign = #{foreignFlag}
+    </if>
+    <if test="sales != null">
+      AND i.sales = #{sales}
+    </if>
+    ORDER BY i.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="waitChangeCount" parameterType="ContractProjectQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(1)
+    from t_contract i
+    left join t_contract_project a on a.contract_id = i.contract_id
+    left join t_customer c on i.customer_id = c.customer_id
+    where a.contract_id is null and i.status = 2
+    <if test="customerId != null">
+      AND i.customer_id = #{customerId}
+    </if>
+    <if test="customerName != null">
+      AND c.customer_name LIKE concat('%',#{customerName},'%')
+    </if>
+    <if test="signBeginDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d') >= DATE_FORMAT(#{signBeginDate},'%Y-%m-%d')
+    </if>
+    <if test="signEndDate != null">
+      AND DATE_FORMAT(i.sign_date,'%Y-%m-%d')&lt;= DATE_FORMAT(#{signEndDate},'%Y-%m-%d')
+    </if>
+    <if test="contractId != null">
+      AND i.contract_id = #{contractId}
+    </if>
+    <if test="drawing != null">
+      AND i.drawing = #{drawing}
+    </if>
+    <if test="creator != null">
+      AND i.creator = #{creator}
+    </if>
+    <if test="foreignFlag == 1">
+      AND i.is_foreign = #{foreignFlag}
+    </if>
+    <if test="sales != null">
+      AND i.sales = #{sales}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_contract_project
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractProject" >
+    insert into t_contract_project (contract_id, project_type, designer, 
+      quantity, status, wf_inst_id, 
+      wf_inst_time, wf_inst_remark, revision_status, 
+      revision_wf_inst_id, revision_wf_inst_time, 
+      revision_wf_inst_remark, creator, create_time, 
+      update_time, tmstamp)
+    values (#{contractId,jdbcType=VARCHAR}, #{projectType,jdbcType=VARCHAR}, #{designer,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{wfInstId,jdbcType=VARCHAR}, 
+      #{wfInstTime,jdbcType=TIMESTAMP}, #{wfInstRemark,jdbcType=VARCHAR}, #{revisionStatus,jdbcType=INTEGER}, 
+      #{revisionWfInstId,jdbcType=VARCHAR}, #{revisionWfInstTime,jdbcType=TIMESTAMP}, 
+      #{revisionWfInstRemark,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractProject" >
+    insert into t_contract_project
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="designer != null" >
+        designer,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time,
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark,
+      </if>
+      <if test="revisionStatus != null" >
+        revision_status,
+      </if>
+      <if test="revisionWfInstId != null" >
+        revision_wf_inst_id,
+      </if>
+      <if test="revisionWfInstTime != null" >
+        revision_wf_inst_time,
+      </if>
+      <if test="revisionWfInstRemark != null" >
+        revision_wf_inst_remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="designer != null" >
+        #{designer,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionStatus != null" >
+        #{revisionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="revisionWfInstId != null" >
+        #{revisionWfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionWfInstTime != null" >
+        #{revisionWfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="revisionWfInstRemark != null" >
+        #{revisionWfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractProject" >
+    update t_contract_project
+    <set >
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="designer != null" >
+        designer = #{designer,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionStatus != null" >
+        revision_status = #{revisionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="revisionWfInstId != null" >
+        revision_wf_inst_id = #{revisionWfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="revisionWfInstTime != null" >
+        revision_wf_inst_time = #{revisionWfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="revisionWfInstRemark != null" >
+        revision_wf_inst_remark = #{revisionWfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractProject" >
+    update t_contract_project
+    set project_type = #{projectType,jdbcType=VARCHAR},
+      designer = #{designer,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      revision_status = #{revisionStatus,jdbcType=INTEGER},
+      revision_wf_inst_id = #{revisionWfInstId,jdbcType=VARCHAR},
+      revision_wf_inst_time = #{revisionWfInstTime,jdbcType=TIMESTAMP},
+      revision_wf_inst_remark = #{revisionWfInstRemark,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </update>
+</mapper>

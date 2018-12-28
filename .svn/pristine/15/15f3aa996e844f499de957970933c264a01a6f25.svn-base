@@ -1,0 +1,260 @@
+<template>
+  <Modal v-model="show" :title="title" :closable="false" :mask-closable="false">
+    <div class="page customeredit">
+      <Loading :loading="loading">
+      <div class="page-form">
+        <Form :model="formItem" ref="form" :label-width="100" :rules="ruleValidate" class="form-item"> 
+          <FormItem label="供应商" prop="providerId">
+            <Input v-model="formItem.providerName" :disabled="isEdit" placeholder="" class="width-1" readonly="readonly" icon="search" @on-click="selProvider"/></Input>
+          </FormItem>
+          <FormItem label="物料编码" prop="materId">
+            <SelMaterialInput class="width-1" 
+              v-model="formItem.materId"
+              @input-item="selectMater"
+              :displayText="formItem.materId"
+              :disabled="isEdit"
+              placeholder=""
+              :transfer="false"></SelMaterialInput>
+          </FormItem>
+          <FormItem label="物料名称" prop="materName">
+            {{formItem.materName}}
+          </FormItem>
+          <FormItem label="规格" prop="spec">
+            {{formItem.spec}}
+          </FormItem>
+          <FormItem label="型号" prop="model">
+            {{formItem.model}}
+          </FormItem>
+          <FormItem label="单位" prop="unit">
+            {{$args.getArgText('unit',formItem.unit)}}
+          </FormItem>
+          <FormItem label="采购类别" prop="subType">
+            {{$args.getArgText('material_subtype',formItem.subType)}} 
+          </FormItem>
+          <FormItem label="适用工序或产品" prop="applyToProductType">
+             <Input v-model="formItem.applyToProductType" class="width-2"/></Input> 
+          </FormItem>
+          <FormItem label="单价" prop="price">
+            <InputNumber :max="9999999999" :min="0" v-model="formItem.price" class="width-1" ></InputNumber>
+          </FormItem>
+          <FormItem label="付款方式" prop="payType">
+            <Select v-model="formItem.payType" style="width:150px" placeholder="付款方式">
+              <Option v-for="item in $args.getArgGroup('pay_way')" :value="item.argCode" :key="item.argCode">{{ item.argText }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="交货期" prop="deliveryDate">
+            <Input  v-model="formItem.deliveryDate"></Input>
+          </FormItem>
+          <FormItem label="联系人" prop="linkMan">
+            <Input  v-model="formItem.linkMan"></Input>
+          </FormItem>
+          <FormItem label="联系电话" prop="linkPhone">
+            <Input  v-model="formItem.linkPhone"></Input>
+          </FormItem>
+          <FormItem label="备注" prop="remark">
+            <Input  v-model="formItem.remark"></Input>
+          </FormItem> 
+          <FormItem>
+            <Button type="primary" icon="checkmark" @click="save">保存</Button>
+            <Button type="ghost" @click="reset" style="margin-left: 8px" >重置</Button>
+            <Button type="ghost" @click="close" style="margin-left: 8px">取消</Button>
+          </FormItem>
+        </Form>
+      </div>
+      </Loading>
+      <SelProvider ref="selProvider" :transfer="false"></SelProvider>
+    </div>
+    <div slot="footer"></div>
+  </Modal>
+</template>
+<script>
+  import Loading from '@/components/loading';
+  import SelArea from '@/components/selarea';
+  import SelMaterialInput from '@/components/material/selmaterial/SelMaterialInput';
+  import SelProvider from '@/components/provider/SelectProvider';
+  import page from '@/assets/js/page';
+  export default {
+    components: {
+      SelMaterialInput,SelProvider,
+      Loading, SelArea,  //声明新组件
+    },
+    data() {
+      return {
+        loading: 0,
+        show: false,
+        //是否编辑 0 添加 1 编辑
+        isEdit: false,
+        industry: [],
+        //表单对象
+        formItem: {
+          "id":0,
+          "remark":"", 
+          "providerId":"",
+          "providerName":"",
+          "materId":"",
+          "materName":"",
+          "spec":"",
+          "model":"",
+          "unit":"",
+          "subType":null,
+          "applyToProductType":"",
+          "price":0,
+          "deliveryDate":"",
+          "payType":"",
+          "linkMan":"",
+          "address":"",
+          "linkPhone":"",
+          "inquireTime":"",
+          "remark":"",
+        },
+        oriItem: {},
+        //验证
+        ruleValidate: {
+          providerId: [
+            {required: true, whitespace: true, message: '请选择供应商', trigger: 'change'},
+          ],
+          materId: [
+            {required: true, whitespace: true, message: '请选择供物料', trigger: 'change'},
+          ],
+        }
+      };
+    },
+    computed: {
+      title() {
+        if (this.isEdit) {
+          return "编辑询价单";
+        } else {
+          return "新建询价单";
+        }
+      },
+    },
+    mounted(){ 
+    },
+    methods: {
+      save() {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.saveItem();
+          } else {
+            return;
+          }
+        });
+      },
+
+      saveItem() {
+        let url = '';
+        let msg = '';
+        if (this.isEdit) {
+          url = '/api/providerInquire/update';
+          msg = '修改成功';
+        } else {
+          url = '/api/providerInquire/add';
+          msg = '添加成功';
+        }
+        this.loading = 1;
+        /*(res为执行完API后返回的值)*/
+        this.$http.post(url, this.formItem).then((res) => {
+          debugger;
+          this.loading = 0;
+          if (res.data.code === 0) {
+            this.$Message.success(msg);
+            this.close();
+            this.$emit("on-save");
+
+          } else {
+            this.$Message.error(res.data.message)
+          }
+        }).catch((error) => {
+          this.loading = 0;
+          this.$Message.error(error.message)
+        });
+      },
+
+      open(item) {//判断编辑页面，新建页面
+        this.show = true;
+        this.$refs['form'].resetFields();
+
+        if (item.id) {
+          this.isEdit = true;
+          this.oriItem = item;
+        } else {
+          this.isEdit = false;
+          this.oriItem = Object.assign({
+            "id":0,
+            "remark":"", 
+            "providerId":"",
+            "providerName":"",
+            "materId":"",
+            "materName":"",
+            "spec":"",
+            "model":"",
+            "unit":"",
+            "subType":null,
+            "applyToProductType":"",
+            "price":0,
+            "deliveryDate":"",
+            "payType":"",
+            "linkMan":"",
+            "address":"",
+            "linkPhone":"",
+            "inquireTime":"",  
+          },item);
+        }
+        Object.assign(this.formItem,this.oriItem);
+      },
+      selectMater(mater){
+        if(mater != null){
+          this.formItem.materId = mater.materId;
+          this.formItem.materName = mater.materName;
+          this.formItem.unit = mater.unit;
+          this.formItem.spec = mater.spec;
+          this.formItem.model = mater.model;
+          this.formItem.subType = mater.subType;
+        }else{
+          this.formItem.materId = '';
+          this.formItem.materName = '';
+          this.formItem.unit = '';
+          this.formItem.spec = '';
+          this.formItem.model = '';
+          this.formItem.subType = '';
+        }
+        this.$refs['form'].validateField('materId');
+      },
+      selProvider(){ 
+        var sel = this.$refs.selProvider;
+        sel.show({
+        ok:(data)=>{
+          if(data){
+            this.formItem.providerId = data.providerId;
+            this.formItem.providerName = data.providerName;
+            this.formItem.linkMan = data.linkMan;
+            this.formItem.address =data.address;
+            this.formItem.linkPhone=data.linkPhone;
+            this.formItem.inquireTime=page.formatDate(new Date(),'yyyy-MM-dd');
+          }
+        }
+        });
+      },
+      close() {
+        this.show = false;
+      },
+
+      reset() {
+        $.extend(this.formItem,this.oriItem);
+      }, 
+    }
+  }
+
+</script>
+
+<style type="text/css">
+  .form-sub-title {
+    font-size: 14px;
+    margin: 0 0 12px 18px;
+    color: #2b85e4;
+  }
+
+  .customeredit .width-1{
+    width: 160px;
+  }
+</style>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.workflow.dao.WorkflowFormMapper">
+
+    <sql id="Base_Column_List">
+      id, corp_id,app_id, title, description, show_field_seq,hiden_title,field_way,field_title_size,field_value_size,
+      field_row_space,form_width,color_bg,color_head_bg,color_page,color_title,color_head,color_describe,pic_bg,
+      pic_head,pic_head_logo,fields_json,grid_json,flow_json,field_auth_json,use_scope,use_scope_dept,use_scope_group,flow_title,
+      icon_no, icon_color, icon_src,is_open,create_time, update_time
+    </sql>
+
+    <select id="get" parameterType="java.lang.Integer" resultType="WorkflowForm">
+      select <include refid="Base_Column_List"/>
+      from t_wf_form
+      where id = #{id}     
+    </select>
+    
+     <update id="setFlow" parameterType = "WorkflowFormFlow">
+        update t_wf_form
+        <set>
+          <if test="flowJson != null">
+            flow_json = #{flowJson,jdbcType=INTEGER},
+          </if>
+          <if test="updateTime != null">
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+          </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}  
+     </update>
+     
+    <insert id="insert" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowForm" useGeneratedKeys="true" keyProperty="id">
+        insert into t_wf_form
+        <trim prefix="(" suffix=")" suffixOverrides=","> 
+            <if test="id != null">
+                id,
+            </if>
+             <if test="appId != null">
+                app_id,
+            </if>
+            <if test="corpId != null">
+                corp_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="showFieldSeq != null">
+                show_field_seq,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="hidenTitle != null">
+                hiden_title,
+            </if>
+            <if test="fieldWay != null">
+                field_way,
+            </if>
+            <if test="fieldTitleSize != null">
+                field_title_size,
+            </if>
+             <if test="fieldValueSize != null">
+                field_value_size,
+            </if>
+             <if test="fieldRowSpace != null">
+                field_row_space,
+            </if>
+             <if test="formWidth != null">
+                form_width,
+            </if>
+             <if test="colorBg != null">
+                color_bg,
+            </if>
+             <if test="colorHeadBg != null">
+                color_head_bg,
+            </if>
+             <if test="colorPage != null">
+                color_page,
+            </if>
+             <if test="colorTitle != null">
+                color_title,
+            </if>
+             <if test="colorHead != null">
+                color_head,
+            </if>
+             <if test="colorDescribe != null">
+                color_describe,
+            </if>
+             <if test="picBg != null">
+                pic_bg,
+            </if>
+             <if test="picHead != null">
+                pic_head,
+            </if>
+             <if test="picHeadLogo != null">
+                pic_head_logo,
+            </if>
+             <if test="fieldsJson != null">
+                fields_json,
+            </if>
+             <if test="gridJson != null"> 
+                grid_json,
+            </if>
+            <if test="flowTitle != null"> 
+                flow_title,
+            </if>
+            <if test="iconNo != null">
+                icon_no,
+            </if>
+            <if test="iconColor != null">
+                icon_color,
+            </if>
+            <if test="iconSrc != null">
+                icon_src,
+            </if>
+            <if test="useScope != null">
+                use_scope,
+            </if>
+             <if test="flowJson != null">
+                flow_json,
+            </if>
+             <if test="isOpen != null">
+                is_open,
+            </if>
+            <if test="fieldAuthJson != null">
+                field_auth_json
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="appId != null">
+                #{appId,jdbcType=INTEGER},
+            </if>
+            <if test="corpId != null">
+                #{corpId,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="showFieldSeq != null">
+                #{showFieldSeq,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+             <if test="hidenTitle != null">
+                #{hidenTitle,jdbcType=INTEGER},
+            </if>
+            <if test="fieldWay != null">
+                #{fieldWay,jdbcType=INTEGER},
+            </if>
+            <if test="fieldTitleSize != null">
+                #{fieldTitleSize,jdbcType=INTEGER},
+            </if>
+             <if test="fieldValueSize != null">
+                #{fieldValueSize,jdbcType=INTEGER},
+            </if>
+             <if test="fieldRowSpace != null">
+               #{fieldRowSpace,jdbcType=INTEGER},
+            </if>
+             <if test="formWidth != null">
+                #{formWidth,jdbcType=INTEGER},
+            </if>
+             <if test="colorBg != null">
+                 #{colorBg,jdbcType=VARCHAR},
+            </if>
+             <if test="colorHeadBg != null">
+                 #{colorHeadBg,jdbcType=VARCHAR},
+            </if>
+             <if test="colorPage != null">
+                 #{colorPage,jdbcType=VARCHAR},
+            </if>
+             <if test="colorTitle != null">
+                 #{colorTitle,jdbcType=VARCHAR},
+            </if>
+             <if test="colorHead != null">
+                 #{colorHead,jdbcType=VARCHAR},
+            </if>
+             <if test="colorDescribe != null">
+                 #{colorDescribe,jdbcType=VARCHAR},
+            </if>
+             <if test="picBg != null">
+                 #{picBg,jdbcType=VARCHAR},
+            </if>
+             <if test="picHead != null">
+                #{picHead,jdbcType=VARCHAR},
+            </if>
+             <if test="picHeadLogo != null">
+                 #{picHeadLogo,jdbcType=VARCHAR},
+            </if>
+             <if test="fieldsJson != null">
+                 #{fieldsJson,jdbcType=VARCHAR},
+            </if>
+             <if test="gridJson != null"> 
+                 #{gridJson,jdbcType=VARCHAR},
+            </if>
+            <if test="flowTitle != null"> 
+                 #{flowTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="iconNo != null">
+                #{iconNo,jdbcType=INTEGER},
+            </if>
+            <if test="iconColor != null">
+                #{iconColor,jdbcType=INTEGER},
+            </if>
+            <if test="iconSrc != null">
+                #{iconSrc,jdbcType=VARCHAR},
+            </if>
+            <if test="useScope != null">
+                #{useScope,jdbcType=VARCHAR},
+            </if>
+            <if test="flowJson != null">
+                #{flowJson,jdbcType=VARCHAR},
+            </if>
+            <if test="isOpen != null">
+                 #{isOpen,jdbcType=INTEGER},
+            </if>
+            <if test="fieldAuthJson != null">
+                 #{field_auth_json,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowForm">
+        update t_wf_form
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+             <if test="showFieldSeq != null">
+                show_field_seq = #{showFieldSeq,jdbcType=INTEGER},
+            </if>
+             <if test="hidenTitle != null">
+                hiden_title = #{hidenTitle,jdbcType=INTEGER},
+            </if>
+            <if test="fieldWay != null">
+                field_way = #{fieldWay,jdbcType=INTEGER},
+            </if>
+            <if test="fieldTitleSize != null">
+                field_title_size = #{fieldTitleSize,jdbcType=INTEGER},
+            </if>
+             <if test="fieldValueSize != null">
+                field_value_size = #{fieldValueSize,jdbcType=INTEGER},
+            </if>
+             <if test="fieldRowSpace != null">
+               field_row_space = #{fieldRowSpace,jdbcType=INTEGER},
+            </if>
+             <if test="formWidth != null">
+                form_width = #{formWidth,jdbcType=INTEGER},
+            </if>
+             <if test="colorBg != null">
+                 color_bg = #{colorBg,jdbcType=VARCHAR},
+            </if>
+             <if test="colorHeadBg != null">
+                 color_head_bg = #{colorHeadBg,jdbcType=VARCHAR},
+            </if>
+             <if test="colorPage != null">
+                 color_page = #{colorPage,jdbcType=VARCHAR},
+            </if>
+             <if test="colorTitle != null">
+                 color_title = #{colorTitle,jdbcType=VARCHAR},
+            </if>
+             <if test="colorHead != null">
+                 color_head = #{colorHead,jdbcType=VARCHAR},
+            </if>
+             <if test="colorDescribe != null">
+                 color_describe = #{colorDescribe,jdbcType=VARCHAR},
+            </if>
+             <if test="picBg != null">
+                 pic_bg = #{picBg,jdbcType=VARCHAR},
+            </if>
+             <if test="picHead != null">
+                pic_head = #{picHead,jdbcType=VARCHAR},
+            </if>
+             <if test="picHeadLogo != null">
+                 pic_head_logo = #{picHeadLogo,jdbcType=VARCHAR},
+            </if>
+             <if test="fieldsJson != null">
+                 fields_json = #{fieldsJson,jdbcType=VARCHAR},
+            </if>
+             <if test="gridJson != null"> 
+                 grid_json = #{gridJson,jdbcType=VARCHAR},
+            </if>
+            <if test="flowTitle != null"> 
+                 flow_title = #{flowTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="iconNo != null">
+                icon_no = #{iconNo,jdbcType=INTEGER},
+            </if>
+            <if test="iconColor != null">
+                icon_color = #{iconColor,jdbcType=INTEGER},
+            </if>
+            <if test="iconSrc != null">
+                icon_src = #{iconSrc,jdbcType=VARCHAR},
+            </if>
+            <if test="useScope != null">
+                use_scope = #{useScope,jdbcType=VARCHAR},
+            </if>
+            <if test="useScopeDept != null">
+                use_scope_dept = #{useScopeDept,jdbcType=VARCHAR},
+            </if>
+            <if test="useScopeGroup != null">
+                use_scope_group = #{useScopeGroup,jdbcType=VARCHAR},
+            </if>
+            <if test="flowJson != null">
+                flow_json = #{flowJson,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fieldAuthJson != null">
+                field_auth_json = #{fieldAuthJson,jdbcType=VARCHAR},
+            </if>
+            <if test="isOpen != null">
+                 is_open = #{isOpen,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update> 
+    <update id="setForm">
+       update t_wf_form
+       set app_id = #{appId}
+       where id in 
+       <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+                #{item}  
+       </foreach>
+    </update>  
+    <select id="list" resultType="WorkflowFormListDTO" parameterType="WorkflowFormParam">
+        select id,corp_id,app_id,title,description,icon_no,icon_color,icon_src,use_scope,is_open,create_time,update_time
+        from t_wf_form
+        where corp_id = #{corpId} 
+        <if test="appId != null">
+          and app_id = #{appId}
+        </if> 
+        <if test="title!= null and title !=''">
+          and title LIKE concat(concat('%',#{title}),'%')
+        </if> 
+    </select>
+    
+    <select id="myForms" resultType="WorkflowFormListDTO" parameterType="WorkflowFormParam">
+        select id,corp_id,app_id,title,description,icon_no,icon_color,icon_src,use_scope,is_open,create_time,update_time
+        from t_wf_form
+        where corp_id = #{corpId} 
+        and concat(',',use_scope,',') LIKE concat('%,',#{empId},',%') 
+        <if test="title!= null and title !=''">
+          and title LIKE concat(concat('%',#{title}),'%')
+        </if> 
+    </select>
+    
+    <delete id="delete">
+       delete from t_wf_form 
+       where id=#{id}
+       <if test="appId != null and appId > 0">
+       and app_id = #{appId}
+       </if>
+    </delete>
+    <update id="untie">
+      update t_wf_form set app_id = 0,update_time = now()
+      where id = #{id}
+    </update>
+</mapper>

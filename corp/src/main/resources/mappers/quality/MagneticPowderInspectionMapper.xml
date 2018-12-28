@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.quality.certification.dao.MagneticPowderInspectionMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection">
+  	<id column="magnetic_id" jdbcType="VARCHAR" property="magneticId" />
+    <result column="contract_id" jdbcType="VARCHAR" property="contractId" />
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="report_id" jdbcType="VARCHAR" property="reportId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="report_no" jdbcType="VARCHAR" property="reportNo" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="part_no" jdbcType="VARCHAR" property="partNo" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="statu" jdbcType="INTEGER" property="statu" />
+    <result column="report_date" jdbcType="TIMESTAMP" property="reportDate" />
+    <result column="drawing_no" jdbcType="VARCHAR" property="drawingNo" />
+    <result column="commission_unit" jdbcType="VARCHAR" property="commissionUnit" />
+    <result column="quantity" jdbcType="VARCHAR" property="quantity" />
+    <result column="material" jdbcType="VARCHAR" property="material" />
+    <result column="type_of" jdbcType="VARCHAR" property="typeOf" />
+    <result column="sensitivity" jdbcType="VARCHAR" property="sensitivity" />
+    <result column="required_standard" jdbcType="VARCHAR" property="requiredStandard" />
+    <result column="type_of_the" jdbcType="VARCHAR" property="typeOfThe" />
+    <result column="type_of_coupling" jdbcType="VARCHAR" property="typeOfCoupling" />
+    <result column="statu" jdbcType="VARCHAR" property="statu" />
+    <result column="type_of_machine" jdbcType="VARCHAR" property="typeOfMachine" />
+    <result column="size" jdbcType="VARCHAR" property="size" />
+    <result column="frequency" jdbcType="VARCHAR" property="frequency" />
+    <result column="adjusting_field" jdbcType="VARCHAR" property="adjustingField" />
+    <result column="angle" jdbcType="VARCHAR" property="angle" />
+    <result column="remark" jdbcType="VARCHAR" property="remrk" />
+    <result column="test_people" property="testPeople" jdbcType="VARCHAR" />
+    <result column="checked_by" property="checkedBy" jdbcType="VARCHAR" />
+    <result column="approved_by" property="approvedBy" jdbcType="VARCHAR" />
+    <result column="coupling" jdbcType="VARCHAR" property="coupling" />
+    <result column="wf_inst_id" jdbcType="VARCHAR" property="wfInstId" />
+    <result column="wf_inst_time" jdbcType="TIMESTAMP" property="wfInstTime" />
+    <result column="wf_inst_remark" jdbcType="VARCHAR" property="wfInstRemark" />
+    <result column="audit" jdbcType="VARCHAR" property="audit" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+    <result column="sketch_part" jdbcType="LONGVARCHAR" property="sketchPart" />
+    <result column="magnetic_test_result" jdbcType="LONGVARCHAR" property="magneticTestResult" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    contract_id, id, magnetic_id, report_id, description, report_no, order_no, part_no, 
+    status, report_date, drawing_no, commission_unit, quantity, material, type_of, sensitivity, 
+    required_standard, type_of_the, type_of_coupling, statu, type_of_machine, size, frequency, 
+    adjusting_field, angle, coupling, wf_inst_id, wf_inst_time, wf_inst_remark, audit, sketch_part, magnetic_test_result
+    create_time, update_time,remark,test_people,checked_by,approved_by, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection" resultType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection"  >
+    select *
+    from t_magnetic_powder_inspection  where 1=1
+    <if test='magneticId != null and magneticId !=""'>
+      AND magnetic_id = #{magneticId}
+    </if>
+   
+  </select>
+    <select id="selectByMid" parameterType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection" resultType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection"  >
+    select *
+    from t_magnetic_powder_inspection  where 1=1
+    <if test='magneticId != null and magneticId !=""'>
+      AND magnetic_id = #{magneticId}
+    </if>
+   
+  </select>
+  <select id="selectByPrimaryKeys"  resultType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection">
+    select 
+   	tm.*,tt.contract_no contractId
+    from t_magnetic_powder_inspection tm 
+    left join  t_contract tt on tt.contract_id = tm.contract_id
+    
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_magnetic_powder_inspection
+    where magnetic_id = #{magneticId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection">
+    insert into t_magnetic_powder_inspection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    <if test="id != null">
+        id,
+      </if>
+      <if test="contractId != null">
+        contract_id,
+      </if>
+      <if test="magneticId != null">
+        magnetic_id,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="reportNo != null">
+        report_no,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="partNo != null">
+        part_no,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="reportDate != null">
+        report_date,
+      </if>
+      <if test="drawingNo != null">
+        drawing_no,
+      </if>
+      <if test="commissionUnit != null">
+        commission_unit,
+      </if>
+       <if test="remark != null">
+        remark,
+      </if>
+      <if test="testPeople != null" >
+        test_people,
+      </if>
+      <if test="checkedBy != null" >
+        checked_by,
+      </if>
+      <if test="approvedBy != null" >
+        approved_by,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="material != null">
+        material,
+      </if>
+      <if test="sensitivity != null">
+        sensitivity,
+      </if>
+      <if test="requiredStandard != null">
+        required_standard,
+      </if>
+      <if test="typeOfThe != null">
+        type_of_the,
+      </if>
+      <if test="typeOfCoupling != null">
+        type_of_coupling,
+      </if>
+      <if test="typeOfMachine != null">
+        type_of_machine,
+      </if>
+      <if test="size != null">
+        size,
+      </if>
+      <if test="adjustingField != null">
+        adjusting_field,
+      </if>
+      <if test="angle != null">
+        angle,
+      </if>
+      <if test="wfInstId != null">
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null">
+        wf_inst_time,
+      </if>
+      <if test="wfInstRemark != null">
+        wf_inst_remark,
+      </if>
+      <if test="audit != null">
+        audit,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+      <if test="sketchPart != null">
+        sketch_part,
+      </if>
+      <if test="magneticTestResult != null">
+        magnetic_test_result,
+      </if>
+      <if test="typeOfEquipment != null">
+        type_of_equipment,
+      </if>
+      <if test="areaTested != null">
+        area_tested,
+      </if>
+      <if test="surfaceCondition != null">
+        surface_condition,
+      </if>
+      <if test="testingMethod != null">
+        testing_method,
+      </if>
+      <if test="methodOfTesting != null">
+        method_of_testing,
+      </if>
+      <if test="medium != null">
+        medium,
+      </if>
+      <if test="prodDistance != null">
+        prod_distance,
+      </if>
+      <if test="currentInAmpsr != null">
+        current_in_ampsr,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+     <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null">
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="magneticId != null">
+        #{magneticId,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="reportNo != null">
+        #{reportNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="partNo != null">
+        #{partNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="reportDate != null">
+        #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="drawingNo != null">
+        #{drawingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionUnit != null">
+        #{commissionUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="testPeople != null" >
+        #{testPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedBy != null" >
+        #{checkedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedBy != null" >
+        #{approvedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=VARCHAR},
+      </if>
+      <if test="material != null">
+        #{material,jdbcType=VARCHAR},
+      </if>
+      <if test="sensitivity != null">
+        #{sensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="requiredStandard != null">
+        #{requiredStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="typeOfThe != null">
+        #{typeOfThe,jdbcType=VARCHAR},
+      </if>
+      <if test="typeOfCoupling != null">
+        #{typeOfCoupling,jdbcType=VARCHAR},
+      </if>
+      <if test="typeOfMachine != null">
+        #{typeOfMachine,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="adjustingField != null">
+        #{adjustingField,jdbcType=VARCHAR},
+      </if>
+      <if test="angle != null">
+        #{angle,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstId != null">
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null">
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null">
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="audit != null">
+        #{audit,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sketchPart != null">
+        #{sketchPart,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="magneticTestResult != null">
+        #{magneticTestResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="typeOfEquipment != null">
+        #{typeOfEquipment,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="areaTested != null">
+        #{areaTested,jdbcType=VARCHAR},
+      </if>
+      <if test="surfaceCondition != null">
+        #{surfaceCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="testingMethod != null">
+        #{testingMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="methodOfTesting != null">
+        #{methodOfTesting,jdbcType=VARCHAR},
+      </if>
+      <if test="medium != null">
+        #{medium,jdbcType=VARCHAR},
+      </if>
+      <if test="prodDistance != null">
+        #{prodDistance,jdbcType=VARCHAR},
+      </if>
+      <if test="currentInAmpsr != null">
+        #{currentInAmpsr,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection">
+    update t_magnetic_powder_inspection
+    <set>
+    <if test="id != null">
+        id = #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="magneticId != null">
+        magnetic_id = #{magneticId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportId != null">
+        report_id = #{reportId,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="reportNo != null">
+        report_no = #{reportNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="partNo != null">
+        part_no = #{partNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="reportDate != null">
+        report_date = #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="drawingNo != null">
+        drawing_no = #{drawingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionUnit != null">
+        commission_unit = #{commissionUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=VARCHAR},
+      </if>
+      <if test="material != null">
+        material = #{material,jdbcType=VARCHAR},
+      </if>
+      <if test="typeOf != null">
+        type_of = #{typeOf,jdbcType=VARCHAR},
+      </if>
+      <if test="sensitivity != null">
+        sensitivity = #{sensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+       remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="testPeople != null" >
+       test_people = #{testPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedBy != null" >
+      checked_by = #{checkedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedBy != null" >
+      approved_by = #{approvedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="requiredStandard != null">
+        required_standard = #{requiredStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="typeOfThe != null">
+        type_of_the = #{typeOfThe,jdbcType=VARCHAR},
+      </if>
+      <if test="typeOfCoupling != null">
+        type_of_coupling = #{typeOfCoupling,jdbcType=VARCHAR},
+      </if>
+      <if test="statu != null">
+        statu = #{statu,jdbcType=VARCHAR},
+      </if>
+      <if test="typeOfMachine != null">
+        type_of_machine = #{typeOfMachine,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="adjustingField != null">
+        adjusting_field = #{adjustingField,jdbcType=VARCHAR},
+      </if>
+      <if test="angle != null">
+        angle = #{angle,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstId != null">
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null">
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null">
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="audit != null">
+        audit = #{audit,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sketchPart != null">
+        sketch_part = #{sketchPart,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="magneticTestResult != null">
+        magnetic_test_result = #{magneticTestResult,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+  </update>
+  <update id="updStatusM" parameterType="com.lyarc.tp.corp.quality.certification.bean.MagneticPowderInspection">
+    update t_magnetic_powder_inspection
+    <set>
+    <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="testPeople != null" >
+       test_people = #{testPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedBy != null" >
+      checked_by = #{checkedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedBy != null" >
+      approved_by = #{approvedBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where magnetic_id = #{magneticId,jdbcType=VARCHAR}
+  </update>
+</mapper>

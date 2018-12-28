@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.workflow.dao.WorkflowOperLogMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.workflow.bean.WorkflowOperLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="inst_id" property="instId" jdbcType="INTEGER" />
+    <result column="oper_emp_id" property="operEmpId" jdbcType="VARCHAR" />
+    <result column="oper_emp_name" property="operEmpName" jdbcType="VARCHAR" />
+    <result column="oper_type" property="operType" jdbcType="VARCHAR" />
+    <result column="oper_remark" property="operRemark" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="corp_id" property="corpId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, inst_id, oper_emp_id, oper_emp_name, oper_type, oper_remark,comment, corp_id, create_time,
+    update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wf_oper_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByInstId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_wf_oper_log
+    where inst_id = #{instId,jdbcType=VARCHAR} order by create_time desc limit 1
+  </select>
+  <select id="list" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.workflow.form.WorkflowOperLogParam" >
+    select
+    <include refid="Base_Column_List" />
+    from t_wf_oper_log
+    where corp_id = #{corpId,jdbcType=VARCHAR} and inst_id = #{instId,jdbcType=VARCHAR}
+    order by create_time asc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_wf_oper_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowOperLog" >
+    insert into t_wf_oper_log (id, inst_id, oper_emp_id, 
+      oper_emp_name, oper_type, oper_remark, comment
+      corp_id, create_time, update_time, 
+      tmstamp)
+    values (#{id,jdbcType=INTEGER}, #{instId,jdbcType=INTEGER}, #{operEmpId,jdbcType=VARCHAR}, 
+      #{operEmpName,jdbcType=VARCHAR}, #{operType,jdbcType=VARCHAR}, #{operRemark,jdbcType=VARCHAR},  #{comment,jdbcType=VARCHAR},
+      #{corpId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowOperLog" >
+    insert into t_wf_oper_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="instId != null" >
+        inst_id,
+      </if>
+      <if test="operEmpId != null" >
+        oper_emp_id,
+      </if>
+      <if test="operEmpName != null" >
+        oper_emp_name,
+      </if>
+      <if test="operType != null" >
+        oper_type,
+      </if>
+      <if test="operRemark != null" >
+        oper_remark,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="corpId != null" >
+        corp_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="instId != null" >
+        #{instId,jdbcType=INTEGER},
+      </if>
+      <if test="operEmpId != null" >
+        #{operEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="operEmpName != null" >
+        #{operEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="operType != null" >
+        #{operType,jdbcType=VARCHAR},
+      </if>
+      <if test="operRemark != null" >
+        #{operRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null" >
+        #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowOperLog" >
+    update t_wf_oper_log
+    <set >
+      <if test="instId != null" >
+        inst_id = #{instId,jdbcType=INTEGER},
+      </if>
+      <if test="operEmpId != null" >
+        oper_emp_id = #{operEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="operEmpName != null" >
+        oper_emp_name = #{operEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="operType != null" >
+        oper_type = #{operType,jdbcType=VARCHAR},
+      </if>
+      <if test="operRemark != null" >
+        oper_remark = #{operRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{operRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null" >
+        corp_id = #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowOperLog" >
+    update t_wf_oper_log
+    set inst_id = #{instId,jdbcType=INTEGER},
+      oper_emp_id = #{operEmpId,jdbcType=VARCHAR},
+      oper_emp_name = #{operEmpName,jdbcType=VARCHAR},
+      oper_type = #{operType,jdbcType=VARCHAR},
+      oper_remark = #{operRemark,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      corp_id = #{corpId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

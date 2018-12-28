@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.quality.revision.dao.TcheckRevisionLogMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.revision.bean.TcheckRevisionLog">
+    <id column="revision_id" jdbcType="VARCHAR" property="revisionId" />
+    <result column="ledger_id" jdbcType="VARCHAR" property="ledgerId" />
+    <result column="batch_id" jdbcType="VARCHAR" property="batchId" />
+    <result column="provider" jdbcType="VARCHAR" property="provider" />
+    <result column="mater_name" jdbcType="VARCHAR" property="materName" />
+    <result column="inspection_date" jdbcType="TIMESTAMP" property="inspectionDate" />
+    <result column="analyst" jdbcType="VARCHAR" property="analyst" />
+    <result column="inspector" jdbcType="VARCHAR" property="inspector" />
+    <result column="auditor" jdbcType="VARCHAR" property="auditor" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    revision_id, ledger_id, batch_id, provider, mater_name, inspection_date, analyst, 
+    inspector, auditor, audit_time, create_time, update_time, tmstamp
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_check_revision_log
+    where revision_id = #{revisionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_check_revision_log
+    where revision_id = #{revisionId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.quality.revision.bean.TcheckRevisionLog">
+    insert into t_check_revision_log (revision_id, ledger_id, batch_id, 
+      provider, mater_name, inspection_date, 
+      analyst, inspector, auditor, 
+      audit_time, create_time, update_time, 
+      tmstamp)
+    values (#{revisionId,jdbcType=VARCHAR}, #{ledgerId,jdbcType=VARCHAR}, #{batchId,jdbcType=VARCHAR}, 
+      #{provider,jdbcType=VARCHAR}, #{materName,jdbcType=VARCHAR}, #{inspectionDate,jdbcType=TIMESTAMP}, 
+      #{analyst,jdbcType=VARCHAR}, #{inspector,jdbcType=VARCHAR}, #{auditor,jdbcType=VARCHAR}, 
+      #{auditTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.revision.bean.TcheckRevisionLog">
+    insert into t_check_revision_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="revisionId != null">
+        revision_id,
+      </if>
+      <if test="ledgerId != null">
+        ledger_id,
+      </if>
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="provider != null">
+        provider,
+      </if>
+      <if test="materName != null">
+        mater_name,
+      </if>
+      <if test="inspectionDate != null">
+        inspection_date,
+      </if>
+      <if test="analyst != null">
+        analyst,
+      </if>
+      <if test="inspector != null">
+        inspector,
+      </if>
+      <if test="auditor != null">
+        auditor,
+      </if>
+      <if test="auditTime != null">
+        audit_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="revisionId != null">
+        #{revisionId,jdbcType=VARCHAR},
+      </if>
+      <if test="ledgerId != null">
+        #{ledgerId,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        #{batchId,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null">
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionDate != null">
+        #{inspectionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="analyst != null">
+        #{analyst,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null">
+        #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="auditor != null">
+        #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_check_revision_log
+    <set>
+      <if test="record.revisionId != null">
+        revision_id = #{record.revisionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ledgerId != null">
+        ledger_id = #{record.ledgerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.batchId != null">
+        batch_id = #{record.batchId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.provider != null">
+        provider = #{record.provider,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materName != null">
+        mater_name = #{record.materName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inspectionDate != null">
+        inspection_date = #{record.inspectionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.analyst != null">
+        analyst = #{record.analyst,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inspector != null">
+        inspector = #{record.inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditor != null">
+        auditor = #{record.auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditTime != null">
+        audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.tmstamp != null">
+        tmstamp = #{record.tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_check_revision_log
+    set revision_id = #{record.revisionId,jdbcType=VARCHAR},
+      ledger_id = #{record.ledgerId,jdbcType=VARCHAR},
+      batch_id = #{record.batchId,jdbcType=VARCHAR},
+      provider = #{record.provider,jdbcType=VARCHAR},
+      mater_name = #{record.materName,jdbcType=VARCHAR},
+      inspection_date = #{record.inspectionDate,jdbcType=TIMESTAMP},
+      analyst = #{record.analyst,jdbcType=VARCHAR},
+      inspector = #{record.inspector,jdbcType=VARCHAR},
+      auditor = #{record.auditor,jdbcType=VARCHAR},
+      audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{record.tmstamp,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.revision.bean.TcheckRevisionLog">
+    update t_check_revision_log
+    <set>
+      <if test="ledgerId != null">
+        ledger_id = #{ledgerId,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        provider = #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null">
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionDate != null">
+        inspection_date = #{inspectionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="analyst != null">
+        analyst = #{analyst,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null">
+        inspector = #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="auditor != null">
+        auditor = #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where revision_id = #{revisionId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="list" parameterType="TcheckRevisionLogQueryBean"
+		resultType="TcheckRevisionLog">
+		select * from t_check_revision_log where 1=1
+	<if test='batchId != null and batchId !=""'>
+      AND batch_id LIKE concat('%',#{batchId},'%')
+    </if>
+    <if test='analyst != null and analyst !=""'>
+      AND analyst = #{analyst}
+    </if>
+    <if test='inspector != null and inspector !=""'>
+      AND inspector = #{inspector,jdbcType=VARCHAR}
+    </if>
+	<if test="createBeginTime != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+    </if>
+    <if test="createEndTime != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+    </if>
+	<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+	</if>
+  </select>
+  <select id="count" parameterType="TcheckRevisionLogQueryBean"
+		resultType="java.lang.Long">
+		select count(batch_id) from t_check_revision_log where 1=1
+	<if test='batchId != null and batchId !=""'>
+      AND batch_id LIKE concat('%',#{batchId},'%')
+    </if>
+    <if test='analyst != null and analyst !=""'>
+      AND analyst = #{analyst}
+    </if>
+    <if test='inspector != null and inspector !=""'>
+      AND inspector = #{inspector,jdbcType=VARCHAR}
+    </if>
+	<if test="createBeginTime != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+    </if>
+    <if test="createEndTime != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+    </if>
+  </select>
+</mapper>

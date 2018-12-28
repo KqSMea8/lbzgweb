@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.productstock.dao.ProductStockBillMapper">
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.productstock.bean.ProductStockBillBean">
+		<id column="stock_bill_id" property="stockBillId" jdbcType="VARCHAR" />
+		<result column="storage_id" property="storageId" jdbcType="VARCHAR" />
+		<result column="bill_date" property="billDate" jdbcType="TIMESTAMP" />
+		<result column="oper_type" property="operType" jdbcType="INTEGER" />
+		<result column="shipping_order" property="shippingOrder"
+			jdbcType="VARCHAR" />
+		<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		<result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+		<result column="delivery_address" property="deliveryAddress"
+			jdbcType="VARCHAR" />
+		<result column="department" property="department" jdbcType="INTEGER" />
+		<result column="proposer" property="proposer" jdbcType="VARCHAR" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="shipper" property="shipper" jdbcType="VARCHAR" />
+		<result column="inspector" property="inspector" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="auditor" property="auditor" jdbcType="VARCHAR" />
+		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="audit_remark" property="auditRemark" jdbcType="VARCHAR" />
+		<result column="creator" property="creator" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+
+	</resultMap>
+	<select id="list"
+	parameterType="com.lyarc.tp.corp.productstock.bean.ProductStockBillQueryBean"
+	resultType="ProductStockBillBean">
+	select s.*,c.customer_name from t_product_stock_bill s
+	left join
+	t_customer c on s.customer_id=c.customer_id
+	where 1=1
+	<if test='stockBillId != null and stockBillId !=""'>
+		AND s.stock_bill_id = #{stockBillId}
+	</if>
+	<if test='billDate != null and billDate !=""'>
+		AND s.bill_date = #{billDate}
+	</if>
+	<if test='operType != null and operType !=""'>
+		AND s.oper_type = #{operType}
+	</if>
+	<if test='status != null'>
+		AND s.status = #{status}
+	</if>
+	<if test="createTimeStart != null">
+      AND DATE_FORMAT(s.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(s.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+	ORDER BY s.create_time DESC
+	<if test="offset != null and pageSize != null">
+		limit #{offset},#{pageSize}
+	</if>
+</select>
+
+	<select id="count" parameterType="ProductStockBillQueryBean"
+		resultType="java.lang.Long">
+		SELECT
+		count(1)
+		from t_product_stock_bill s
+		where 1=1
+		<if test='stockBillId != null and stockBillId !=""'>
+			AND s.stock_bill_id = #{stockBillId}
+		</if>
+		<if test='billDate != null and billDate !=""'>
+			AND s.bill_date = #{billDate}
+		</if>
+		<if test='operType != null and operType !=""'>
+			AND s.oper_type = #{operType}
+		</if> 
+		<if test='status != null'>
+	      AND s.status = #{status}
+	    </if>
+	    <if test="createTimeStart != null">
+     	  AND DATE_FORMAT(s.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+	    </if>
+	    <if test="createTimeEnd != null">
+	      AND DATE_FORMAT(s.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+	    </if>
+	</select>
+
+	<insert id="insertSelective" parameterType="ProductStockBillBean">
+		insert into t_product_stock_bill
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="stockBillId != null">
+				stock_bill_id,
+			</if>
+			<if test="storageId != null">
+				storage_id,
+			</if>
+			<if test="billDate != null">
+				bill_date,
+			</if>
+			<if test="operType != null">
+				oper_type,
+			</if>
+			<if test="shippingOrder != null">
+				shipping_order,
+			</if>
+			<if test="customerId != null">
+				customer_id,
+			</if>
+			<if test="contractId != null">
+				contract_id,
+			</if>
+			<if test="deliveryAddress != null">
+				delivery_address,
+			</if>
+			<if test="department != null">
+				department,
+			</if>
+			<if test="proposer != null">
+				proposer,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="receiver != null">
+				receiver,
+			</if>
+			<if test="shipper != null">
+				shipper,
+			</if>
+			<if test="inspector != null">
+				inspector,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="auditor != null">
+				auditor,
+			</if>
+			<if test="auditTime != null">
+				audit_time,
+			</if>
+			<if test="auditRemark != null">
+				audit_remark,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				create_time
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="stockBillId != null">
+				#{stockBillId,jdbcType=VARCHAR},
+			</if>
+			<if test="storageId != null">
+				#{storageId ,jdbcType=VARCHAR},
+			</if>
+			<if test="billDate != null">
+				#{billDate ,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operType != null">
+				#{operType ,jdbcType=INTEGER},
+			</if>
+			<if test="shippingOrder != null">
+				#{shippingOrder ,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				#{customerId ,jdbcType=VARCHAR},
+			</if>
+			<if test="contractId != null">
+				#{contractId ,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryAddress != null">
+				#{deliveryAddress ,jdbcType=VARCHAR},
+			</if>
+			<if test="department != null">
+				#{department ,jdbcType=INTEGER},
+			</if>
+			<if test="proposer != null">
+				#{proposer ,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator ,jdbcType=VARCHAR},
+			</if>
+			<if test="receiver != null">
+				#{receiver ,jdbcType=VARCHAR},
+			</if>
+			<if test="shipper != null">
+				#{shipper ,jdbcType=VARCHAR},
+			</if>
+			<if test="inspector != null">
+				#{inspector ,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				#{amount ,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{remark ,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status ,jdbcType=INTEGER},
+			</if>
+			<if test="auditor != null">
+				#{auditor ,jdbcType=VARCHAR},
+			</if>
+			<if test="auditTime != null">
+				#{auditTime ,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditRemark != null">
+				#{auditRemark ,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator ,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 自增类型的类型编号 -->
+	<select id="createSequence" parameterType="java.lang.String"
+		resultType="java.lang.Integer" statementType="CALLABLE">
+		call sp_seq(concat(#{currentDate},'_t_in_stock'),1)
+	</select>
+
+	<select id="selectedObject" resultType="ProductStockBillBean"
+		parameterType="java.lang.String" flushCache="true">
+		select * from
+		t_product_stock_bill
+		where stock_bill_id =
+		#{stockBillId,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateByPrimaryKeySelective" parameterType="ProductStockBillBean">
+		update t_product_stock_bill
+		<set>
+			<if test="storageId != null">
+				storage_id = #{storageId,jdbcType=VARCHAR},
+			</if>
+			<if test="billDate != null">
+				bill_date = #{billDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operType != null">
+				oper_type = #{operType,jdbcType=INTEGER},
+			</if>
+			<if test="shippingOrder != null">
+				shipping_order = #{shippingOrder,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="contractId != null">
+				contract_id = #{contractId ,jdbcType=VARCHAR},
+			</if>
+			<if test="department != null">
+				department = #{department,jdbcType=INTEGER},
+			</if>
+			<if test="proposer != null">
+				proposer = #{proposer,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				operator = #{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="receiver != null">
+				receiver = #{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="shipper != null">
+				shipper = #{shipper,jdbcType=VARCHAR},
+			</if>
+			<if test="inspector != null">
+				inspector = #{inspector,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				amount = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="auditor != null">
+				auditor = #{auditor,jdbcType=VARCHAR},
+			</if>
+			<if test="auditTime != null">
+				audit_time = #{auditTime,jdbcType=VARCHAR},
+			</if>
+			<if test="auditRemark != null">
+				audit_remark = #{auditRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				creator = #{creator,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 删除 Integer delete(@Param("stockBillId") String stockBillId); -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete from
+		t_product_stock_bill where stock_bill_id =
+		#{stockBillId,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- extends="BaseResultMap" 加上这个后显示 stock_bill_id字段值，否则为null -->
+	<resultMap id="getBillDetailResultMap"
+		type="com.lyarc.tp.corp.productstock.bean.ProductStockBillBean">
+		<collection property="detailList"
+			ofType="com.lyarc.tp.corp.productstock.bean.ProductStockBillDetail"
+			select="getBillDetails" column="stock_bill_id">
+		</collection>
+	</resultMap>
+
+	<!-- 单子详情 resultType="StockBillDTO" resultMap="ResultMapWithDetail" -->
+	<select id="getBill" resultMap="getBillDetailResultMap"
+		parameterType="java.lang.String">
+		select b.*,c.customer_name from t_product_stock_bill b
+		left join t_customer c 
+		on b.customer_id = c.customer_id
+		where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 获取单子的里面table列表的详情 -->
+	<select id="getBillDetails"
+		resultType="com.lyarc.tp.corp.productstock.bean.ProductStockBillDetail"
+		parameterType="java.lang.String">
+		select * from t_product_stock_bill_detail
+		where
+		stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+	</select>
+	<!-- 更新提交状态 -->
+	<!-- 发布/public Integer publicStatus(@Param("stockBillId") String stockBillId); -->
+	<update id="publicStatus" flushCache="true">
+		update t_product_stock_bill
+		<set>
+			status = 1,update_time = now()
+		</set>
+		where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+	</update>
+
+  <!-- 通过状态  -->
+  <!-- Integer passStatus(@Param("stockBillId") String stockBillId); status=2 -->
+    <update id="passStatus"  flushCache="true">
+       update t_product_stock_bill
+        <set>
+          status = 2,update_time = now()
+        </set>
+          WHERE stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+    </update>
+ <!-- 驳回状态  -->
+    <update id="rejectStatus" flushCache="true">
+       update t_product_stock_bill
+        <set>
+          status = 3,update_time = now(), audit_remark=#{auditRemark,jdbcType=VARCHAR},audit_time = now(),
+        </set>
+          WHERE stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Oct 23 19:40:00 CST 2018
+org.apache.commons.io-2.4-sources.jar>public=
+org.apache.commons.io-2.4.jar>public=
+org.apache.commons.io-2.4.pom>public=

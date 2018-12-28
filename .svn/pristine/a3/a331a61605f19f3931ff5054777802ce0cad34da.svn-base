@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.quality.InspectionSheet.dao.InspectionSheetDetailMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheetDetail">
+    <id column="ledger_id" jdbcType="VARCHAR" property="ledgerId" />
+    <id column="mater_id" jdbcType="VARCHAR" property="materId" />
+    <id column="inspection_id" jdbcType="VARCHAR" property="inspectionId" />
+    <result column="inspection_apply_id" jdbcType="VARCHAR" property="inspectionApplyId" />
+    <result column="mater_name" jdbcType="VARCHAR" property="materName" />
+    <result column="spec" jdbcType="VARCHAR" property="spec" />
+    <result column="sub_type" jdbcType="VARCHAR" property="subType" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="unit" jdbcType="VARCHAR" property="unit" />
+    <result column="quantity" jdbcType="DECIMAL" property="quantity" />
+    <result column="uses" jdbcType="VARCHAR" property="uses" />
+    <result column="origin" jdbcType="VARCHAR" property="origin" />
+    <result column="buyer" jdbcType="VARCHAR" property="buyer" />
+    <result column="arrival_date" jdbcType="TIMESTAMP" property="arrivalDate" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="arrival_quantity" jdbcType="DECIMAL" property="arrivalQuantity" />
+    <result column="origin_batch" jdbcType="VARCHAR" property="originBatch" />
+    <result column="batch" jdbcType="VARCHAR" property="batch" />
+    <result column="package_count" jdbcType="DECIMAL" property="packageCount" />
+    <result column="vehicle_no" jdbcType="VARCHAR" property="vehicleNo" />
+    <result column="rough_weight" jdbcType="DECIMAL" property="roughWeight" />
+    <result column="take_out_weight" jdbcType="DECIMAL" property="takeOutWeight" />
+    <result column="package_weight" jdbcType="DECIMAL" property="packageWeight" />
+    <result column="validity_date" jdbcType="TIMESTAMP" property="validityDate" />
+    <result column="quality_time" jdbcType="VARCHAR" property="qualityTime" />
+    <result column="batch_id" jdbcType="VARCHAR" property="batchId" />
+    <result column="provider_id" jdbcType="VARCHAR" property="providerId" />
+    <result column="made_time" jdbcType="VARCHAR" property="madeTime" />
+    <result column="is_enter_ledger" jdbcType="INTEGER" property="isEnterLedger" />
+    <result column="purchase_order_id" jdbcType="VARCHAR" property="purchaseOrderId" />
+    <result column="inspector" jdbcType="VARCHAR" property="inspector" />
+    <result column="analyst" jdbcType="VARCHAR" property="analyst" />
+    <result column="inspection_date" jdbcType="TIMESTAMP" property="inspectionDate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+    <result column="unqualified_id" jdbcType="TIMESTAMP" property="unqualifiedId" />   
+  </resultMap>
+  <sql id="Base_Column_List">
+    ledger_id, mater_id, inspection_id, inspection_apply_id, mater_name, spec, sub_type, 
+    level, unit, quantity, uses, origin, buyer, arrival_date, price, amount, arrival_quantity, 
+    origin_batch, batch, package_count, vehicle_no, rough_weight, take_out_weight, package_weight, 
+    validity_date, quality_time, batch_id, is_enter_ledger, purchase_order_id, inspector, 
+    analyst, inspection_date,unqualified_id,provider_id,made_time, create_time, update_time, tmstamp
+  </sql>
+    
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheetDetail">
+    select *
+    from t_inspection_apply_detail
+    where inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+    <if test='materId != null and materId != ""'>
+		AND	mater_id = #{materId,jdbcType=VARCHAR}
+	</if>
+   <!--  left join  t_inspection_detail ta on ta.inspection_apply_id = ti.inspection_apply_id  
+	left join t_purchase_order_detail pd  on pd.purchase_order_id = ti.purchase_order_id -->
+  </select>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheetDetail">
+    insert into t_inspection_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ledgerId != null">
+        ledger_id,
+      </if>
+      <if test="materId != null">
+        mater_id,
+      </if>
+      <if test="unqualifiedId != null">
+        unqualified_id,
+      </if>
+      <if test="inspectionId != null">
+        inspection_id,
+      </if>
+      <if test="inspectionApplyId != null">
+        inspection_apply_id,
+      </if>
+      <if test="materName != null">
+        mater_name,
+      </if>
+      <if test="spec != null">
+        spec,
+      </if>
+      <if test="subType != null">
+        sub_type,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="unit != null">
+        unit,
+      </if>
+      <if test="providerId != null">
+        provider_id,
+      </if>
+      <if test="madeDate != null">
+        made_date,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="uses != null">
+        uses,
+      </if>
+      <if test="origin != null">
+        origin,
+      </if>
+      <if test="buyer != null">
+        buyer,
+      </if>
+      <if test="arrivalDate != null">
+        arrival_date,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="arrivalQuantity != null">
+        arrival_quantity,
+      </if>
+      <if test="originBatch != null">
+        origin_batch,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="packageCount != null">
+        package_count,
+      </if>
+      <if test="vehicleNo != null">
+        vehicle_no,
+      </if>
+      <if test="roughWeight != null">
+        rough_weight,
+      </if>
+      <if test="takeOutWeight != null">
+        take_out_weight,
+      </if>
+      <if test="packageWeight != null">
+        package_weight,
+      </if>
+      <if test="validityDate != null">
+        validity_date,
+      </if>
+      <if test="qualityTime != null">
+        quality_time,
+      </if>
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="isEnterLedger != null">
+        is_enter_ledger,
+      </if>
+      <if test="purchaseOrderId != null">
+        purchase_order_id,
+      </if>
+      <if test="inspector != null">
+        inspector,
+      </if>
+      <if test="analyst != null">
+        analyst,
+      </if>
+      <if test="inspectionDate != null">
+        inspection_date,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ledgerId != null">
+        #{ledgerId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null">
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifiedId != null">
+        #{unqualifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionId != null">
+        #{inspectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="madeDate != null">
+        #{madeDate,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null">
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionApplyId != null">
+        #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null">
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null">
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="subType != null">
+        #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null">
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="uses != null">
+        #{uses,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null">
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="buyer != null">
+        #{buyer,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivalDate != null">
+        #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalQuantity != null">
+        #{arrivalQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="originBatch != null">
+        #{originBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=VARCHAR},
+      </if>
+      <if test="packageCount != null">
+        #{packageCount,jdbcType=DECIMAL},
+      </if>
+      <if test="vehicleNo != null">
+        #{vehicleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="roughWeight != null">
+        #{roughWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="takeOutWeight != null">
+        #{takeOutWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="packageWeight != null">
+        #{packageWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="validityDate != null">
+        #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qualityTime != null">
+        #{qualityTime,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        #{batchId,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnterLedger != null">
+        #{isEnterLedger,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderId != null">
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null">
+        #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="analyst != null">
+        #{analyst,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionDate != null">
+        #{inspectionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheetDetail">
+    update t_inspection_detail
+    <set>
+      <if test="inspectionApplyId != null">
+        inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null">
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null">
+        spec = #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="subType != null">
+        sub_type = #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null">
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifiedId != null">
+       unqualified_id = #{unqualifiedId,jdbcType=VARCHAR},
+      </if>
+      <if test="madeDate != null">
+       made_date = #{madeDate,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="uses != null">
+        uses = #{uses,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null">
+        origin = #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="buyer != null">
+        buyer = #{buyer,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivalDate != null">
+        arrival_date = #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalQuantity != null">
+        arrival_quantity = #{arrivalQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="originBatch != null">
+        origin_batch = #{originBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=VARCHAR},
+      </if>
+      <if test="packageCount != null">
+        package_count = #{packageCount,jdbcType=DECIMAL},
+      </if>
+      <if test="vehicleNo != null">
+        vehicle_no = #{vehicleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="roughWeight != null">
+        rough_weight = #{roughWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="takeOutWeight != null">
+        take_out_weight = #{takeOutWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="packageWeight != null">
+        package_weight = #{packageWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="validityDate != null">
+        validity_date = #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qualityTime != null">
+        quality_time = #{qualityTime,jdbcType=VARCHAR},
+      </if>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnterLedger != null">
+        is_enter_ledger = #{isEnterLedger,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderId != null">
+        purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null">
+        inspector = #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="analyst != null">
+        analyst = #{analyst,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionDate != null">
+        inspection_date = #{inspectionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ledger_id = #{ledgerId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+      and inspection_id = #{inspectionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

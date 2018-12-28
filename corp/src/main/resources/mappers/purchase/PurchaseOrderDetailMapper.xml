@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.purchase.order.dao.PurchaseOrderDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrderDetail" >
+    <id column="purchase_order_id" property="purchaseOrderId" jdbcType="VARCHAR" />
+    <id column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="sub_type" property="subType" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="spec" property="spec" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="use" property="use" jdbcType="VARCHAR" />
+    <result column="provider_id" property="providerId" jdbcType="VARCHAR" />
+    <result column="origin" property="origin" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="need_date" property="needDate" jdbcType="TIMESTAMP" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="in_quantity" property="inQuantity" jdbcType="DECIMAL" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    purchase_order_id, mater_id, sub_type, mater_name, level, spec, model, `use`, provider_id,
+    origin, unit, need_date, price, quantity, amount, remark, in_quantity, creator, create_time, 
+    update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrderDetailKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_purchase_order_detail
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrderDetailKey" >
+    delete from t_purchase_order_detail
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByPurchaseOrderId"  >
+    delete from t_purchase_order_detail
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrderDetail" >
+    insert into t_purchase_order_detail (purchase_order_id, mater_id, sub_type, 
+      mater_name, level, spec, 
+      model, `use`, provider_id,
+      origin, unit, need_date, 
+      price, quantity, amount, 
+      remark, in_quantity, creator, 
+      create_time, update_time, tmstamp
+      )
+    values (#{purchaseOrderId,jdbcType=VARCHAR}, #{materId,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, 
+      #{materName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{spec,jdbcType=VARCHAR}, 
+      #{model,jdbcType=VARCHAR}, #{use,jdbcType=VARCHAR}, #{providerId,jdbcType=VARCHAR}, 
+      #{origin,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{needDate,jdbcType=TIMESTAMP}, 
+      #{price,jdbcType=DECIMAL}, #{quantity,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{inQuantity,jdbcType=DECIMAL}, #{creator,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrderDetail" >
+    insert into t_purchase_order_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="purchaseOrderId != null" >
+        purchase_order_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="subType != null" >
+        sub_type,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="use != null" >
+        `use`,
+      </if>
+      <if test="providerId != null" >
+        provider_id,
+      </if>
+      <if test="origin != null" >
+        origin,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="needDate != null" >
+        need_date,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="inQuantity != null" >
+        in_quantity,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="purchaseOrderId != null" >
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="subType != null" >
+        #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="use != null" >
+        #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="needDate != null" >
+        #{needDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="inQuantity != null" >
+        #{inQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrderDetail" >
+    update t_purchase_order_detail
+    <set >
+      <if test="subType != null" >
+        sub_type = #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="spec != null" >
+        spec = #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="use != null" >
+        `use` = #{use,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null" >
+        provider_id = #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        origin = #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="needDate != null" >
+        need_date = #{needDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="inQuantity != null" >
+        in_quantity = #{inQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrderDetail" >
+    update t_purchase_order_detail
+    set sub_type = #{subType,jdbcType=VARCHAR},
+      mater_name = #{materName,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      spec = #{spec,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      `use` = #{use,jdbcType=VARCHAR},
+      provider_id = #{providerId,jdbcType=VARCHAR},
+      origin = #{origin,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      need_date = #{needDate,jdbcType=TIMESTAMP},
+      price = #{price,jdbcType=DECIMAL},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      in_quantity = #{inQuantity,jdbcType=DECIMAL},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+</mapper>

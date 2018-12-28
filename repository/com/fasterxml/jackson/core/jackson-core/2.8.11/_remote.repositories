@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Dec 26 16:31:22 CST 2018
+jackson-core-2.8.11.pom>public=
+jackson-core-2.8.11.pom>aliyun=
+jackson-core-2.8.11.jar>aliyun=
+jackson-core-2.8.11.jar>public=
+jackson-core-2.8.11-sources.jar>public=

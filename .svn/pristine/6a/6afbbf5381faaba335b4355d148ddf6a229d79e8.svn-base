@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StockSafeMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.warehouse.bean.StockSafe" >
+    <id column="storage_id" property="storageId" jdbcType="VARCHAR" />
+    <id column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="spec" property="spec" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="min_quantity" property="minQuantity" jdbcType="DECIMAL" />
+    <result column="safe_quantity" property="safeQuantity" jdbcType="DECIMAL" />
+    <result column="max_quantity" property="maxQuantity" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    storage_id, mater_id, mater_name, spec, model, unit, min_quantity, safe_quantity, 
+    max_quantity, create_time, update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.warehouse.bean.StockSafeKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_stock_safe
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="com.lyarc.tp.corp.warehouse.bean.StockSafeQueryBean" resultType="StockSafe" >
+    select s.storage_id,s.mater_id,m.mater_name,m.spec,m.model,m.unit,
+    s.min_quantity,s.safe_quantity,s.max_quantity
+    from t_stock_safe s left join t_material m on s.mater_id = m.mater_id
+    where 1=1
+    <if test='keyword != null and keyword !=""'>
+      AND (m.mater_id LIKE concat('%',#{keyword},'%') m.mater_name LIKE concat('%',#{keyword},'%') or s.batch LIKE concat('%',#{keyword},'%') )
+    </if>
+    <if test='storageId != null and storageId !=""'>
+      AND s.storage_id = #{storageId}
+    </if>
+    <if test='materId != null and materId !=""'>
+      AND s.mater_id = #{materId}
+    </if>
+    <if test='materName != null and materName !=""'>
+      AND m.mater_name LIKE concat('%',#{materName},'%')
+    </if>
+    ORDER BY s.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="StockSafeQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(1)
+    from t_stock_safe s left join t_material m on s.mater_id = m.mater_id
+    where 1=1
+    <if test='keyword != null and keyword !=""'>
+      AND (m.mater_id LIKE concat('%',#{keyword},'%') m.mater_name LIKE concat('%',#{keyword},'%') or s.batch LIKE concat('%',#{keyword},'%') )
+    </if>
+    <if test='storageId != null and storageId !=""'>
+      AND s.storage_id = #{storageId}
+    </if>
+    <if test='materId != null and materId !=""'>
+      AND s.mater_id = #{materId}
+    </if>
+    <if test='materName != null and materName !=""'>
+      AND m.mater_name LIKE concat('%',#{materName},'%')
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StockSafeKey" >
+    delete from t_stock_safe
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.warehouse.bean.StockSafe" >
+    insert into t_stock_safe (storage_id, mater_id, mater_name, 
+      spec, model, unit, 
+      min_quantity, safe_quantity, max_quantity, 
+      create_time, update_time, tmstamp
+      )
+    values (#{storageId,jdbcType=VARCHAR}, #{materId,jdbcType=VARCHAR}, #{materName,jdbcType=VARCHAR}, 
+      #{spec,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{minQuantity,jdbcType=DECIMAL}, #{safeQuantity,jdbcType=DECIMAL}, #{maxQuantity,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StockSafe" >
+    insert into t_stock_safe
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="storageId != null" >
+        storage_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="minQuantity != null" >
+        min_quantity,
+      </if>
+      <if test="safeQuantity != null" >
+        safe_quantity,
+      </if>
+      <if test="maxQuantity != null" >
+        max_quantity,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="storageId != null" >
+        #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="minQuantity != null" >
+        #{minQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="safeQuantity != null" >
+        #{safeQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="maxQuantity != null" >
+        #{maxQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StockSafe" >
+    update t_stock_safe
+    <set >
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        spec = #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="minQuantity != null" >
+        min_quantity = #{minQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="safeQuantity != null" >
+        safe_quantity = #{safeQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="maxQuantity != null" >
+        max_quantity = #{maxQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StockSafe" >
+    update t_stock_safe
+    set mater_name = #{materName,jdbcType=VARCHAR},
+      spec = #{spec,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      min_quantity = #{minQuantity,jdbcType=DECIMAL},
+      safe_quantity = #{safeQuantity,jdbcType=DECIMAL},
+      max_quantity = #{maxQuantity,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.productstock.dao.ProductStockInMapper" >
+  
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.productstock.bean.ProductStockInBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="storage_id" property="storageId" jdbcType="VARCHAR" />
+    <result column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="drawing" property="drawing" jdbcType="VARCHAR" />
+    <result column="casting" property="casting" jdbcType="VARCHAR" />
+    <result column="texture" property="texture" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="total_weight" property="totalWeight" jdbcType="DECIMAL" />
+    <result column="proposer" property="proposer" jdbcType="VARCHAR" />    
+    <result column="process_product_id" property="processProductId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+ <!-- 列表查询 -->
+  <select id="list" parameterType="ProductStockInQueryBean" resultType="ProductStockInBean">
+    select p.*,c.customer_name
+    from t_product_stock_in p
+    left join t_customer c on
+    p.customer_id=c.customer_id
+    where 1=1
+    <if test='contractId != null and contractId !=""'>
+      AND p.contract_id LIKE concat('%',#{contractId},'%')
+    </if>
+    <if test='casting != null and casting !=""'>
+      AND p.casting LIKE concat('%',#{casting},'%')
+    </if>
+    <if test='drawing != null and drawing !=""'>
+      AND p.drawing LIKE concat('%',#{drawing},'%')
+    </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(p.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(p.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+    ORDER BY p.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!-- 列表附带的计数 -->
+  <select id="count" parameterType="ProductStockInQueryBean" resultType="java.lang.Long">
+    select count(1)
+    from t_product_stock_in
+    where 1=1
+     <if test='contractId != null and contractId !=""'>
+      AND contract_id LIKE concat('%',#{contractId},'%')
+    </if>
+    <if test='casting != null and casting !=""'>
+      AND casting LIKE concat('%',#{casting},'%')
+    </if>
+    <if test='drawing != null and drawing !=""'>
+      AND drawing LIKE concat('%',#{drawing},'%')
+    </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+  </select>
+  
+   <!-- 自增类型的类型编号 -->
+  <select id="createSequence" parameterType="java.lang.String" resultType="java.lang.Integer" statementType="CALLABLE">
+    call sp_seq(concat(#{currentDate},'_t_in_stock'),1)
+  </select>
+  
+  <!-- 插入新建的部分 -->
+  <insert id="insertSelective" parameterType="ProductStockInBean" >
+    insert into t_product_stock_in
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="storageId != null" >
+        storage_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="drawing != null" >
+        drawing,
+      </if>
+      <if test="casting != null" >
+        casting,
+      </if>
+      <if test="texture != null" >
+        texture,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>  
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="totalWeight != null" >
+        total_weight,
+      </if>
+      <if test="proposer != null" >
+        proposer,
+      </if>
+      <if test="processProductId != null" >
+        process_product_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storageId != null" >
+        #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="casting != null" >
+        #{casting,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>  
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="totalWeight != null" >
+        #{totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="proposer != null" >
+        #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="processProductId != null" >
+        #{processProductId,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <!-- 更新提交状态  -->
+  <!-- 发布/public   Integer publicStatus(@Param("stockBillId") String stockBillId);-->
+  <!--   <update id="publicStatus"  flushCache="true">
+       update t_stock_bill
+        <set>
+          status = 1,update_time = now()
+        </set>
+          where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+    </update> -->
+  
+  <!-- 驳回状态  -->
+    <!-- <update id="rejectStatus" flushCache="true">
+       update t_stock_bill
+        <set>
+          status = 3,update_time = now(), audit_remark=#{auditRemark,jdbcType=VARCHAR}
+        </set>
+          WHERE stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+    </update> -->
+
+   <!-- 更新主数据  Integer updateByPrimaryKeySelective(StockBillBean stockBillBean);-->
+<!--   <update id="updateByPrimaryKeySelective" parameterType="StockBillBean" >
+    update t_stock_bill
+    <set >
+      <if test="storageId != null" >
+        storage_id = #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="operId != null" >
+        oper_id = #{operId,jdbcType=VARCHAR},
+      </if>
+      <if test="isWeight != null" >
+        is_weight = #{isWeight,jdbcType=INTEGER},
+      </if>
+      <if test="inStockApplyId != null" >
+        in_stock_apply_id = #{inStockApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="outStockApplyId != null" >
+        out_stock_apply_id = #{outStockApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseBackOrderId != null" >
+        purchase_back_order_id = #{purchaseBackOrderId,jdbcType=VARCHAR},
+      </if>  
+      <if test="department != null" >
+        department = #{department,jdbcType=INTEGER},
+      </if>
+      <if test="proposer != null" >
+        proposer = #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="billDate != null" >
+        bill_date = #{billDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="auditRemark != null" >
+        audit_remark = #{auditRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+  </update> -->
+  
+  
+  <!-- 删除  Integer delete(@Param("stockBillId") String stockBillId); -->
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from t_stock_bill where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 通过状态  -->
+  <!-- Integer passStatus(@Param("stockBillId") String stockBillId); status=2 -->
+   <!--  <update id="passStatus"  flushCache="true">
+       update t_stock_bill
+        <set>
+          status = 2,update_time = now()
+        </set>
+          WHERE stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+    </update>
+  
+  
+  <select id="selectedObject"  resultType="StockBillBean"  parameterType="java.lang.String"  flushCache="true">
+    select  * from t_stock_bill
+    where stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+  </select> -->
+  
+</mapper>

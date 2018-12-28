@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StorageAuthMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.warehouse.bean.StorageAuth" >
+    <id column="storage_id" property="storageId" jdbcType="VARCHAR" />
+    <id column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    storage_id, emp_id, creator, create_time, update_time, tmstamp
+  </sql>
+
+  <!--<sql id="Base_Column_Join" >-->
+    <!--storage_id, emp_id, creator, create_time, update_time, tmstamp-->
+  <!--</sql>-->
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAuthKey" >
+    select * from t_storage_auth
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlaceKey" resultType="StorageAuthDto">
+    select b.*,e.emp_id,e.true_name
+    ,ta.arg_text typeName,emp.true_name linkmanName,dept.dept_name departmentName
+    from t_storage_auth a
+    left join t_storage b on a.storage_id = b.storage_id
+    left join t_emp e on a.emp_id = e.emp_id
+    left join t_emp emp on b.linkman = emp.emp_id
+    left join t_arg ta on ta.arg_code = b.type and ta.arg_group = 'warehouse_type'
+    left join t_dept dept on b.department = dept.dept_id
+    where 1=1
+    <if test='storageId != null and storageId != ""'>
+      AND a.storage_id = #{storageId,jdbcType=VARCHAR}
+    </if>
+    <if test='empId != null  and empId != ""'>
+      and a.emp_id = #{empId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="getAuth" parameterType="com.lyarc.tp.corp.warehouse.bean.StoragePlaceKey" resultType="StorageAuthDto">
+    select b.storage_id,b.name,e.emp_id,e.true_name
+    from t_storage_auth a
+    left join t_storage b on a.storage_id = b.storage_id
+    left join t_emp e on a.emp_id = e.emp_id
+    where 1=1
+    <if test='storageId != null and storageId != ""'>
+      AND a.storage_id = #{storageId,jdbcType=VARCHAR}
+    </if>
+    <if test='empId != null  and empId != ""'>
+      and a.emp_id = #{empId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAuthKey" >
+    delete from t_storage_auth
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and emp_id = #{empId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByEmpId" >
+    delete from t_storage_auth
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAuth" >
+    insert into t_storage_auth (storage_id, emp_id, creator, 
+      create_time, update_time, tmstamp
+      )
+    values (#{storageId,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAuth" >
+    insert into t_storage_auth
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="storageId != null" >
+        storage_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="storageId != null" >
+        #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAuth" >
+    update t_storage_auth
+    <set >
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StorageAuth" >
+    update t_storage_auth
+    set creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+      and emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+</mapper>

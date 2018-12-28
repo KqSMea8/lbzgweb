@@ -1,0 +1,47 @@
+logging:
+  config: classpath:log4j2-dev.xml
+  level: 
+    org.springframework: info 
+    
+server:
+  port: 8089
+  compression: 
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  basePath: http://127.0.0.1:8080/corp
+  
+wxconfig: 
+  callbackDomain:  http://wttest.tunnel.qydev.com
+  #callbackDomain: http://tydev.tunnel.lyarc.com
+  providerSecret: LNEEmiyKp94r8bPx2lwdxaZMopincgb7T0ypmHjAeRLkT3yY3MKMaqTUkS2rAI2j
+  corpId: wx681bb0c5da87b426 
+  msgDomain: http://127.0.0.1:8089/corp
+test: 1
+
+wechat:
+  cp:
+    sync:
+      corpId: wxdca02fc5f641dabb
+      secret: nVVlmNSMwmbBmKpYWkVjy6aKaiYFGIwODtqNkqYEIyk
+    manage:
+      corpId: wxdca02fc5f641dabb
+      secret: O-ph1NeaqPNhSC02ejLhnNGvQZCeM4h4qmM5hPKMobk
+      agentId: 1000207
+    workflow:
+      corpId: wxdca02fc5f641dabb
+      secret: kidXU17tbFHACp9vFcdJUWU4pklH9kXpauuSjXtvtqo
+      agentId: 1000208
+
+ # 上传文件配置
+spring:
+    http:
+      multipart:
+#        location: /files
+        location: e:/files/tmpfiles
+        max-file-size: 10MB
+        max-request-size: 100MB
+
+
+
+cronScanAuditEvent: 0 0 0/24 * * *
+uploadDir: d:/files

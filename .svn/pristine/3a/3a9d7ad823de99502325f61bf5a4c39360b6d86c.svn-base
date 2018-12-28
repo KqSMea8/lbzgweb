@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StockOpertypeMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.warehouse.bean.StockOpertype">
+    <id column="oper_id" jdbcType="VARCHAR" property="operId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="source" jdbcType="INTEGER" property="source" />
+    <result column="reject" jdbcType="INTEGER" property="reject" />
+    <result column="repair" jdbcType="INTEGER" property="repair" />
+    <result column="creator" jdbcType="INTEGER" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    oper_id, name, type, source, reject, repair, creator, create_time, update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_stock_opertype
+    where oper_id = #{operId,jdbcType=VARCHAR}
+  </select>
+  <select id="list" parameterType="StockOpertypeQueryBean" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_stock_opertype
+    where 1=1
+    <if test='name != null and name !=""'>
+      AND name LIKE concat('%',#{name},'%')
+    </if>
+    <if test="type != null">
+      AND type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="source != null">
+      and source = #{source,jdbcType=INTEGER}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_stock_opertype
+    where oper_id = #{operId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.warehouse.bean.StockOpertype">
+    insert into t_stock_opertype (oper_id, name, type, 
+      source, reject, repair, 
+      creator, create_time, update_time, 
+      tmstamp)
+    values (#{operId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{source,jdbcType=INTEGER}, #{reject,jdbcType=INTEGER}, #{repair,jdbcType=INTEGER}, 
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StockOpertype">
+    insert into t_stock_opertype
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="operId != null">
+        oper_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="reject != null">
+        reject,
+      </if>
+      <if test="repair != null">
+        repair,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="operId != null">
+        #{operId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="reject != null">
+        #{reject,jdbcType=INTEGER},
+      </if>
+      <if test="repair != null">
+        #{repair,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.warehouse.bean.StockOpertype">
+    update t_stock_opertype
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="reject != null">
+        reject = #{reject,jdbcType=INTEGER},
+      </if>
+      <if test="repair != null">
+        repair = #{repair,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where oper_id = #{operId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StockOpertype">
+    update t_stock_opertype
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      source = #{source,jdbcType=INTEGER},
+      reject = #{reject,jdbcType=INTEGER},
+      repair = #{repair,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where oper_id = #{operId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

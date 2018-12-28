@@ -1,0 +1,94 @@
+{
+  "_args": [
+    [
+      "@xkeshi/vue-qrcode@0.3.0",
+      "D:\\svn\\lbzgweb\\corp_page"
+    ]
+  ],
+  "_from": "@xkeshi/vue-qrcode@0.3.0",
+  "_id": "@xkeshi/vue-qrcode@0.3.0",
+  "_inBundle": false,
+  "_integrity": "sha512-Kv+jQ38I/ipxsGgutHluVDBR5Rk4ePKqShi5c21/E0AQNUQzXV6rZTtCWE+4RQQqyxcc062YZSrN/cksWHES6A==",
+  "_location": "/@xkeshi/vue-qrcode",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@xkeshi/vue-qrcode@0.3.0",
+    "name": "@xkeshi/vue-qrcode",
+    "escapedName": "@xkeshi%2fvue-qrcode",
+    "scope": "@xkeshi",
+    "rawSpec": "0.3.0",
+    "saveSpec": null,
+    "fetchSpec": "0.3.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@xkeshi/vue-qrcode/-/vue-qrcode-0.3.0.tgz",
+  "_spec": "0.3.0",
+  "_where": "D:\\svn\\lbzgweb\\corp_page",
+  "author": {
+    "name": "Chen Fengyuan",
+    "url": "http://chenfengyuan.com"
+  },
+  "browser": "dist/vue-qrcode.js",
+  "bugs": {
+    "url": "https://github.com/xkeshi/vue-qrcode/issues"
+  },
+  "dependencies": {
+    "qrious": "^4.0.2"
+  },
+  "description": "Qrcode component for Vue.js.",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.7.2",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^4.3.1",
+    "uglify-js": "^3.1.2"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "homepage": "https://xkeshi.github.io/vue-qrcode",
+  "keywords": [
+    "qrcode",
+    "vue",
+    "component",
+    "vue-component",
+    "html",
+    "css",
+    "javascript",
+    "front-end",
+    "web",
+    "development"
+  ],
+  "license": "MIT",
+  "main": "dist/vue-qrcode.common.js",
+  "module": "dist/vue-qrcode.esm.js",
+  "name": "@xkeshi/vue-qrcode",
+  "peerDependencies": {
+    "vue": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xkeshi/vue-qrcode.git"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "compress": "uglifyjs ./dist/vue-qrcode.js -o ./dist/vue-qrcode.min.js -c -m --comments /^!/",
+    "dev": "rollup -c -m -w",
+    "lint": "eslint ./src",
+    "postbuild": "npm run compress",
+    "prebuild": "npm run lint --fix",
+    "start": "npm run dev"
+  },
+  "version": "0.3.0"
+}

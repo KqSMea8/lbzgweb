@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Dec 26 16:31:22 CST 2018
+commons-lang3-3.5.pom>public=
+commons-lang3-3.5.pom>aliyun=
+commons-lang3-3.5.jar>aliyun=
+commons-lang3-3.5.jar>public=
+commons-lang3-3.5-sources.jar>public=

@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Dec 26 16:31:23 CST 2018
+org.apache.commons.io-2.4.jar>aliyun=
+org.apache.commons.io-2.4-sources.jar>public=
+org.apache.commons.io-2.4.jar>public=
+org.apache.commons.io-2.4.pom>aliyun=
+org.apache.commons.io-2.4.pom>public=

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.certification.dao.QualifiedReportMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.certification.bean.QualifiedReport" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="certificate_id" property="certificateId" jdbcType="VARCHAR" />
+    <result column="part_size_id" property="partSizeId" jdbcType="VARCHAR" />
+    <result column="magnetic_id" property="magneticId" jdbcType="VARCHAR" />
+    <result column="ultrasonic_id" property="ultrasonicId" jdbcType="VARCHAR" />
+    <result column="is_foreign" property="isForeign" jdbcType="INTEGER" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, contract_id, certificate_id, part_size_id, magnetic_id, ultrasonic_id, customer_id, 
+    customer_name,is_foreign, create_time, update_time, tmstamp
+  </sql>
+  <!-- 合格证管理界面分页 -->
+  <select id="listAllC" resultType="java.lang.String">
+	SELECT qr.contract_id from t_qualified_report qr
+	left join t_casting_certificate cc on cc.certificate_id = qr.certificate_id
+	left join t_customer c on c.customer_id = qr.customer_id 
+	where 1=1
+	 <if test='contractId != null and contractId !=""' >
+       and qr.contract_id LIKE concat('%',#{contractId},'%')
+      </if>
+       <if test='drawing != null and drawing !=""' >
+       and  cc.test_item LIKE concat('%',#{drawing},'%')
+      </if>
+        <if test='casting != null and casting !=""' >
+       and  cc.test_item LIKE concat('%',#{casting},'%')
+      </if>
+       <if test='customerName != null and customerName !=""' >
+       and  qr.customer_name LIKE concat('%',#{customerName},'%')
+      </if>
+      <if test="createBeginTime != null">
+			AND DATE_FORMAT(qr.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+		</if>
+		<if test="createEndTime != null">
+			AND DATE_FORMAT(qr.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+		</if>
+      group by qr.contract_id
+	<if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+  <!-- 条数 -->
+  <select id="counts" parameterType="com.lyarc.tp.corp.quality.certification.bean.QualifiedReport" resultType="java.lang.Long">
+  	 SELECT count(DISTINCT qr.contract_id) from t_qualified_report qr
+  	 left join t_casting_certificate cc on cc.certificate_id = qr.certificate_id
+	left join t_customer c on c.customer_id = qr.customer_id 
+	where 1=1
+	 <if test='contractId != null and contractId !=""' >
+       and qr.contract_id LIKE concat('%',#{contractId},'%')
+      </if>
+       <if test='testItem != null and testItem !=""' >
+       and  cc.test_item LIKE concat('%',#{drawing},'%')
+      </if>
+       <if test='customerName != null and customerName !=""' >
+       and  qr.customer_name LIKE concat('%',#{customerName},'%')
+      </if>
+      <if test="createBeginTime != null">
+			AND DATE_FORMAT(qr.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+		</if>
+		<if test="createEndTime != null">
+			AND DATE_FORMAT(qr.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+		</if>
+  </select>
+  
+  <select id="selectByPrimaryKeys" resultType="com.lyarc.tp.corp.quality.certification.bean.QualifiedReport"  >
+    select 
+  	 *
+    from t_qualified_report
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_qualified_report
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.QualifiedReport" >
+    insert into t_qualified_report
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="certificateId != null" >
+        certificate_id,
+      </if>
+      <if test="partSizeId != null" >
+        part_size_id,
+      </if>
+      <if test="isForeign != null" >
+        is_foreign,
+      </if>
+      <if test="magneticId != null" >
+        magnetic_id,
+      </if>
+      <if test="ultrasonicId != null" >
+        ultrasonic_id,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateId != null" >
+        #{certificateId,jdbcType=VARCHAR},
+      </if>
+      <if test="partSizeId != null" >
+        #{partSizeId,jdbcType=VARCHAR},
+      </if>
+      <if test="isForeign != null" >
+        #{isForeign,jdbcType=INTEGER},
+      </if>
+      <if test="magneticId != null" >
+        #{magneticId,jdbcType=VARCHAR},
+      </if>
+      <if test="ultrasonicId != null" >
+        #{ultrasonicId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.certification.bean.QualifiedReport" >
+    update t_qualified_report
+    <set >
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateId != null" >
+        certificate_id = #{certificateId,jdbcType=VARCHAR},
+      </if>
+      <if test="partSizeId != null" >
+        part_size_id = #{partSizeId,jdbcType=VARCHAR},
+      </if>
+      <if test="magneticId != null" >
+        magnetic_id = #{magneticId,jdbcType=VARCHAR},
+      </if>
+      <if test="ultrasonicId != null" >
+        ultrasonic_id = #{ultrasonicId,jdbcType=VARCHAR},
+      </if>
+      <if test="isForeign != null" >
+      isForeign =  #{isForeign,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+   <update id="updByCertificateId" parameterType="com.lyarc.tp.corp.quality.certification.bean.QualifiedReport" >
+    update t_qualified_report
+    <set >
+      <if test="partSizeId != null" >
+        part_size_id = #{partSizeId,jdbcType=VARCHAR},
+      </if>
+      <if test="magneticId != null" >
+        magnetic_id = #{magneticId,jdbcType=VARCHAR},
+      </if>
+      <if test="ultrasonicId != null" >
+        ultrasonic_id = #{ultrasonicId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where certificate_id = #{certificateId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.inspection.dao.InspectionMapper" >
+
+  <!-- 表：t_inspection_apply -->
+  <sql id="Base_Column_List" >
+     inspection_apply_id,purchase_order_id,department,proposer,apply_date,operator,status,quality_inspection_id,
+     creator, create_time, update_time, tmstamp
+  </sql>
+
+ <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.inspection.bean.InspectionBean" >
+    <id column="inspection_apply_id" property="inspectionApplyId" jdbcType="VARCHAR" />
+    <result column="purchase_order_id" property="purchaseOrderId" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="INTEGER" />
+    <result column="proposer" property="proposer" jdbcType="VARCHAR" />
+    <result column="apply_date" property="applyDate" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="quality_inspection_id" property="qualityInspectionId" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- extends="BaseResultMap" 加上这个后显示 stock_bill_id字段值，否则为null-->
+  <resultMap id="ResultMapWithDetail" type="com.lyarc.tp.corp.inspection.dto.InspectionDTO"   extends="BaseResultMap">
+    <collection property="detailList" ofType="com.lyarc.tp.corp.inspection.dto.InspectionDetailDTO" select="getDetails"
+                column="inspection_apply_id">
+    </collection>
+  </resultMap>
+
+<!-- inspection_apply_id,mater_id,sub_type,mater_name,level,spec,model,use,provider_id,origin,
+     unit,need_date,price,quantity,amount,buyer,arrival_date,arrival_quantity,origin_batch,batch,made_date,validity_date,
+     quality_time,remark,creator, create_time, update_time, tmstamp -->
+ <!-- 获取单子的里面table列表的详情 -->
+ <select id="getDetails" resultType="InspectionDetailDTO" parameterType="java.lang.String" >
+    select
+    a.inspection_apply_id, a.mater_id,  a.sub_type, a.level,
+     a.`use`, a.provider_id, a.origin, a.need_date, a.price,
+    a.quantity, a.amount, a.buyer, a.arrival_date,
+     a.arrival_quantity, a.origin_batch,  a.batch, a.made_date, a.validity_date, a.quality_time, a.remark, a.creator,
+    a.create_time, a.update_time, a.tmstamp,
+    m.mater_name as materName,  m.spec as spec,  m.model as model, m.unit as unit
+    from t_inspection_apply_detail a 
+    left join t_material m on a.mater_id = m.mater_id
+    where a.inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+  </select>
+  
+ <!-- InspectionDTO get(@Param("inspectionApplyId") String inspectionApplyId); -->
+  <select id="get"  resultMap="ResultMapWithDetail"  parameterType="java.lang.String" >
+    select  * from t_inspection_apply
+    where inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 插入新建的部分  Integer add(InspectionBean inspectionBean);-->
+  <insert id="add" parameterType="InspectionForm">
+    insert into t_inspection_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="inspectionApplyId != null" >
+        inspection_apply_id,
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="proposer != null" >
+        proposer,
+      </if>
+      <if test="applyDate != null" >
+        apply_date,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="qualityInspectionId != null" >
+        quality_inspection_id,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inspectionApplyId != null" >
+        #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=INTEGER},
+      </if>
+      <if test="proposer != null" >
+        #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null" >
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="qualityInspectionId != null" >
+        #{qualityInspectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 自增类型的类型编号 -->
+  <select id="createSequence" parameterType="java.lang.String" resultType="java.lang.Integer" statementType="CALLABLE">
+    call sp_seq(concat(#{currentDate},'_t_inspection_apply'),1)
+  </select>
+ 
+   <!-- 查询订单是否存在 Integer selectedId(@Param("inspectionApplyId") String inspectionApplyId);-->
+  <select id="selectedId" parameterType="java.lang.String"  resultType="Integer" flushCache="true">
+    select 1 from t_inspection_apply where inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+  </select>
+  
+   <!-- 删除 Integer delete(@Param("inspectionApplyId") String inspectionApplyId); -->
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from t_inspection_apply where inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+  </delete>
+  
+  <!--  inspection_apply_id,purchase_order_id,department,proposer,apply_date,operator,status,quality_inspection_id,
+     creator, create_time, update_time, tmstamp -->
+  <!-- 更新主数据 Integer update(InspectionForm inspectionForm);-->
+  <update id="update" parameterType="InspectionForm">
+    update t_inspection_apply
+    <set >
+      <if test="purchaseOrderId != null" >
+        purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="proposer != null" >
+        proposer = #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null" >
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="qualityInspectionId != null" >
+        quality_inspection_id = #{qualityInspectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- inspection_apply_id,purchase_order_id,department,proposer,apply_date,operator,status,quality_inspection_id,
+     creator, create_time, update_time, tmstamp -->
+  <!-- 列表查询  List<InspectionDTO> list(InspectionQueryForm inspectionQueryForm); -->
+  
+  <select id="list" parameterType="InspectionQueryForm" resultType="InspectionDTO">
+    select distinct o.*
+    from t_inspection_apply o
+    left join t_inspection_apply_detail od on o.inspection_apply_id = od.inspection_apply_id
+    where 1=1
+    <if test='inspectionApplyId != null and inspectionApplyId !=""'>
+      AND o.inspection_apply_id LIKE concat('%',#{inspectionApplyId},'%')
+    </if>
+     <if test="status != null" >
+       AND o.status = #{status,jdbcType=VARCHAR}
+      </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+    ORDER BY o.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <!-- 列表附带的计数 Long count(InspectionQueryForm inspectionQueryForm); -->
+  <select id="count" parameterType="InspectionQueryForm" resultType="java.lang.Long">
+    select count(o.inspection_apply_id)
+    from t_inspection_apply o
+    where 1=1
+     <if test='inspectionApplyId != null and inspectionApplyId !=""'>
+      AND o.inspection_apply_id LIKE concat('%',#{inspectionApplyId},'%')
+    </if>
+    <if test="status != null" >
+       AND o.status = #{status,jdbcType=VARCHAR}
+      </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+  </select>
+</mapper>

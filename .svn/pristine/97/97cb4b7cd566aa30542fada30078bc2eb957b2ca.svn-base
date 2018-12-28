@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.InspectionSheet.dao.InspectionSheetMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheet" >
+    <id column="inspection_id" property="inspectionId" jdbcType="VARCHAR" />
+    <result column="inspection_apply_id" property="inspectionApplyId" jdbcType="VARCHAR" />
+    <result column="purchase_order_id" property="purchaseOrderId" jdbcType="VARCHAR" />
+    <result column="inspector" property="inspector" jdbcType="VARCHAR" />
+    <result column="inspection_date" property="inspectionDate" jdbcType="TIMESTAMP" />
+    <result column="analyst" property="analyst" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="weight_id" property="weightId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    inspection_id, inspection_apply_id, purchase_order_id, inspector,weight_id,remark, inspection_date, 
+    analyst, create_time, update_time, tmstamp
+  </sql>
+  <select id="list" resultType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheet">
+	select * from t_inspection_apply a
+<!-- 	left join t_inspection_apply_detail ad on a.inspection_apply_id = ad.inspection_apply_id
+ -->	 where 1=1
+	<if test='inspectionApplyId != null and inspectionApplyId != ""'>
+	and	a.inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+	</if>
+	<if test='purchaseOrderId != null and purchaseOrderId != ""'>
+	AND	a.purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+	</if>
+	<if test='department != null and department != ""'>
+	AND	a.department LIKE concat('%',#{department},'%')
+	</if>
+	<if test='proposer != null and proposer != ""'>
+	AND	a.proposer LIKE concat('%',#{proposer},'%')
+	</if>
+	
+	<if test="createBeginTime != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+    </if>
+    <if test="createEndTime != null">
+      AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+    </if>
+	ORDER BY a.create_time DESC
+	<if test="offset != null and pageSize != null">
+		limit #{offset},#{pageSize}
+	</if>
+	</select>
+	<select id="count" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheet"
+		resultType="java.lang.Long">
+	select  count(inspection_apply_id) from t_inspection_apply 
+	where 1=1
+	<if test='inspectionApplyId != null and inspectionApplyId != ""'>
+	AND	inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR}
+	</if>
+	<if test='purchaseOrderId != null and purchaseOrderId != ""'>
+	AND	purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+	</if>
+	<if test='department != null and department != ""'>
+	AND	department LIKE LIKE concat('%',#{department},'%')
+	</if>
+	<if test='proposer != null and proposer != ""'>
+	AND	proposer LIKE LIKE concat('%',#{proposer},'%')
+	</if>
+	</select>
+  <select id="selectId" resultType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheet">
+  	select * from t_inspection
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_inspection
+    where inspection_id = #{inspectionId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="addMain" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheet" >
+    insert into t_inspection
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="inspectionId != null" >
+        inspection_id,
+      </if>
+      <if test="inspectionApplyId != null" >
+        inspection_apply_id,
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id,
+      </if>
+      <if test="inspector != null" >
+        inspector,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="weightId != null" >
+        weight_id,
+      </if>
+      <if test="inspectionDate != null" >
+        inspection_date,
+      </if>
+      <if test="analyst != null" >
+        analyst,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inspectionId != null" >
+        #{inspectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionApplyId != null" >
+        #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+        #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="weightId != null" >
+        #{weightId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionDate != null" >
+        #{inspectionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="analyst != null" >
+        #{analyst,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.InspectionSheet.bean.InspectionSheet" >
+    update t_inspection
+    <set >
+      <if test="inspectionApplyId != null" >
+        inspection_apply_id = #{inspectionApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspector != null" >
+        inspector = #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionDate != null" >
+        inspection_date = #{inspectionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="weightId != null" >
+        weightId = #{weightId,jdbcType=VARCHAR},
+      </if>
+      <if test="analyst != null" >
+        analyst = #{analyst,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where inspection_id = #{inspectionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

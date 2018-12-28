@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StockMapper">
+	<resultMap id="BaseResultMap" type="com.lyarc.tp.corp.warehouse.bean.Stock">
+		<id column="storage_id" property="storageId" jdbcType="VARCHAR" />
+		<id column="mater_id" property="materId" jdbcType="VARCHAR" />
+		<id column="place_id" property="placeId" jdbcType="VARCHAR" />
+		<result column="mater_name" property="materName" jdbcType="VARCHAR" />
+		<result column="spec" property="spec" jdbcType="VARCHAR" />
+		<result column="model" property="model" jdbcType="VARCHAR" />
+		<result column="unit" property="unit" jdbcType="VARCHAR" />
+		<result column="batch" property="batch" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="quantity" property="quantity" jdbcType="DECIMAL" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+		<result column="check_status" property="checkStatus" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		storage_id, mater_id, place_id, mater_name, spec, model, unit, batch, price,
+		quantity,
+		amount, create_time, update_time, tmstamp
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="com.lyarc.tp.corp.warehouse.bean.StockKey">
+		select
+		<include refid="Base_Column_List" />
+		from t_stock
+		where storage_id = #{storageId,jdbcType=VARCHAR}
+		and mater_id = #{materId,jdbcType=VARCHAR}
+		and place_id = #{placeId,jdbcType=VARCHAR}
+	</select>
+
+	<!-- List<Stock> list(StockQueryBean queryBean); resultType="StockDto" -->
+	<select id="list" parameterType="com.lyarc.tp.corp.warehouse.bean.StockQueryBean"
+		resultType="Stock">
+		select
+		s.storage_id,s.mater_id,m.mater_name,m.spec,m.model,m.unit,s.batch,s.place_id,p.name
+		placeName,
+		s.price,s.quantity,s.amount, s.check_status,s.check_quantity,s.check_remark
+		from t_stock s
+		left join t_material m on s.mater_id = m.mater_id
+		left join t_storage_place p on s.storage_id = p.storage_id and s.place_id
+		= p.place_id
+		where 1=1
+		<if test='keyword != null and keyword !=""'>
+			AND (m.mater_id LIKE concat('%',#{keyword},'%') or m.mater_name LIKE
+			concat('%',#{keyword},'%') or s.batch LIKE concat('%',#{keyword},'%')
+			)
+		</if>
+		<if test='storageId != null and storageId !=""'>
+			AND s.storage_id = #{storageId}
+		</if>
+		<if test='materId != null and materId !=""'>
+			AND s.mater_id = #{materId}
+		</if>
+		<if test='placeId != null and placeId !=""'>
+			AND s.place_id = #{placeId}
+		</if>
+		<if test='checkStatus != null'>
+			AND s.check_status = #{checkStatus}
+		</if>
+		<if test='batch != null and batch !=""'>
+			AND s.batch = #{batch}
+		</if>
+		ORDER BY s.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>	
+
+	<select id="count" parameterType="StockQueryBean" resultType="java.lang.Long">
+		SELECT
+		count(1)
+		from t_stock s left join t_material m on s.mater_id = m.mater_id
+		left join t_storage_place p on s.storage_id = p.storage_id and s.place_id
+		= p.place_id
+		where 1=1
+		<if test='keyword != null and keyword !=""'>
+			AND (m.mater_id LIKE concat('%',#{keyword},'%') or m.mater_name LIKE
+			concat('%',#{keyword},'%') or s.batch LIKE concat('%',#{keyword},'%')
+			)
+		</if>
+		<if test='storageId != null and storageId !=""'>
+			AND s.storage_id = #{storageId}
+		</if>
+		<if test='materId != null and materId !=""'>
+			AND s.mater_id = #{materId}
+		</if>
+		<if test='placeId != null and placeId !=""'>
+			AND s.place_id = #{placeId}
+		</if>
+		<if test='checkStatus != null'>
+			AND s.check_status = #{checkStatus}
+		</if>
+		<if test='batch != null and batch !=""'>
+			AND s.batch = #{batch}
+		</if>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.StockKey">
+		delete from t_stock
+		where storage_id = #{storageId,jdbcType=VARCHAR}
+		and mater_id = #{materId,jdbcType=VARCHAR}
+		and place_id = #{placeId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.Stock">
+		insert into t_stock
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="storageId != null">
+				storage_id,
+			</if>
+			<if test="materId != null">
+				mater_id,
+			</if>
+			<if test="placeId != null">
+				place_id,
+			</if>
+			<if test="materName != null">
+				mater_name,
+			</if>
+			<if test="spec != null">
+				spec,
+			</if>
+			<if test="model != null">
+				model,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			<if test="batch != null">
+				batch,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="storageId != null">
+				#{storageId,jdbcType=VARCHAR},
+			</if>
+			<if test="materId != null">
+				#{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="placeId != null">
+				#{placeId,jdbcType=VARCHAR},
+			</if>
+			<if test="materName != null">
+				#{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="spec != null">
+				#{spec,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				#{model,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="batch != null">
+				#{batch,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.warehouse.bean.Stock">
+		update t_stock
+		<set>
+			<if test="materName != null">
+				mater_name = #{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="spec != null">
+				spec = #{spec,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				model = #{model,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				unit = #{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="batch != null">
+				batch = #{batch,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="quantity != null">
+				quantity = #{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null">
+				amount = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where storage_id = #{storageId,jdbcType=VARCHAR}
+		and mater_id = #{materId,jdbcType=VARCHAR}
+		and place_id = #{placeId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- Integer checkBatchStatus(Stock record);// 根据4个主键，批量仓库盘点更改状态 -->
+	<update id="checkBatchStatus" parameterType="com.lyarc.tp.corp.warehouse.bean.Stock">
+		update t_stock
+		<set>
+			<if test="checkStatus != null">
+				check_status = #{checkStatus},
+			</if>
+			<if test="checkRemark != null">
+				check_remark = #{checkRemark},
+			</if>
+
+			check_quantity = #{checkQuantity}
+
+		</set>
+		where storage_id = #{storageId}
+		and mater_id = #{materId}
+		and place_id = #{placeId}
+		and batch = #{batch}
+	</update>
+
+	<update id="checkSubmit" parameterType="java.lang.String">
+		update t_stock
+		<set>
+			check_status = 2
+		</set>
+		where storage_id = #{storageId}
+		and check_status = 1
+	</update>
+
+	<select id="loadCheck" resultMap="BaseResultMap">
+		select * from t_stock where check_status=#{checkStatus,jdbcType=INTEGER} and
+		storage_id = #{storageId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="checkUpdate" parameterType="com.lyarc.tp.corp.warehouse.bean.Stock" >
+    	update t_stock
+    	<set>
+    	quantity = #{quantity},
+    	check_quantity = #{checkQuantity},
+    	check_status = #{checkStatus},
+    	check_remark = #{checkRemark},
+    	</set>
+    	
+    	where storage_id = #{storageId}
+		and mater_id = #{materId}
+		and place_id = #{placeId}
+		and batch = #{batch}
+    </update>
+    
+    <!-- 分组查询 -->
+    <select id="listMater" parameterType="com.lyarc.tp.corp.warehouse.bean.StockQueryBean"
+		resultType="Stock">
+		select
+		s.storage_id,s.mater_id,m.mater_name,m.spec,m.model,m.unit,
+		sum(s.quantity) as quantity from t_stock s
+		left join t_material m on s.mater_id = m.mater_id		
+		where 1=1
+		<if test='keyword != null and keyword !=""'>
+			AND (m.mater_id LIKE concat('%',#{keyword},'%') or m.mater_name LIKE
+			concat('%',#{keyword},'%') 
+			)
+		</if>
+		<if test='storageId != null and storageId !=""'>
+			AND s.storage_id = #{storageId}
+		</if>
+		<if test='materId != null and materId !=""'>
+			AND s.mater_id = #{materId}
+		</if>
+		GROUP BY s.storage_id,s.mater_id
+		ORDER BY m.mater_name ASC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>	
+
+	<select id="countMater" parameterType="StockQueryBean" resultType="java.lang.Long">
+	SELECT count(1) from(
+		SELECT
+		s.storage_id,s.mater_id
+		from t_stock s left join t_material m on s.mater_id = m.mater_id		
+		where 1=1
+		<if test='keyword != null and keyword !=""'>
+			AND (m.mater_id LIKE concat('%',#{keyword},'%') or m.mater_name LIKE
+			concat('%',#{keyword},'%')
+			)
+		</if>
+		<if test='storageId != null and storageId !=""'>
+			AND s.storage_id = #{storageId}
+		</if>
+		<if test='materId != null and materId !=""'>
+			AND s.mater_id = #{materId}
+		</if>
+		GROUP BY s.storage_id,s.mater_id) as a
+	</select>
+</mapper>

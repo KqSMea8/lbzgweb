@@ -1,0 +1,400 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:include="fragment::header"></div>
+<style type="text/css"> 
+	 /* 公用样式 */
+        
+        @media (min-width:1200px) {
+            .container {
+                width: 1170px;
+                padding-right: 15px;
+                padding-left: 15px;
+                margin-right: auto;
+                margin-left: auto;
+            }
+        }
+        
+        body {
+            font-family: Microsoft YaHei;
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .container {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
+        body a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        body a:active,
+        body a:focus,
+        body a:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        body p {
+            margin: 0 0 10px;
+        }
+        
+        body img {
+            vertical-align: middle;
+        }
+        
+        body * {
+            box-sizing: border-box;
+        }
+        
+        .ty .btn-info {
+            color: #fff;
+            background-color: #20BFEE;
+            border-color: #20bfee;
+            outline: none;
+        }
+        
+        .ty .btn-info:hover {
+            background-color: #2ed0fd;
+            border-color: #2ed0fd;
+            text-decoration: none;
+            outline: none;
+        }
+        
+        .ty .btn-info:active {
+            background-color: #20bfee;
+            border-color: #20bfee;
+            box-shadow: inset 0 1px 1px 1px #1ea9d1;
+            text-shadow: 0 1px 0 #56d4f5;
+            color: #178cad;
+            transition-duration: 0s;
+            outline: none;
+        }
+        
+        .btn {
+            background-image: none;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        .btn-lg {
+            padding: 10px 16px;
+            font-size: 18px;
+            line-height: 1.3333333;
+            border-radius: 6px;
+            display: block;
+            width: 100%;
+        }
+        
+        .bottom {
+            text-align: center;
+            height: 150px;
+            background-color: #000;
+            font-size: 16px;
+            color: #ccc;
+        }
+        
+        .bottom .text {
+            text-align: left;
+            display: inline-block;
+            vertical-align: top;
+            padding-top: 35px;
+        }
+        
+        .bottom .copyright {
+            color: #666666;
+            font-size: 14px;
+        }
+        
+        .bottom .code {
+            display: inline-block;
+            height: 100px;
+            width: 100px;
+            background-color: #fff;
+            margin-right: 28px;
+            margin-top: 25px;
+        }
+        
+        .bottom .code img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .form-control {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-control::-moz-placeholder {
+            color: #ccc;
+        }
+        
+        .form-control::-webkit-input-placeholder {
+            /* WebKit browsers */
+            color: #ccc;
+        }
+        
+        .form-control:focus {
+            border-color: #66afe9;
+            outline: 0;
+        }
+
+     
+     /* 页面样式 */
+     
+     .backStageLogin-head {
+            height: 80px;
+            line-height: 80px;
+            padding: 0 50px;
+            color: #999;
+            font-size: 14px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            border-bottom: 1px solid #f4f4f4;
+            z-index: 10;
+            background-color: #fff;
+        }
+        
+        .backStageLogin-head .logo {
+            cursor: pointer;
+        }
+        
+        .backStageLogin-head .back-url {
+            position: absolute;
+            right: 50px;
+            padding-left: 15px;
+            background: url('images/back.png') center left no-repeat;
+        }
+        
+        .backStageLogin-head .back-url:hover {
+            background: url('images/back1.png') center left no-repeat;
+        }
+        
+        .backStageLogin-main {
+            position: relative;
+            height: 719px;
+            margin-top: 80px;
+        }
+        
+        .backStageLogin-logo {
+            position: absolute;
+            left: 110px;
+            top: 50%;
+            margin-top: -197px;
+        }
+        
+        .backStageLogin-logo img {
+            height: 320px;
+        }
+        
+        .backStageLogin-loginBox {
+            width: 370px;
+            height: 365px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            position: absolute;
+            right: 90px;
+            top: 50%;
+            margin-top: -228px;
+            background-color: #fff;
+            z-index: 1;
+        }
+        
+        .backStageLogin-loginBox-form {
+            padding: 40px 35px;
+            margin: 0 auto;
+        }
+        
+        .backStageLogin-loginBox-title {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .backStageLogin-loginBox-login {
+            height: 40px;
+            line-height: 40px;
+            padding: 0;
+            font-size: 16px;
+        }
+        
+        .backStageLogin-loginBox .mb15 {
+            margin-bottom: 15px;
+        }
+        
+        .backStageLogin-loginBox .form-control {
+            height: 42px;
+        }
+        
+        .backStageLogin-loginBox .radio-inline {
+            vertical-align: bottom;
+        }
+        
+        .backStageLogin-loginBox-operate {
+            color: #999;
+            position: relative;
+        }
+        
+        .backStageLogin-loginBox-ForgotPSW {
+            position: absolute;
+            right: 0;
+        }
+        
+        .backStageLogin-loginBox-weChat {
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 56px;
+            line-height: 56px;
+            border-top: 1px solid #ddd; 
+            width: 100%;
+            color: #0285f9;
+        }
+        .backStageLogin-loginBox-weChat-qy {
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 56px;
+            line-height: 56px;
+            border-top: 1px solid #ddd;
+            width: 50%;
+            color: #0285f9;
+        }
+        
+        .backStageLogin-loginBox-weChat .weChat-logo,
+        .backStageLogin-loginBox-weChat-qy .weChat-logo {
+            width: 25px;
+        }
+        
+        .backStageLogin-loginBox-weChat:hover , .backStageLogin-loginBox-weChat-qy:hover{
+            background-color: #f7f7f7;
+        }
+        
+        .ty a:hover {
+            color: #20BFEE;
+        }
+</style>
+</head>
+<body class="ty">
+    <div class="backStageLogin-head">
+        <a href="/"><img alt="洛阳重工" class="logo" src="images/logo.jpg" style="height: 60px"/></a>
+        <!--<span class="back-home"><a class="back-url" href="/">返回洛阳重工首页</a></span>-->
+    </div>
+    <div class="container backStageLogin-main">
+        <div class="backStageLogin-logo">
+            <img src="images/backStageLogin.jpg" alt="后台登录" />
+        </div>
+        <div class="backStageLogin-loginBox">
+            <div class="backStageLogin-loginBox-form">
+                <p class="backStageLogin-loginBox-title">账号登录</p>
+                <input type="text" class="form-control mb15" value="renxin" id="loginName" placeholder="邮箱，用户名" />
+                <input type="password" class="form-control mb15" value="123456" id="password" placeholder="密码" />
+                <p class="backStageLogin-loginBox-operate checkbox">
+                    <label class="radio-inline mb15">
+                        <input type="checkbox" name="optionsRadiosinline" id="optionsRadios3" value="option1" /> 记住密码
+                    </label>
+                    <span class="backStageLogin-loginBox-ForgotPSW"><a href="javascript:void(0);">忘记密码</a></span>
+                </p>
+                <button type="button" class="btn btn-info btn-lg backStageLogin-loginBox-login" onclick="login()">登录</button>
+                    <a id="qc_link" href="./login/qclogin" target="_blank">
+                        <div class="backStageLogin-loginBox-weChat">   
+                            <img class="weChat-logo" src="images/firmWeChat.png" alt="" /> 企业微信扫码登录                   
+                        </div>
+                    </a>        
+            </div>
+        </div>
+    </div>
+    <!--<div class="bottom">-->
+        <!--<div class="code">-->
+            <!--<img src="images/code.jpg" alt="业务定制" />-->
+        <!--</div>-->
+        <!--<div class="text">-->
+            <!--<p>扫码关注腾云公众号</p>-->
+            <!--<p>联系我们： （0379）65112858 65112856</p>-->
+            <!--<p class="copyright">COPYRIGHT 2016 洛阳艾克科技有限公司 版权所有</p>-->
+        <!--</div>-->
+    <!--</div>-->
+</body>
+ 
+<script th:src="@{/js/jquery/jquery-1.11.1.min.js}"></script>
+<script type="text/javascript" >
+/*<![CDATA[*/
+    $(function(){
+    	$('#loginName').keydown(function(e){
+    		if(e.keyCode==13){
+    			$('#password').focus();
+    		}
+    	});
+    	
+    	$('#password').keydown(function(e){
+    		if(e.keyCode==13){
+    		   login();
+    		}
+    	});
+    })
+    
+    function login(){
+        var data = {};
+        data.loginName = $("#loginName").val();
+        data.password = $("#password").val();
+		
+        if(data.loginName == ''||data.loginName == null){
+        	alert('用户名不能为空!');
+        	$("#loginName").focus();
+        	return;
+        }
+        
+        if(data.password == ''||data.loginName == null){
+        	alert('密码不能为空!');
+        	$("#password").focus();
+        	return;
+        }
+
+        $.ajax({
+            url:'/corp/api/login/login',
+            type:'POST',
+            contentType:"application/json",
+            data:JSON.stringify(data),
+            success:function(result){
+                var code = result.code;
+                if(code == 10001){
+                    alert('用户名或密码不能为空')
+                }else if(code == 10002){
+                    alert('用户名或密码不正确')
+                }else if(code == 10007){
+                    alert('账号已被禁用')
+                }else if(code == 0){
+                    window.location.href="/#/corp";
+                }
+            }
+        })
+}
+ 
+/*]]>*/
+</script>
+
+</html>

@@ -1,0 +1,79 @@
+server:
+  context-path: /corp
+management: 
+  security: 
+    enabled: false
+    roles:
+
+logging:
+  level:
+    com.netflix.discovery.shared: info
+    org.apache: warn
+    org.eclipse: warn
+#    org.springframework: info
+info: 
+  app:
+    name: ${eureka.instance.instance-id} 
+    encoding: @project.build.sourceEncoding@
+    jdk: @java.version@
+
+endpoints: 
+  info:
+    enabled: true
+    
+mybatis:
+  #config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mappers/**/*.xml
+  type-aliases-package: com.lyarc.tp.corp
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+
+spring: 
+  #不适用redis存储
+  session:
+    store-type: none
+  application: 
+    name: corp
+    admin:
+      enabled: true
+  datasource: # 主数据源，默认的
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lbzgweb?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&useSSL=false&allowMultiQueries=true
+    username: root
+    password: root
+    initialSize: 2 # 初始化大小，最小，最大
+    minIdle: 1 # 配置获取连接等待超时的时间
+    maxActive: 10 # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    maxWait: 60000 # 配置一个连接在池中最小生存的时间，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+#    validationQuery: SELECT 'x'
+#    testWhileIdle: true
+#    testOnBorrow: false
+#    testOnReturn: false
+    filters: stat # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+  thymeleaf:
+    cache: false
+    suffix: .html
+    mode: LEGACYHTML5
+    prefix: classpath:/templates/
+    encoding: UTF-8
+    content-type: text/html
+  jackson:
+      locale: zh
+      time-zone: GMT+8
+      date-format: yyyy-MM-dd HH:mm:ss
+      serialization:
+        write-enums-using-to-string: true
+      deserialization:
+        read-enums-using-to-string: true
+        fail-on-unknown-properties: false
+#      default-property-inclusion: non-null
+#      property-naming-strategy: SNAKE_CASE
+  profiles:
+    active: dev
+  activiti:
+    check-process-definitions: false

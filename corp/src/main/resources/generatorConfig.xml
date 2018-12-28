@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="testTables" targetRuntime="MyBatis3">
+    
+        <commentGenerator>
+            <!-- 删除自动生成注释 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        
+        <!-- 配置数据库连接信息 -->
+        <jdbcConnection 
+        	driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://192.168.0.104:3306/lbzgweb?autoReconnect=true&amp;useServerPreparedStmts=false&amp;rewriteBatchedStatements=true&amp;useSSL=false&amp;allowMultiQueries=true" 
+            userId="root"
+            password="root">
+        </jdbcConnection>
+        
+        <!-- 数据类型解析，false表示将DECIMAL和 NUMERIC类型解析为 Integer，true表示解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        
+        <!-- 自动生成实体类存放的位置 -->
+        <javaModelGenerator targetPackage="com.lyarc.tp.corp.quality.certification.bean"
+            targetProject="./src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        
+        <!-- 自动生成Mapper.xml存放的位置 -->
+        <sqlMapGenerator targetPackage="mappers.quality" 
+            targetProject="./src/main/resources">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+        
+        <!-- 自动生成Mapper接口存放的位置 -->
+        <javaClientGenerator type="XMLMAPPER"
+            targetPackage="com.lyarc.tp.corp.quality.certification.dao" 
+            targetProject="./src/main/java">
+           <!--  enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+        
+        <!-- 指定数据库表 -->
+      <!--   <table tableName="t_inspection" domainObjectName="InspectionSheet" 
+        enableCountByExample="false" enableSelectByExample="false"
+        enableUpdateByExample="false" enableDeleteByExample="false"></table> -->
+        <table tableName="t_part_size" domainObjectName="PartSize" 
+        enableCountByExample="false" enableSelectByExample="false"
+        enableUpdateByExample="false" enableDeleteByExample="false"></table>   
+       <!--  <table tableName="t_upb_eight_d_report" domainObjectName="UpbEightDReport" 
+        enableCountByExample="false" enableSelectByExample="false"
+        enableUpdateByExample="false" enableDeleteByExample="false"></table>    -->
+       <!--  <table tableName="t_magnetic_powder_inspection" domainObjectName="PartSize" 
+        enableCountByExample="false" enableSelectByExample="false"
+        enableUpdateByExample="false" enableDeleteByExample="false"></table>   
+        <table tableName="t_part_size" domainObjectName="UltrasonicTesting" 
+        enableCountByExample="false" enableSelectByExample="false"
+        enableUpdateByExample="false" enableDeleteByExample="false"></table>    
+         -->
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.contract.contract.dao.ContractDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.contract.contract.bean.ContractDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="drawing" property="drawing" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="texture" property="texture" jdbcType="VARCHAR" />
+    <result column="hardness" property="hardness" jdbcType="VARCHAR" />
+    <result column="delivery_type" property="deliveryType" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="weight_total" property="weightTotal" jdbcType="DECIMAL" />
+    <result column="workblank" property="workblank" jdbcType="DECIMAL" />
+    <result column="workblank_fee" property="workblankFee" jdbcType="DECIMAL" />
+    <result column="process_fee" property="processFee" jdbcType="DECIMAL" />
+    <result column="packing_fee" property="packingFee" jdbcType="DECIMAL" />
+    <result column="freight_fee" property="freightFee" jdbcType="DECIMAL" />
+    <result column="port_fee" property="portFee" jdbcType="DECIMAL" />
+    <result column="model_fee" property="modelFee" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, contract_id, mater_id, drawing, mater_name, texture, hardness, delivery_type, 
+    unit, quantity, weight, weight_total, workblank, workblank_fee, process_fee, packing_fee, 
+    freight_fee, port_fee, model_fee, amount, delivery_date, remark, creator, create_time, 
+    update_time, tmstamp,files
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_contract_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_contract_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByContractId" parameterType="java.lang.String" >
+    delete from t_contract_detail
+    where contract_id = #{contractId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractDetail" >
+    insert into t_contract_detail (id, contract_id, mater_id, 
+      drawing, mater_name, texture, 
+      hardness, delivery_type, unit, 
+      quantity, weight, weight_total, 
+      workblank, workblank_fee, process_fee, 
+      packing_fee, freight_fee, port_fee, 
+      model_fee, amount, delivery_date, 
+      remark, creator, create_time, 
+      update_time, tmstamp,files)
+    values (#{id,jdbcType=INTEGER}, #{contractId,jdbcType=VARCHAR}, #{materId,jdbcType=VARCHAR}, 
+      #{drawing,jdbcType=VARCHAR}, #{materName,jdbcType=VARCHAR}, #{texture,jdbcType=VARCHAR},
+      #{hardness,jdbcType=VARCHAR}, #{deliveryType,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=DECIMAL}, #{weight,jdbcType=DECIMAL}, #{weightTotal,jdbcType=DECIMAL},
+      #{workblank,jdbcType=DECIMAL}, #{workblankFee,jdbcType=DECIMAL}, #{processFee,jdbcType=DECIMAL}, 
+      #{packingFee,jdbcType=DECIMAL}, #{freightFee,jdbcType=DECIMAL}, #{portFee,jdbcType=DECIMAL}, 
+      #{modelFee,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, #{deliveryDate,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP},#{tmstamp,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractDetail" >
+    insert into t_contract_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="drawing != null" >
+        drawing,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="texture != null" >
+        texture,
+      </if>
+      <if test="hardness != null" >
+        hardness,
+      </if>
+      <if test="deliveryType != null" >
+        delivery_type,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="weightTotal != null" >
+        weight_total,
+      </if>
+      <if test="workblank != null" >
+        workblank,
+      </if>
+      <if test="workblankFee != null" >
+        workblank_fee,
+      </if>
+      <if test="processFee != null" >
+        process_fee,
+      </if>
+      <if test="packingFee != null" >
+        packing_fee,
+      </if>
+      <if test="freightFee != null" >
+        freight_fee,
+      </if>
+      <if test="portFee != null" >
+        port_fee,
+      </if>
+      <if test="modelFee != null" >
+        model_fee,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="files != null" >
+        files,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="hardness != null" >
+        #{hardness,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryType != null" >
+        #{deliveryType,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="weightTotal != null" >
+        #{weightTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="workblank != null" >
+        #{workblank,jdbcType=DECIMAL},
+      </if>
+      <if test="workblankFee != null" >
+        #{workblankFee,jdbcType=DECIMAL},
+      </if>
+      <if test="processFee != null" >
+        #{processFee,jdbcType=DECIMAL},
+      </if>
+      <if test="packingFee != null" >
+        #{packingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="freightFee != null" >
+        #{freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="portFee != null" >
+        #{portFee,jdbcType=DECIMAL},
+      </if>
+      <if test="modelFee != null" >
+        #{modelFee,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryDate != null" >
+        #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="files != null" >
+        #{files,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractDetail" >
+    update t_contract_detail
+    <set >
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        mater_id = #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        drawing = #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        texture = #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="hardness != null" >
+        hardness = #{hardness,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryType != null" >
+        delivery_type = #{deliveryType,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="weightTotal != null" >
+        weight_total = #{weightTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="workblank != null" >
+        workblank = #{workblank,jdbcType=DECIMAL},
+      </if>
+      <if test="workblankFee != null" >
+        workblank_fee = #{workblankFee,jdbcType=DECIMAL},
+      </if>
+      <if test="processFee != null" >
+        process_fee = #{processFee,jdbcType=DECIMAL},
+      </if>
+      <if test="packingFee != null" >
+        packing_fee = #{packingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="freightFee != null" >
+        freight_fee = #{freightFee,jdbcType=DECIMAL},
+      </if>
+      <if test="portFee != null" >
+        port_fee = #{portFee,jdbcType=DECIMAL},
+      </if>
+      <if test="modelFee != null" >
+        model_fee = #{modelFee,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="files != null" >
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.contract.contract.bean.ContractDetail" >
+    update t_contract_detail
+    set contract_id = #{contractId,jdbcType=VARCHAR},
+      mater_id = #{materId,jdbcType=VARCHAR},
+      drawing = #{drawing,jdbcType=VARCHAR},
+      mater_name = #{materName,jdbcType=VARCHAR},
+      texture = #{texture,jdbcType=VARCHAR},
+      hardness = #{hardness,jdbcType=VARCHAR},
+      delivery_type = #{deliveryType,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      weight = #{weight,jdbcType=DECIMAL},
+      weight_total = #{weightTotal,jdbcType=DECIMAL},
+      workblank = #{workblank,jdbcType=DECIMAL},
+      workblank_fee = #{workblankFee,jdbcType=DECIMAL},
+      process_fee = #{processFee,jdbcType=DECIMAL},
+      packing_fee = #{packingFee,jdbcType=DECIMAL},
+      freight_fee = #{freightFee,jdbcType=DECIMAL},
+      port_fee = #{portFee,jdbcType=DECIMAL},
+      model_fee = #{modelFee,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=DECIMAL},
+      delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+      files = #{files,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

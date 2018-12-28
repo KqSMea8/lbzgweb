@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.purchase.order.dao.InStockApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.purchase.order.bean.InStockApply" >
+    <id column="in_stock_apply_id" property="inStockApplyId" jdbcType="VARCHAR" />
+    <result column="storage_id" property="storageId" jdbcType="VARCHAR" />
+    <result column="purchase_order_id" property="purchaseOrderId" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="INTEGER" />
+    <result column="proposer" property="proposer" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="audit_remark" property="auditRemark" jdbcType="VARCHAR" />
+    <result column="stock_bill_id" property="stockBillId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <resultMap id="ResultMapWithDetail" type="com.lyarc.tp.corp.purchase.order.bean.InStockApply" extends="BaseResultMap" >
+    <collection property="detailList" ofType="com.lyarc.tp.corp.purchase.order.bean.InStockApplyDetail" select="getDetails"
+                column="in_stock_apply_id">
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    in_stock_apply_id, purchase_order_id, department, proposer, remark, creator, create_time, 
+    update_time, tmstamp,status,audit_remark,stock_bill_id,storage_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_in_stock_apply
+    where in_stock_apply_id = #{inStockApplyId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="InStockApplyQueryBean" resultType="InStockApply">
+    select p.*
+    from t_in_stock_apply p
+    where 1=1
+    <if test='purchaseOrderId != null and purchaseOrderId !=""'>
+      AND p.purchase_order_id LIKE concat('%',#{purchaseOrderId},'%')
+    </if>
+    <if test='inStockApplyId != null and inStockApplyId !=""'>
+      AND p.in_stock_apply_id LIKE concat('%',#{inStockApplyId},'%')
+    </if>
+    <if test='storageId != null and storageId !=""'>
+      AND p.storage_id LIKE concat('%',#{storageId},'%')
+    </if>
+    <if test="createBeginTime != null">
+      AND DATE_FORMAT(p.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+    </if>
+    <if test="createEndTime != null">
+      AND DATE_FORMAT(p.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+    </if>
+    <if test="status !=null">
+      AND p.status= #{status}
+    </if>
+    ORDER BY p.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="InStockApplyQueryBean" resultType="java.lang.Long">
+    select count(distinct p.in_stock_apply_id)
+    from t_in_stock_apply p
+    where 1=1
+
+    <if test='purchaseOrderId != null and purchaseOrderId !=""'>
+      AND p.purchase_order_id LIKE concat('%',#{purchaseOrderId},'%')
+    </if>
+    <if test='inStockApplyId != null and inStockApplyId !=""'>
+      AND p.in_stock_apply_id LIKE concat('%',#{inStockApplyId},'%')
+    </if>
+    <if test='storageId != null and storageId !=""'>
+      AND p.storage_id LIKE concat('%',#{storageId},'%')
+    </if>
+    <if test="createBeginTime != null">
+      AND DATE_FORMAT(p.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+    </if>
+    <if test="createEndTime != null">
+      AND DATE_FORMAT(p.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+    </if>
+    <if test="status !=null">
+      AND p.status= #{status}
+    </if>
+  </select>
+
+  <select id="selectAndDetail" resultMap="ResultMapWithDetail" parameterType="java.lang.String" >
+    select o.*
+    from t_in_stock_apply o
+    where o.in_stock_apply_id = #{inStockApplyId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getDetails" resultType="InStockApplyDetail" parameterType="java.lang.String" >
+    select
+    a.in_stock_apply_id, a.mater_id, m.sub_type, m.mater_name, a.level, m.spec, m.model, a.`use`, a.provider_id,p.provider_name,
+    a.buyer, a.arrival_date, a.origin, a.unit, a.need_date, a.price, a.quantity, a.storage, a.amount, a.origin_batch,
+    a.batch, a.made_date, a.validity_date, a.quality_time, a.remark, a.status, a.creator, a.create_time,
+    a.update_time, a.tmstamp, a.oper_remark
+    from t_in_stock_apply_detail a left join t_material m on a.mater_id = m.mater_id
+    left join t_provider p on a.provider_id = p.provider_id
+    where in_stock_apply_id = #{in_stock_apply_id}
+  </select>
+
+  <!-- 自增类型的类型编号 -->
+  <select id="createSequence" parameterType="java.lang.String" resultType="java.lang.Integer" statementType="CALLABLE">
+    call sp_seq(concat(#{currentDate},'_t_in_stock_apply'),1)
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_in_stock_apply
+    where in_stock_apply_id = #{inStockApplyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.purchase.order.bean.InStockApply" >
+    insert into t_in_stock_apply (in_stock_apply_id, purchase_order_id, 
+      department, proposer, remark, 
+      creator, create_time, update_time, 
+      tmstamp)
+    values (#{inStockApplyId,jdbcType=VARCHAR}, #{purchaseOrderId,jdbcType=VARCHAR}, 
+      #{department,jdbcType=INTEGER}, #{proposer,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.purchase.order.bean.InStockApply" >
+    insert into t_in_stock_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="inStockApplyId != null" >
+        in_stock_apply_id,
+      </if>
+      <if test="purchaseOrderId != null" >
+        purchase_order_id,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="proposer != null" >
+        proposer,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="storageId != null" >
+        storage_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="stockBillId != null" >
+        stock_bill_id,
+      </if>
+      <if test="auditRemark != null" >
+        audit_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="inStockApplyId != null" >
+        #{inStockApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderId != null" >
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=INTEGER},
+      </if>
+      <if test="proposer != null" >
+        #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="storageId != null" >
+        #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="stockBillId != null" >
+        #{stockBillId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditRemark != null" >
+        #{auditRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 查询订单是否存在  Integer selectedId(@Param("stockBillId") String stockBillId);-->
+  <select id="selectedId" parameterType="java.lang.String"  resultType="Integer" flushCache="true">
+    select 1 from t_in_stock_apply where in_stock_apply_id = #{inStockApplyId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- Integer rejectStatus(StockBillStatusRejectForm form);  -->
+    <update id="rejectStatus" parameterType="InStockApplyStatusRejectForm" flushCache="true">
+       update t_in_stock_apply
+        <set>
+          status = 3,update_time = now(),audit_remark=#{auditRemark,jdbcType=VARCHAR}
+        </set>
+          WHERE in_stock_apply_id = #{inStockApplyId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="pass" flushCache="true">
+       update t_in_stock_apply
+        <set>
+          status = 2,update_time = now(),stock_bill_id = #{stockBillId,jdbcType=VARCHAR}
+        </set>
+          WHERE in_stock_apply_id = #{inStockApplyId,jdbcType=VARCHAR}
+    </update>
+</mapper>

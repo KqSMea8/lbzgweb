@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.purchase.provider.dao.ProviderPayApplyMapper">
+	<sql id="Base_Column_List">
+		pa_id,provider_id,amount,order_id,files,
+		proposer,remark,status,wf_inst_id,
+		wf_inst_time,wf_inst_remark,creator,
+		create_time,update_time,tmstamp
+	</sql>
+
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.purchase.provider.dao.ProviderPayApplyMapper">
+		<id column="pa_id" jdbcType="VARCHAR" property="paId" />
+		<result column="provider_id" jdbcType="VARCHAR" property="providerId" />
+		<result column="amount" jdbcType="VARCHAR" property="amount" />
+		<result column="order_id" jdbcType="DECIMAL" property="orderId" />
+		<result column="files" jdbcType="VARCHAR" property="files" />
+		<result column="proposer" jdbcType="VARCHAR" property="proposer" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="wf_inst_id" jdbcType="VARCHAR" property="wfInstId" />
+		<result column="wf_inst_time" jdbcType="TIMESTAMP" property="wfInstTime" />
+		<result column="wf_inst_remark" jdbcType="VARCHAR" property="wfInstRemark" />
+		<result column="creator" jdbcType="INTEGER" property="creator" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="tmstamp" jdbcType="TIMESTAMP" property="tmStamp" />
+	</resultMap> 
+
+	<select id="selectedId" parameterType="java.lang.String"
+		resultType="Integer" flushCache="true">
+		select 1 from t_provider_pay_apply
+		where
+		pa_id=#{paId,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 列表查询 -->
+	<select id="list" parameterType="ProviderPayApply" resultType="ProviderPayApplyDto">
+		select
+		pa.*,p.provider_name from t_provider_pay_apply pa
+		left join
+		t_provider p
+		on pa.provider_id = p.provider_id
+		where 1=1
+		<if test='paId != null and paId !=""'>
+			AND pa.pa_id =#{paId}
+		</if>
+		<if test='providerId != null and providerId !=""'>
+			AND pa.provider_id =#{providerId}
+		</if>
+		<if test='providerName != null'>
+			 AND p.provider_name LIKE concat('%',#{providerName},'%')
+		</if>
+		<if test="createTimeStart != null">
+			AND DATE_FORMAT(pa.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+		</if>
+		<if test="createTimeEnd != null">
+			AND DATE_FORMAT(pa.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+		</if>
+		<if test='status != null'>
+			AND pa.status = #{status}
+		</if>
+		ORDER BY pa.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<select id="count" parameterType="ProviderPayApply" resultType="java.lang.Long">
+		select count(1)
+		from t_provider_pay_apply t where 1=1
+		<if test='paId != null and paId !=""'>
+			AND t.pa_id =#{paId}
+		</if>
+		<if test='providerId != null and providerId !=""'>
+			AND t.provider_id =#{providerId}
+		</if>
+		<if test="createTimeStart != null">
+			AND DATE_FORMAT(t.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+		</if>
+		<if test="createTimeEnd != null">
+			AND DATE_FORMAT(t.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+		</if>
+	</select>
+
+	<insert id="insertSelective" parameterType="ProviderPayApply">
+		insert into t_provider_pay_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="paId != null">
+				pa_id,
+			</if>
+			<if test="providerId != null">
+				provider_id,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="files != null">
+				files,
+			</if>
+			<if test="proposer != null">
+				proposer,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="wfInstId != null">
+				wf_inst_id,
+			</if>
+			<if test="wfInstTime != null">
+				wf_inst_time,
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmStamp != null">
+				tmstamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="paId != null">
+				#{paId,jdbcType=VARCHAR},
+			</if>
+			<if test="providerId != null">
+				#{providerId,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="files != null">
+				#{files,jdbcType=VARCHAR},
+			</if>
+			<if test="proposer != null">
+				#{proposer,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="wfInstId != null">
+				#{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstTime != null">
+				#{wfInstTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wfInstRemark != null">
+				#{wfInstRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmStamp != null">
+				#{tmStamp,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="ProviderAdjustPrice">
+		update t_provider_pay_apply
+		<set>
+			<if test="paId != null">
+				pa_id = #{paId,jdbcType=VARCHAR},
+			</if>
+			<if test="providerId != null">
+				provider_id = #{providerId,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				amount = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="files != null">
+				files = #{files,jdbcType=VARCHAR},
+			</if>
+			<if test="proposer != null">
+				proposer = #{proposer,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="wfInstId != null">
+				wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstTime != null">
+				wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				creator = #{creator,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmStamp != null">
+				tmstamp = #{tmStamp,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where pa_id= #{paId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="submit" parameterType="ProviderPayApplyForm">
+		update t_provider_pay_apply
+		<set>
+			<if test="wfInstId != null">
+				wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstTime != null">
+				wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+			</if>
+			status = 1
+		</set>
+		where pa_id = #{paId,jdbcType=VARCHAR} and status = 0
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		delete from t_provider_pay_apply
+		where pa_id=#{paId,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="selectedObject" resultType="ProviderPayApplyDto"
+		parameterType="java.lang.String" flushCache="true">
+		select 
+		pa.*,p.provider_name from t_provider_pay_apply pa
+		left join t_provider p
+		on pa.provider_id = p.provider_id
+		where pa_id=#{paId,jdbcType=VARCHAR}
+	</select>
+</mapper>

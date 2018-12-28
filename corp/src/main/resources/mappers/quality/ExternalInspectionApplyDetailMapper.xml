@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.dao.ExternalInspectionApplyDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyDetail" >
+    <id column="instrument_id" property="instrumentId" jdbcType="VARCHAR" />
+    <id column="external_apply_id" property="externalApplyId" jdbcType="VARCHAR" />
+    <result column="proposer" property="proposer" jdbcType="VARCHAR" />
+    <result column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="application_date" property="applicationDate" jdbcType="TIMESTAMP" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="last_testing_time" property="lastTestingTime" jdbcType="TIMESTAMP" />
+    <result column="counter_name" property="counterName" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="orgin" property="orgin" jdbcType="VARCHAR" />
+    <result column="internal_id" property="internalId" jdbcType="VARCHAR" />
+    <result column="installation_site" property="installationSite" jdbcType="VARCHAR" />
+    <result column="retesting_period" property="retestingPeriod" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyDetail" extends="BaseResultMap" >
+    <result column="remarks" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    instrument_id, external_apply_id, proposer, application_date, department, last_testing_time, 
+    counter_name, model, orgin, internal_id, installation_site, retesting_period, create_time, 
+    update_time, tmstamp
+  </sql>
+  <sql id="Blob_Column_List" >
+    remark
+  </sql>
+  
+<!-- 
+  <update id="updateInstruementId" parameterType="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyDetail" >
+    update t_instrument
+    <set >
+      <if test="instruementId != null" >
+        instruementId = #{instruementId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where mater_id = #{materId,jdbcType=VARCHAR}
+     
+  </update> -->
+  <select id="findDetail"  resultType="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyDetail" >
+   	select *
+    from t_external_inspection_apply_detail ad
+    left join t_external_inspection_apply ti on
+	 ti.external_apply_id = ad.external_apply_id  	
+	where ti.external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectedId" parameterType="java.lang.String"
+		resultType="Integer" flushCache="true">
+		select count(external_apply_id) from t_external_inspection_apply_detail where
+		external_apply_id =
+		#{externalApplyId,jdbcType=VARCHAR}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyDetailKey" >
+    delete from t_external_inspection_apply_detail
+    where instrument_id = #{instrumentId,jdbcType=VARCHAR}
+      and external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyDetail" >
+    insert into t_external_inspection_apply_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="instrumentId != null" >
+        instrument_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="externalApplyId != null" >
+        external_apply_id,
+      </if>
+      <if test="proposer != null" >
+        proposer,
+      </if>
+      <if test="applicationDate != null" >
+        application_date,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="lastTestingTime != null" >
+        last_testing_time,
+      </if>
+      <if test="counterName != null" >
+        counter_name,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="orgin != null" >
+        orgin,
+      </if>
+      <if test="internalId != null" >
+        internal_id,
+      </if>
+      <if test="installationSite != null" >
+        installation_site,
+      </if>
+      <if test="retestingPeriod != null" >
+        retesting_period,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="instrumentId != null" >
+        #{instrumentId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="externalApplyId != null" >
+        #{externalApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="proposer != null" >
+        #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationDate != null" >
+        #{applicationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTestingTime != null" >
+        #{lastTestingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="counterName != null" >
+        #{counterName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="orgin != null" >
+        #{orgin,jdbcType=VARCHAR},
+      </if>
+      <if test="internalId != null" >
+        #{internalId,jdbcType=VARCHAR},
+      </if>
+      <if test="installationSite != null" >
+        #{installationSite,jdbcType=VARCHAR},
+      </if>
+      <if test="retestingPeriod != null" >
+        #{retestingPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyDetail" >
+    update t_external_inspection_apply_detail
+    <set >
+    
+    	<if test="materId != null" >
+        mater_id = #{materId,jdbcType=TIMESTAMP},
+      </if>
+      
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTestingTime != null" >
+        last_testing_time = #{lastTestingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="counterName != null" >
+        counter_name = #{counterName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="orgin != null" >
+        orgin = #{orgin,jdbcType=VARCHAR},
+      </if>
+      <if test="internalId != null" >
+        internal_id = #{internalId,jdbcType=VARCHAR},
+      </if>
+      <if test="installationSite != null" >
+        installation_site = #{installationSite,jdbcType=VARCHAR},
+      </if>
+      <if test="retestingPeriod != null" >
+        retesting_period = #{retestingPeriod,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where instrument_id = #{instrumentId,jdbcType=VARCHAR}
+      and external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+  </update>
+</mapper>

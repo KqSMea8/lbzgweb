@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.workflow.dao.WorkflowDraftMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.workflow.bean.WorkflowDraft" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="corp_id" property="corpId" jdbcType="VARCHAR" />
+    <result column="form_id" property="formId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="INTEGER" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="fields_json" property="fieldsJson" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, corp_id, form_id, emp_id, fields_json, create_time, update_time, tmstamp
+  </sql>
+  <sql id="Base_Column_List_Join" >
+    d.id, d.corp_id, d.form_id, d.emp_id, d.fields_json, d.create_time, d.update_time, d.tmstamp,f.title
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wf_draft
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="list" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.workflow.form.WorkflowDraftParam" >
+    select
+    <include refid="Base_Column_List_Join" />
+    from t_wf_draft d left join t_wf_form f on d.form_id = f.id
+    where d.corp_id = #{corpId,jdbcType=VARCHAR} and d.emp_id = #{empId,jdbcType=VARCHAR}
+    order by d.create_time desc
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="appList" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.workflow.form.WorkflowDraftParam" >
+    select
+    <include refid="Base_Column_List_Join" />
+    from t_wf_draft d left join t_wf_form f on d.form_id = f.id
+    where d.corp_id = #{corpId,jdbcType=VARCHAR} and d.emp_id = #{empId,jdbcType=VARCHAR}
+    <if test="lastId != null and lastId > 0">
+      AND (
+      d.create_time &lt; (SELECT wd.create_time FROM t_wf_draft wd WHERE wd.id=#{lastId})
+      OR (d.create_time = (SELECT wd.create_time FROM t_wf_draft wd WHERE wd.id=#{lastId}) AND d.id &gt; #{lastId})
+      )
+    </if>
+    order by d.create_time desc
+    <if test="pageSize != null">
+      limit #{pageSize}
+    </if>
+  </select>
+
+  <select id="count" resultType="java.lang.Long" parameterType="com.lyarc.tp.corp.workflow.form.WorkflowDraftParam" >
+    select
+    count(1)
+    from t_wf_draft d left join t_wf_form f on d.form_id = f.id
+    where d.corp_id = #{corpId,jdbcType=VARCHAR} and d.emp_id = #{empId,jdbcType=VARCHAR}
+    order by d.create_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_wf_draft
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowDraft" >
+    insert into t_wf_draft (id, corp_id, form_id, 
+      emp_id, fields_json, create_time, 
+      update_time, tmstamp)
+    values (#{id,jdbcType=INTEGER}, #{corpId,jdbcType=VARCHAR}, #{formId,jdbcType=INTEGER}, 
+      #{empId,jdbcType=VARCHAR}, #{fieldsJson,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowDraft" >
+    insert into t_wf_draft
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="corpId != null" >
+        corp_id,
+      </if>
+      <if test="formId != null" >
+        form_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="fieldsJson != null" >
+        fields_json,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="corpId != null" >
+        #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="formId != null" >
+        #{formId,jdbcType=INTEGER},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldsJson != null" >
+        #{fieldsJson,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowDraft" >
+    update t_wf_draft
+    <set >
+      <if test="corpId != null" >
+        corp_id = #{corpId,jdbcType=VARCHAR},
+      </if>
+      <if test="formId != null" >
+        form_id = #{formId,jdbcType=INTEGER},
+      </if>
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldsJson != null" >
+        fields_json = #{fieldsJson,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowDraft" >
+    update t_wf_draft
+    set corp_id = #{corpId,jdbcType=VARCHAR},
+      form_id = #{formId,jdbcType=INTEGER},
+      emp_id = #{empId,jdbcType=VARCHAR},
+      fields_json = #{fieldsJson,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

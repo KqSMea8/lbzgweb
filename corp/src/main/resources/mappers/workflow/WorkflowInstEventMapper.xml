@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.workflow.dao.WorkflowInstEventMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.workflow.bean.WorkflowInstEvent" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="inst_id" property="instId" jdbcType="VARCHAR" />
+    <result column="event" property="event" jdbcType="VARCHAR" />
+    <result column="business_key" property="businessKey" jdbcType="VARCHAR" />
+    <result column="wf_id" property="wfId" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, inst_id, event, wf_id, creator, create_time, update_time, tmstamp,business_key
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wf_inst_event
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="queryEventInfo" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_wf_inst_event
+    where id > (select value from t_setting where name='lastInstId' ) and create_time  >=  NOW() - interval 24 hour
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_wf_inst_event
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowInstEvent" >
+    insert into t_wf_inst_event (id, inst_id, event, business_key
+      wf_id, creator, create_time, 
+      update_time, tmstamp)
+    values (#{id,jdbcType=INTEGER}, #{instId,jdbcType=VARCHAR}, #{event,jdbcType=VARCHAR},#{businessKey,jdbcType=VARCHAR},
+      #{wfId,jdbcType=INTEGER}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowInstEvent" >
+    insert into t_wf_inst_event
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="instId != null" >
+        inst_id,
+      </if>
+      <if test="event != null" >
+        event,
+      </if>
+      <if test="businessKey != null" >
+        business_key,
+      </if>
+      <if test="wfId != null" >
+        wf_id,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="instId != null" >
+        #{instId,jdbcType=VARCHAR},
+      </if>
+      <if test="event != null" >
+        #{event,jdbcType=VARCHAR},
+      </if>
+      <if test="businessKey != null" >
+        #{businessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="wfId != null" >
+        #{wfId,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowInstEvent" >
+    update t_wf_inst_event
+    <set >
+      <if test="instId != null" >
+        inst_id = #{instId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessKey != null" >
+        business_key = #{businessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="event != null" >
+        event = #{event,jdbcType=VARCHAR},
+      </if>
+      <if test="wfId != null" >
+        wf_id = #{wfId,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.workflow.bean.WorkflowInstEvent" >
+    update t_wf_inst_event
+    set inst_id = #{instId,jdbcType=VARCHAR},
+      event = #{event,jdbcType=VARCHAR},
+      businessKey = #{businessKey,jdbcType=VARCHAR},
+      wf_id = #{wfId,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

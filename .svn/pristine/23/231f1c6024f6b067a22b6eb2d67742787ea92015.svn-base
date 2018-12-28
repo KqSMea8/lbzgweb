@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.warehouse.dao.StorageMapper">
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.warehouse.bean.Storage">
+    <id column="storage_id" jdbcType="VARCHAR" property="storageId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="linkman" jdbcType="VARCHAR" property="linkman" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="department" jdbcType="INTEGER" property="department" />
+    <result column="check_status" jdbcType="INTEGER" property="checkStatus" />
+    <result column="init_status" jdbcType="INTEGER" property="initStatus" />
+    <result column="creator" jdbcType="INTEGER" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="tmstamp" jdbcType="TIMESTAMP" property="tmstamp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    storage_id, name, type, address, linkman, telphone, department, check_status, init_status, 
+    creator, create_time, update_time, tmstamp
+  </sql>
+  <sql id="Base_Column_Join">
+    a.storage_id, a.name, a.type, a.address, a.linkman, a.telphone, a.department, a.check_status, a.init_status,
+    a.creator, a.create_time, a.update_time, a.tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_storage
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="StorageQueryBean" resultType="StorageDto">
+    SELECT
+    <include refid="Base_Column_Join"/>,ta.arg_text typeName,emp.true_name linkmanName,dept.dept_name departmentName
+    from t_storage a
+    left join t_emp emp on a.linkman = emp.emp_id
+    left join t_arg ta on ta.arg_code = a.type and ta.arg_group = 'warehouse_type'
+    left join t_dept dept on a.department = dept.dept_id
+    where 1=1
+    <if test='name != null and name !=""'>
+      AND a.name LIKE concat('%',#{name},'%')
+    </if>
+    <if test='initStatus != null'>
+      AND a.init_status = #{initStatus}
+    </if>
+
+    ORDER BY a.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="StorageQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(1)
+    from t_storage a where 1=1
+    <if test='name != null and name !=""'>
+      AND a.name = #{name}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_storage
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.warehouse.bean.Storage">
+    insert into t_storage (storage_id, name, type, 
+      address, linkman, telphone, 
+      department, check_status, init_status, 
+      creator, create_time, update_time, 
+      tmstamp)
+    values (#{storageId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{linkman,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, 
+      #{department,jdbcType=INTEGER}, #{checkStatus,jdbcType=INTEGER}, #{initStatus,jdbcType=INTEGER}, 
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.warehouse.bean.Storage">
+    insert into t_storage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="storageId != null">
+        storage_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="linkman != null">
+        linkman,
+      </if>
+      <if test="telphone != null">
+        telphone,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+      <if test="checkStatus != null">
+        check_status,
+      </if>
+      <if test="initStatus != null">
+        init_status,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="tmstamp != null">
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="storageId != null">
+        #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="linkman != null">
+        #{linkman,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null">
+        #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=INTEGER},
+      </if>
+      <if test="checkStatus != null">
+        #{checkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="initStatus != null">
+        #{initStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.warehouse.bean.Storage">
+    update t_storage
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="linkman != null">
+        linkman = #{linkman,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null">
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=INTEGER},
+      </if>
+      <if test="checkStatus != null">
+        check_status = #{checkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="initStatus != null">
+        init_status = #{initStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null">
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.warehouse.bean.Storage">
+    update t_storage
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      linkman = #{linkman,jdbcType=VARCHAR},
+      telphone = #{telphone,jdbcType=VARCHAR},
+      department = #{department,jdbcType=INTEGER},
+      check_status = #{checkStatus,jdbcType=INTEGER},
+      init_status = #{initStatus,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+  </update>
+</mapper>

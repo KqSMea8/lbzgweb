@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.contract.inquire.dao.InquireDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="inquire_id" property="inquireId" jdbcType="VARCHAR" />
+    <result column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="drawing" property="drawing" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="texture" property="texture" jdbcType="VARCHAR" />
+    <result column="hardness" property="hardness" jdbcType="VARCHAR" />
+    <result column="delivery_type" property="deliveryType" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="weight_total" property="weightTotal" jdbcType="DECIMAL" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+    <result column="field_json" property="fieldJson" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" extends="BaseResultMap" >
+    <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, inquire_id, mater_id, drawing, mater_name, texture, hardness, delivery_type, 
+    unit, quantity, weight, weight_total, delivery_date, creator, create_time, update_time, 
+    tmstamp,field_json
+  </sql>
+  <sql id="Blob_Column_List" >
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_inquire_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectListByInquireId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_inquire_detail
+    where inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_inquire_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByInquireId" parameterType="java.lang.String" >
+    delete from t_inquire_detail
+    where inquire_id = #{inquireId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteDetailByIds"  >
+    delete from t_inquire_detail
+    where id in
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" >
+    insert into t_inquire_detail (id, inquire_id, mater_id, 
+      drawing, mater_name, texture, 
+      hardness, delivery_type, unit, 
+      quantity, weight, weight_total, 
+      delivery_date, creator, create_time, 
+      update_time, tmstamp, remark,field_json
+      )
+    values (#{id,jdbcType=INTEGER}, #{inquireId,jdbcType=VARCHAR}, #{materId,jdbcType=VARCHAR}, 
+      #{drawing,jdbcType=VARCHAR}, #{materName,jdbcType=VARCHAR}, #{texture,jdbcType=VARCHAR},
+      #{hardness,jdbcType=VARCHAR}, #{deliveryType,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=VARCHAR}, #{weight,jdbcType=DECIMAL}, #{weightTotal,jdbcType=DECIMAL}, 
+      #{deliveryDate,jdbcType=TIMESTAMP}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{tmstamp,jdbcType=TIMESTAMP}, #{remark,jdbcType=LONGVARCHAR},
+       #{fieldJson,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" >
+    insert into t_inquire_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="inquireId != null" >
+        inquire_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="drawing != null" >
+        drawing,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="texture != null" >
+        texture,
+      </if>
+      <if test="hardness != null" >
+        hardness,
+      </if>
+      <if test="deliveryType != null" >
+        delivery_type,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="weightTotal != null" >
+        weight_total,
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="fieldJson != null" >
+        fieldJson,
+      </if>
+      <if test="files != null">
+      	files,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="inquireId != null" >
+        #{inquireId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="hardness != null" >
+        #{hardness,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryType != null" >
+        #{deliveryType,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="weightTotal != null" >
+        #{weightTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryDate != null" >
+        #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fieldJson != null" >
+        #{fieldJson,jdbcType=LONGVARCHAR},
+      </if>
+       <if test="files != null">
+       #{files,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" >
+    update t_inquire_detail
+    <set >
+      <if test="inquireId != null" >
+        inquire_id = #{inquireId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        mater_id = #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        drawing = #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        texture = #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="hardness != null" >
+        hardness = #{hardness,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryType != null" >
+        delivery_type = #{deliveryType,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="weightTotal != null" >
+        weight_total = #{weightTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fieldJson != null" >
+        field_json = #{fieldJson,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" >
+    update t_inquire_detail
+    set inquire_id = #{inquireId,jdbcType=VARCHAR},
+      mater_id = #{materId,jdbcType=VARCHAR},
+      drawing = #{drawing,jdbcType=VARCHAR},
+      mater_name = #{materName,jdbcType=VARCHAR},
+      texture = #{texture,jdbcType=VARCHAR},
+      hardness = #{hardness,jdbcType=VARCHAR},
+      delivery_type = #{deliveryType,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=DECIMAL},
+      weight_total = #{weightTotal,jdbcType=DECIMAL},
+      delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      field_json = #{fieldJson,jdbcType=LONGVARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.contract.inquire.bean.InquireDetail" >
+    update t_inquire_detail
+    set inquire_id = #{inquireId,jdbcType=VARCHAR},
+      mater_id = #{materId,jdbcType=VARCHAR},
+      drawing = #{drawing,jdbcType=VARCHAR},
+      mater_name = #{materName,jdbcType=VARCHAR},
+      texture = #{texture,jdbcType=VARCHAR},
+      hardness = #{hardness,jdbcType=VARCHAR},
+      delivery_type = #{deliveryType,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=DECIMAL},
+      weight_total = #{weightTotal,jdbcType=DECIMAL},
+      delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      field_json = #{fieldJson,jdbcType=LONGVARCHAR},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

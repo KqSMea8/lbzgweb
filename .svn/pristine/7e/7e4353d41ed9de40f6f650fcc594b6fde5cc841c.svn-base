@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Oct 23 19:40:23 CST 2018
+http\://192.168.2.34\:8081/nexus/content/groups/public/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1540294823126
+http\://192.168.2.34\:8081/nexus/content/groups/public/.lastUpdated=1540294822731
+https\://repo.maven.apache.org/maven2/.error=

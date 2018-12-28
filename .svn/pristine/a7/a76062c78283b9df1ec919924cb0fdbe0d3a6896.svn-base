@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.system.material.dao.MaterialMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.system.material.bean.Material" >
+    <id column="mater_id" property="materId" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="drawing" property="drawing" jdbcType="VARCHAR" />
+    <result column="mater_name" property="materName" jdbcType="VARCHAR" />
+    <result column="spec" property="spec" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="cate_id" property="cateId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+    <result column="sub_type" property="subType" jdbcType="VARCHAR" />
+    <result column="apply_to_product_type" property="applyToProductType" jdbcType="VARCHAR" />
+    <result column="is_control" property="isControl" jdbcType="INTEGER" />
+    <result column="is_account" property="isAccount" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mater_id, customer_id, drawing, mater_name, spec, model, type, unit, cate_id,status, creator,
+    create_time, update_time, tmstamp,sub_type,is_control,is_account,apply_to_product_type
+  </sql>
+  <sql id="Base_Column_List_Join" >
+    m.mater_id, m.customer_id, m.drawing, m.mater_name, m.spec, m.model, m.type, m.unit, m.cate_id,m.status, m.creator,
+    m.create_time, m.update_time, m.tmstamp,m.sub_type,m.is_control,m.is_account,m.apply_to_product_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_material m
+    where mater_id = #{materId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByCateId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_material m
+    where cate_id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectMaterial" resultType="Material" parameterType="MaterialQueryBean" >
+    select
+    <include refid="Base_Column_List_Join" />,c.customer_name,a.arg_text unit_name
+    from t_material m left join t_customer c on m.customer_id = c.customer_id
+    left join t_arg a on (m.unit = a.arg_code and a.arg_group='unit')
+    where 1=1
+    <if test='materId != null and materId != ""'>
+      AND m.mater_id = #{materId,jdbcType=VARCHAR}
+    </if>
+    <if test='drawing != null and drawing != ""'>
+      AND m.drawing = #{drawing,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+  <select id="list" parameterType="MaterialQueryBean" resultType="MaterialDto">
+    select
+    <include refid="Base_Column_List_Join" />,c.customer_name,a.arg_text unit_name,mc.title cateName
+    from t_material m left join t_customer c on m.customer_id = c.customer_id
+    left join t_material_category mc on m.cate_id = mc.id
+    left join t_arg a on m.unit = a.arg_code and a.arg_group='unit'
+    where 1=1
+    <if test='keyword != null  and keyword != ""'>
+      AND (m.mater_id LIKE concat('%',#{keyword},'%')
+      or m.drawing LIKE concat('%',#{keyword},'%') or m.mater_name LIKE concat('%',#{keyword},'%') )
+    </if>
+    <if test='type != null  and type != ""'>
+      AND m.type=#{type}
+    </if>
+    <if test='status != null  and status != ""'>
+      AND m.status=#{status}
+    </if>
+    <if test='materId != null and materId != ""'>
+      AND m.mater_id LIKE concat('%',#{materId},'%')
+    </if>
+    <if test='drawing != null and drawing != ""'>
+      AND m.drawing LIKE concat('%',#{drawing},'%')
+    </if>
+    <if test='cateId != null and cateId != ""'>
+      AND m.cate_id=#{cateId}
+    </if>
+    ORDER BY c.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="MaterialQueryBean" resultType="java.lang.Long">
+    SELECT
+    count(1)
+    from t_material m where 1=1
+
+    <if test='keyword != null  and keyword != ""'>
+      AND (m.mater_id LIKE concat('%',#{keyword},'%')
+      or m.drawing LIKE concat('%',#{keyword},'%') or m.mater_name LIKE concat('%',#{keyword},'%') )
+    </if>
+    <if test='type != null  and type != ""'>
+      AND m.type=#{type}
+    </if>
+    <if test='status != null  and status != ""'>
+      AND m.status=#{status}
+    </if>
+    <if test='materId != null and materId != ""'>
+      AND m.mater_id LIKE concat('%',#{materId},'%')
+    </if>
+    <if test='drawing != null and drawing != ""'>
+      AND m.drawing LIKE concat('%',#{drawing},'%')
+    </if>
+    <if test='cateId != null and cateId != ""'>
+      AND m.cate_id=#{cateId}
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_material
+    where mater_id = #{materId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.system.material.bean.Material" >
+    insert into t_material (mater_id, customer_id, drawing, 
+      mater_name, spec, model, 
+      type, unit, cate_id, status,
+      creator, create_time, update_time, 
+      tmstamp,sub_type,is_control,is_account,apply_to_product_type)
+    values (#{materId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{drawing,jdbcType=VARCHAR}, 
+      #{materName,jdbcType=VARCHAR}, #{spec,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{cateId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP},#{subType},#{isControl},#{isAccount},#{applyToProductType})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.system.material.bean.Material" >
+    insert into t_material
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="drawing != null" >
+        drawing,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="spec != null" >
+        spec,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="cateId != null" >
+        cate_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+      <if test="subType != null" >
+        sub_type,
+      </if>
+      <if test="applyToProductType != null" >
+        apply_to_product_type,
+      </if>
+      <if test="isControl != null" >
+        is_control,
+      </if>
+      <if test="isAccount != null" >
+        is_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="cateId != null" >
+        #{cateId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subType != null" >
+        #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyToProductType != null" >
+        #{applyToProductType,jdbcType=VARCHAR},
+      </if>
+      <if test="isControl != null" >
+        #{isControl,jdbcType=INTEGER},
+      </if>
+      <if test="isAccount != null" >
+        #{isAccount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.system.material.bean.Material" >
+    update t_material
+    <set >
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        drawing = #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        spec = #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="cateId != null" >
+        cate_id = #{cateId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subType != null" >
+        sub_type = #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyToProductType != null" >
+        apply_to_product_type = #{applyToProductType,jdbcType=VARCHAR},
+      </if>
+      <if test="isControl != null" >
+        is_control = #{isControl,jdbcType=INTEGER},
+      </if>
+      <if test="isAccount != null" >
+        is_account = #{isAccount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.system.material.bean.Material" >
+    update t_material
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      drawing = #{drawing,jdbcType=VARCHAR},
+      mater_name = #{materName,jdbcType=VARCHAR},
+      spec = #{spec,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      cate_id = #{cateId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      sub_type = #{subType,jdbcType=VARCHAR},
+      apply_to_product_type = #{applyToProductType,jdbcType=VARCHAR},
+      is_control = #{isControl,jdbcType=INTEGER},
+      is_account = #{isAccount,jdbcType=INTEGER},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where mater_id = #{materId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.dao.InstrumentInspectionAcceptMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAccept" >
+    <id column="external_apply_id" property="externalApplyId" jdbcType="VARCHAR" />
+    <id column="inspection_accept_id" property="inspectionAcceptId" jdbcType="VARCHAR" />
+    <result column="instrument_id" property="instrumentId" jdbcType="VARCHAR" />
+    <result column="test_all_cost" property="testAllCost" jdbcType="DECIMAL" />
+    <result column="manufacture_date" property="manufactureDate" jdbcType="TIMESTAMP" />
+    <result column="appliance_return_date" property="applianceReturnDate" jdbcType="TIMESTAMP" />
+    <result column="appraisal_date" property="appraisalDate" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    external_apply_id, inspection_accept_id, instrument_id, test_all_cost, manufacture_date, 
+    appliance_return_date, appraisal_date, operator, create_time, update_time, tmstamp
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAcceptKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_instrument_inspection_accept
+    where external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+      and inspection_accept_id = #{inspectionAcceptId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAcceptKey" >
+    delete from t_instrument_inspection_accept
+    where external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+      and inspection_accept_id = #{inspectionAcceptId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAccept" >
+    insert into t_instrument_inspection_accept (external_apply_id, inspection_accept_id, 
+      instrument_id, test_all_cost, manufacture_date, 
+      appliance_return_date, appraisal_date, 
+      operator, create_time, update_time, 
+      tmstamp)
+    values (#{externalApplyId,jdbcType=VARCHAR}, #{inspectionAcceptId,jdbcType=VARCHAR}, 
+      #{instrumentId,jdbcType=VARCHAR}, #{testAllCost,jdbcType=DECIMAL}, #{manufactureDate,jdbcType=TIMESTAMP}, 
+      #{applianceReturnDate,jdbcType=TIMESTAMP}, #{appraisalDate,jdbcType=TIMESTAMP}, 
+      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.form.InstrumentInspectionAcceptForm" >
+    insert into t_instrument_inspection_accept
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="externalApplyId != null" >
+        external_apply_id,
+      </if>
+      <if test="inspectionAcceptId != null" >
+        inspection_accept_id,
+      </if>
+      <if test="instrumentId != null" >
+        instrument_id,
+      </if>
+      <if test="testAllCost != null" >
+        test_all_cost,
+      </if>
+      <if test="manufactureDate != null" >
+        manufacture_date,
+      </if>
+      <if test="applianceReturnDate != null" >
+        appliance_return_date,
+      </if>
+      <if test="appraisalDate != null" >
+        appraisal_date,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="externalApplyId != null" >
+        #{externalApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionAcceptId != null" >
+        #{inspectionAcceptId,jdbcType=VARCHAR},
+      </if>
+      <if test="instrumentId != null" >
+        #{instrumentId,jdbcType=VARCHAR},
+      </if>
+      <if test="testAllCost != null" >
+        #{testAllCost,jdbcType=DECIMAL},
+      </if>
+      <if test="manufactureDate != null" >
+        #{manufactureDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applianceReturnDate != null" >
+        #{applianceReturnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appraisalDate != null" >
+        #{appraisalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+ 
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAccept" >
+    update t_instrument_inspection_accept
+    <set >
+      <if test="instrumentId != null" >
+        instrument_id = #{instrumentId,jdbcType=VARCHAR},
+      </if>
+      <if test="testAllCost != null" >
+        test_all_cost = #{testAllCost,jdbcType=DECIMAL},
+      </if>
+      <if test="manufactureDate != null" >
+        manufacture_date = #{manufactureDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applianceReturnDate != null" >
+        appliance_return_date = #{applianceReturnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appraisalDate != null" >
+        appraisal_date = #{appraisalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+      and inspection_accept_id = #{inspectionAcceptId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.quality.Instrument.InstrumentInspectionAccept.bean.InstrumentInspectionAccept" >
+    update t_instrument_inspection_accept
+    set instrument_id = #{instrumentId,jdbcType=VARCHAR},
+      test_all_cost = #{testAllCost,jdbcType=DECIMAL},
+      manufacture_date = #{manufactureDate,jdbcType=TIMESTAMP},
+      appliance_return_date = #{applianceReturnDate,jdbcType=TIMESTAMP},
+      appraisal_date = #{appraisalDate,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+      and inspection_accept_id = #{inspectionAcceptId,jdbcType=VARCHAR}
+  </update>
+</mapper>

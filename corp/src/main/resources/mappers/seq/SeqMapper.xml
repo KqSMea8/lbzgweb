@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.seq.dao.SeqMapper" >  
+  <select id="createSeq" parameterType="java.lang.String" resultType="java.lang.Integer" statementType="CALLABLE">
+    call sp_seq(#{key},1)
+  </select> 
+</mapper>

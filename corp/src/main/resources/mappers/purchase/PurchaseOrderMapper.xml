@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.purchase.order.dao.PurchaseOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrder" >
+    <id column="purchase_order_id" property="purchaseOrderId" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="INTEGER" />
+    <result column="proposer" property="proposer" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="quality" property="quality" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="wf_inst_id" property="wfInstId" jdbcType="VARCHAR" />
+    <result column="wf_inst_time" property="wfInstTime" jdbcType="TIMESTAMP" />
+    <result column="wf_inst_remark" property="wfInstRemark" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithDetail" type="com.lyarc.tp.corp.purchase.order.dto.PurchaseOrderDto" extends="BaseResultMap" >
+    <collection property="detailList" ofType="com.lyarc.tp.corp.purchase.order.dto.PurchaseOrderDetailDto" select="getDetails"
+                column="purchase_order_id">
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    purchase_order_id, department, proposer, remark, quality, status, wf_inst_id, wf_inst_time, 
+    wf_inst_remark, creator, create_time, update_time, tmstamp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_purchase_order
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="list" parameterType="PurchaseOrderQueryBean" resultType="PurchaseOrderDto">
+    select distinct o.*
+    from t_purchase_order o
+    left join t_purchase_order_detail od on o.purchase_order_id = od.purchase_order_id
+    left join t_material m on od.mater_id = m.mater_id
+    where 1=1
+    <if test='subType != null and subType !=""'>
+      AND m.sub_type = #{subType}
+    </if>
+    <if test='materName != null and materName !=""'>
+      AND m.mater_name LIKE concat('%',#{materName},'%')
+    </if>
+    <if test='department != null'>
+      AND o.department = #{department}
+    </if>
+    <if test='status != null'>
+      AND o.status = #{status}
+    </if>
+    <if test='statusIn != null and statusIn.length> 0'>
+      AND o.status in
+      <foreach collection="statusIn" item="status" separator=","
+               open="(" close=")">
+        #{status}
+      </foreach>
+    </if>
+
+    <if test='purchaseOrderId != null and purchaseOrderId !=""'>
+      AND o.purchase_order_id LIKE concat('%',#{purchaseOrderId},'%')
+    </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+
+    ORDER BY o.create_time DESC
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+
+  <select id="count" parameterType="PurchaseOrderQueryBean" resultType="java.lang.Long">
+    select count(distinct o.purchase_order_id)
+    from t_purchase_order o
+    left join t_purchase_order_detail od on o.purchase_order_id = od.purchase_order_id
+    left join t_material m on od.mater_id = m.mater_id
+    where 1=1
+    <if test='subType != null and subType !=""'>
+      AND m.sub_type = #{subType}
+    </if>
+    <if test='materName != null and materName !=""'>
+      AND m.mater_name LIKE concat('%',#{materName},'%')
+    </if>
+    <if test='department != null'>
+      AND o.department = #{department}
+    </if>
+    <if test='status != null'>
+      AND o.status = #{status}
+    </if>
+    <if test='statusIn != null and statusIn.length> 0'>
+      AND o.status in
+      <foreach collection="statusIn" item="status" separator=","
+               open="(" close=")">
+        #{status}
+      </foreach>
+    </if>
+    <if test='purchaseOrderId != null and purchaseOrderId !=""'>
+      AND o.purchase_order_id LIKE concat('%',#{purchaseOrderId},'%')
+    </if>
+    <if test="createTimeStart != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeStart},'%Y-%m-%d')
+    </if>
+    <if test="createTimeEnd != null">
+      AND DATE_FORMAT(o.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+    </if>
+  </select>
+
+  <select id="selectAndDetail" resultMap="ResultMapWithDetail" parameterType="java.lang.String" >
+    select o.*
+    from t_purchase_order o
+    where o.purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getDetails" resultType="PurchaseOrderDetailDto" parameterType="java.lang.String" >
+    select
+    a.purchase_order_id, a.mater_id, m.sub_type, m.mater_name, level, m.spec, m.model, `use`, a.provider_id,
+    a.origin, m.unit, a.need_date, a.price, a.quantity, a.amount, a.remark, a.in_quantity,p.provider_name
+    from t_purchase_order_detail a left join t_material m on a.mater_id = m.mater_id
+    left join t_provider p on a.provider_id = p.provider_id
+    where purchase_order_id = #{purchase_order_id}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_purchase_order
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrder" >
+    insert into t_purchase_order (purchase_order_id, department, proposer, 
+      remark, quality, status, 
+      wf_inst_id, wf_inst_time, wf_inst_remark, 
+      creator, create_time, update_time, 
+      tmstamp)
+    values (#{purchaseOrderId,jdbcType=VARCHAR}, #{department,jdbcType=INTEGER}, #{proposer,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{quality,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{wfInstId,jdbcType=VARCHAR}, #{wfInstTime,jdbcType=TIMESTAMP}, #{wfInstRemark,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{tmstamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrder" >
+    insert into t_purchase_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="purchaseOrderId != null" >
+        purchase_order_id,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="proposer != null" >
+        proposer,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="quality != null" >
+        quality,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id,
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time,
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="purchaseOrderId != null" >
+        #{purchaseOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=INTEGER},
+      </if>
+      <if test="proposer != null" >
+        #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="quality != null" >
+        #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrder" >
+    update t_purchase_order
+    <set >
+      <if test="department != null" >
+        department = #{department,jdbcType=INTEGER},
+      </if>
+      <if test="proposer != null" >
+        proposer = #{proposer,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="quality != null" >
+        quality = #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="wfInstId != null" >
+        wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="wfInstTime != null" >
+        wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wfInstRemark != null" >
+        wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lyarc.tp.corp.purchase.order.bean.PurchaseOrder" >
+    update t_purchase_order
+    set department = #{department,jdbcType=INTEGER},
+      proposer = #{proposer,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      quality = #{quality,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+      wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+      wf_inst_remark = #{wfInstRemark,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      tmstamp = #{tmstamp,jdbcType=TIMESTAMP}
+    where purchase_order_id = #{purchaseOrderId,jdbcType=VARCHAR}
+  </update>
+</mapper>

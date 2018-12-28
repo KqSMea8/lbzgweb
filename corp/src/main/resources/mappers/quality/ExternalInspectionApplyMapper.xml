@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.dao.ExternalInspectionApplyMapper">
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApply">
+		<id column="external_apply_id" jdbcType="VARCHAR"
+			property="externalApplyId" />
+		<result column="proposer" jdbcType="VARCHAR"
+			property="proposer" />
+		<result column="application_date" jdbcType="TIMESTAMP"
+			property="applicationDate" />
+		<result column="department" jdbcType="VARCHAR"
+			property="department" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="wf_inst_id" jdbcType="VARCHAR"
+			property="wfInstId" />
+		<result column="wf_inst_time" jdbcType="TIMESTAMP"
+			property="wfInstTime" />
+		<result column="creator" jdbcType="INTEGER"
+			property="creator" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+		<result column="tmstamp" jdbcType="TIMESTAMP"
+			property="tmstamp" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyWithBLOBs">
+		<result column="remark" jdbcType="LONGVARCHAR"
+			property="remark" />
+		<result column="wf_inst_remark" jdbcType="LONGVARCHAR"
+			property="wfInstRemark" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		external_apply_id, proposer, instrument_id, application_date, department,
+		last_testing_time,
+		status, wf_inst_id, wf_inst_time, create_time, update_time, tmstamp
+	</sql>
+	<sql id="Blob_Column_List">
+		remark, wf_inst_remark
+	</sql>
+
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from t_external_inspection_apply
+		where external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_external_inspection_apply
+		where external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+	</delete>
+
+
+	<select id="listExternalInspectionApply"
+		parameterType="ExternalInspectionApplyQueryBean"
+		resultType="ExternalInspectionApply">
+		select ea.*,e.true_name operatorName,dept_name departmentName
+		from t_external_inspection_apply ea left join t_emp e on e.emp_id = ea.proposer 
+		left join t_dept d on d.dept_id = ea.department
+		 where 1=1
+		<if test='proposer != null and proposer !=""'>
+			AND ea.proposer LIKE concat('%',#{proposer},'%')
+		</if>
+		<if test='externalApplyId != null and externalApplyId !=""'>
+			AND ea.external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+		</if>
+		<if test='trueName != null and trueName !=""'>
+			AND e.true_name LIKE concat('%',#{trueName},'%')
+		</if>
+		<if test="createBeginTime != null">
+			AND DATE_FORMAT(eia.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+		</if>
+		<if test="createEndTime != null">
+			AND DATE_FORMAT(eia.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+		</if>
+		ORDER BY ea.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<select id="countExternalInspectionApply"
+		parameterType="ExternalInspectionApplyQueryBean"
+		resultType="java.lang.Long"> 
+		select count(ea.external_apply_id)
+		from t_external_inspection_apply ea left join t_emp e on e.emp_id = ea.proposer 
+		where 1=1
+		<if test='proposer != null and proposer !=""'>
+			AND ea.proposer LIKE concat('%',#{proposer},'%')
+		</if>
+		<if test='externalApplyId != null and externalApplyId !=""'>
+			AND ea.external_apply_id = #{externalApplyId,jdbcType=VARCHAR}
+		</if>
+		<if test="createBeginTime != null">
+			AND DATE_FORMAT(eia.create_time,'%Y-%m-%d') >=
+			DATE_FORMAT(#{createBeginTime},'%Y-%m-%d')
+		</if>
+		<if test="createEndTime != null">
+			AND DATE_FORMAT(eia.create_time,'%Y-%m-%d') &lt;=
+			DATE_FORMAT(#{createEndTime},'%Y-%m-%d')
+		</if>
+	</select>
+	<insert id="insertSelective"
+		parameterType="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApplyWithBLOBs">
+		insert into t_external_inspection_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="externalApplyId != null">
+				external_apply_id,
+			</if>
+			<if test="proposer != null">
+				proposer,
+			</if>
+			
+			<if test="applicationDate != null">
+				application_date,
+			</if>
+			<if test="department != null">
+				department,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="wfInstId != null">
+				wf_inst_id,
+			</if>
+			<if test="wfInstTime != null">
+				wf_inst_time,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="externalApplyId != null">
+				#{externalApplyId,jdbcType=VARCHAR},
+			</if>
+			<if test="proposer != null">
+				#{proposer,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="applicationDate != null">
+				#{applicationDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="department != null">
+				#{department,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="wfInstId != null">
+				#{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstTime != null">
+				#{wfInstTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="wfInstRemark != null">
+				#{wfInstRemark,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+
+	</insert>
+
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.lyarc.tp.corp.quality.Instrument.ExternalInspectionApply.bean.ExternalInspectionApply">
+		update t_external_inspection_apply
+		<set>
+			<if test="proposer != null">
+				proposer = #{proposer,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="department != null">
+				department = #{department,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="wfInstId != null">
+				wf_inst_id = #{wfInstId,jdbcType=VARCHAR},
+			</if>
+			<if test="wfInstTime != null">
+				wf_inst_time = #{wfInstTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="wfInstRemark != null">
+				wf_inst_remark = #{wfInstRemark,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+			where external_apply_id = #{externalApplyId,jdbcType=VARCHAR} 
+	</update>
+	
+</mapper>

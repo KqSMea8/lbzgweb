@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.productstock.dao.ProductStockMapper">
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.productstock.bean.ProductStock">
+		<id column="storage_id" property="storageId" jdbcType="VARCHAR" />
+		<id column="mater_id" property="materId" jdbcType="VARCHAR" />
+		<id column="casting" property="casting" jdbcType="VARCHAR" />
+		<result column="mater_name" property="materName" jdbcType="VARCHAR" />
+		<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		<result column="drawing" property="drawing" jdbcType="VARCHAR" />
+		<result column="unit" property="unit" jdbcType="VARCHAR" />
+		<result column="weight" property="weight" jdbcType="DECIMAL" />
+		<result column="quantity" property="quantity" jdbcType="DECIMAL" />
+		<result column="check_status" property="checkStatus" jdbcType="INTEGER" />
+		<result column="check_quantity" property="checkQuantity"
+			jdbcType="INTEGER" />
+		<result column="check_remark" property="checkRemark" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="tmstamp" property="tmstamp" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="list"
+		parameterType="com.lyarc.tp.corp.productstock.bean.ProductStockQueryBean"
+		resultType="ProductStock">
+		select s.*,c.customer_name from t_product_stock s
+		left join t_customer c on
+		s.customer_id=c.customer_id
+		where 1=1
+		<if test='keyword != null and keyword != ""'>
+	      AND (s.mater_id LIKE concat('%',#{keyword},'%') or s.mater_name LIKE concat('%',#{keyword},'%') 
+	      or s.casting LIKE concat('%',#{keyword},'%') or s.drawing LIKE concat('%',#{keyword},'%'))
+	    </if>
+		<if test='storageId != null and storageId !=""'>
+			AND s.storage_id = #{storageId}
+		</if>
+		<if test='customerId != null and customerId !=""'>
+			AND s.customer_id = #{customerId}
+		</if>
+		<if test='customerName != null and customerName !=""'>
+			AND s.customer_name = #{customerName}
+		</if>
+		<if test='materId != null and materId !=""'>
+			AND s.mater_id LIKE concat('%',#{materId},'%')
+		</if>
+		<if test='materName != null and materName !=""'>
+			AND s.mater_name LIKE concat('%',#{materName},'%')
+		</if>
+		<if test='casting != null and casting !=""'>
+			AND s.casting = #{casting}
+		</if>
+		<if test='drawing != null and drawing !=""'>
+			AND s.drawing LIKE concat('%',#{drawing},'%')
+		</if>
+		<if test='checkStatus != null and checkStatus !=""'>
+			AND s.check_status = #{checkStatus}
+		</if>
+		ORDER BY s.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<select id="count" parameterType="ProductStockQueryBean"
+		resultType="java.lang.Long">
+		select count(1) s from t_product_stock s
+		left join t_customer c on
+		s.customer_id=c.customer_id
+		where 1=1
+		<if test='storageId != null and storageId !=""'>
+			AND s.storage_id = #{storageId}
+		</if>
+		<if test='customerId != null and customerId !=""'>
+			AND s.customer_id = #{customerId}
+		</if>
+		<if test='customerName != null and customerName !=""'>
+			AND s.customer_name = #{customerName}
+		</if>
+		<if test='materId != null and materId !=""'>
+			AND s.mater_id LIKE concat('%',#{materId},'%')
+		</if>
+		<if test='materName != null and materName !=""'>
+			AND s.mater_name LIKE concat('%',#{materName},'%')
+		</if>
+		<if test='casting != null and casting !=""'>
+			AND s.casting = #{casting}
+		</if>
+		<if test='drawing != null and drawing !=""'>
+			AND s.drawing LIKE concat('%',#{drawing},'%')
+		</if>
+		<if test='checkStatus != null and checkStatus !=""'>
+			AND s.check_status = #{checkStatus}
+		</if> 
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<update id="checkBatchStatus" parameterType="com.lyarc.tp.corp.productstock.bean.ProductStock">
+		update t_product_stock
+		<set>
+		<if test="checkStatus != null">
+		check_status = #{checkStatus},
+		</if>
+		
+		check_remark = #{checkRemark},
+		
+		check_quantity = #{checkQuantity}
+		</set>
+		where storage_id = #{storageId}
+		and mater_id = #{materId}
+		and casting=#{casting}
+	</update>
+	
+	<select id="loadCheck" resultMap="BaseResultMap">
+		select * from t_product_stock where check_status=#{checkStatus,jdbcType=INTEGER} and
+		storage_id=#{storageId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="get" parameterType="ProductStockKey" resultMap="BaseResultMap">
+		select * from t_product_stock s
+		where 1=1
+		<if test='storageId != null and storageId !=""'>
+			AND s.storage_id = #{storageId}
+		</if>
+		<if test='materId != null and materId !=""'>
+			AND s.mater_id = #{materId}
+		</if>
+		<if test='materName != null and materName !=""'>
+			AND s.mater_name = #{materName}
+		</if>
+		<if test='casting != null and casting !=""'>
+			AND s.casting = #{casting}
+		</if>
+	</select>
+
+	<update id="checkUpdate" parameterType="com.lyarc.tp.corp.productstock.bean.ProductStock">
+		update t_product_stock
+		<set>
+			quantity = #{quantity},
+			check_quantity = #{checkQuantity},
+			check_status = #{checkStatus},
+			check_remark = #{checkRemark},
+		</set>
+		where storage_id = #{storageId}
+		and mater_id = #{materId} and
+		casting = #{casting}
+	</update>
+	
+	<update id="checkSubmit" parameterType="java.lang.String">
+		update t_product_stock
+		<set>
+			check_status = 2
+		</set>
+		where storage_id = #{storageId}
+		and check_status = 1
+	</update>
+
+	<sql id="Base_Column_List">
+		storage_id, mater_id,mater_name,customer_id, drawing, casting, unit, weight, 
+		quantity,
+		check_status,check_quantity,check_remark, create_time, update_time, tmstamp
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="com.lyarc.tp.corp.productstock.bean.ProductStock">
+		select
+		<include refid="Base_Column_List" />
+		from t_product_stock
+		where storage_id = #{storageId,jdbcType=VARCHAR}
+		and
+		mater_id = #{materId,jdbcType=VARCHAR}
+		and casting =
+		#{casting,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.lyarc.tp.corp.productstock.bean.ProductStock">
+		update t_product_stock
+		<set>
+			<if test="materName != null">
+				mater_name = #{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="drawing != null">
+				drawing = #{drawing,jdbcType=VARCHAR},
+			</if>
+			<if test="weight != null">
+				weight = #{weight,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				unit = #{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="quantity != null">
+				quantity = #{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="checkStatus != null">
+				check_status = #{checkStatus,jdbcType=INTEGER},
+			</if>
+		
+				check_quantity = #{checkQuantity,jdbcType=DECIMAL},
+			
+			<if test="checkRemark != null">
+				check_remark = #{checkRemark,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where storage_id = #{storageId,jdbcType=VARCHAR}
+		and mater_id = #{materId,jdbcType=VARCHAR}
+		and casting = #{casting,jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insertSelective" parameterType="com.lyarc.tp.corp.productstock.bean.ProductStock">
+		insert into t_product_stock
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="storageId != null">
+				storage_id,
+			</if>
+			<if test="materId != null">
+				mater_id,
+			</if>
+			<if test="materName != null">
+				mater_name,
+			</if>
+			
+			<if test="customerId != null">
+				customer_id,
+			</if>
+			
+			<if test="drawing != null">
+				drawing,
+			</if>
+			<if test="casting != null">
+				casting,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			<if test="weight != null">
+				weight,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="checkStatus != null">
+				check_status,
+			</if>
+				<if test="checkQuantity != null">
+				check_quantity,
+			</if>
+			<if test="checkRemark != null">
+				check_remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmstamp != null">
+				tmstamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="storageId != null">
+				#{storageId,jdbcType=VARCHAR},
+			</if>
+			<if test="materId != null">
+				#{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="materName != null">
+				#{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="drawing != null">
+				#{drawing,jdbcType=VARCHAR},
+			</if>
+			<if test="casting != null">
+				#{casting,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="weight != null">
+				#{weight,jdbcType=VARCHAR},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="checkStatus != null">
+				#{checkStatus,jdbcType=INTEGER},
+			</if>
+			<if test="checkQuantity != null">
+				#{checkQuantity,jdbcType=DECIMAL},
+			</if>
+			<if test="checkRemark != null">
+				#{checkRemark,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmstamp != null">
+				#{tmstamp,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	
+	
+	<insert id="add" parameterType="ProductStock" >
+    insert into t_product_stock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="storageId != null" >
+        storage_id,
+      </if>
+      <if test="materId != null" >
+        mater_id,
+      </if>
+      <if test="materName != null" >
+        mater_name,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="drawing != null" >
+        drawing,
+      </if>
+      <if test="casting != null" >
+        casting,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>  
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="checkQuantity != null" >
+        check_quantity,
+      </if>
+      <if test="checkRemark != null" >
+        check_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="storageId != null" >
+        #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        #{materName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="casting != null" >
+        #{casting,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>  
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkQuantity != null" >
+        #{checkQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="checkRemark != null" >
+        #{checkRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="ProductStock" >
+    update t_product_stock
+    <set >
+      <if test="storageId != null" >
+        storage_id = #{storageId,jdbcType=VARCHAR},
+      </if>
+      <if test="materId != null" >
+        mater_id = #{materId,jdbcType=VARCHAR},
+      </if>
+      <if test="materName != null" >
+        mater_name = #{materName,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="drawing != null" >
+        drawing = #{drawing,jdbcType=VARCHAR},
+      </if>
+      <if test="casting != null" >
+        casting = #{casting,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>  
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkQuantity != null" >
+        check_quantity = #{checkQuantity,jdbcType=VARCHAR},
+      </if>
+      <if test="checkRemark != null" >
+        check_remark = #{checkRemark,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tmstamp != null" >
+        tmstamp = #{tmstamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where storage_id = #{storageId,jdbcType=VARCHAR}
+  </update>
+
+  
+</mapper>

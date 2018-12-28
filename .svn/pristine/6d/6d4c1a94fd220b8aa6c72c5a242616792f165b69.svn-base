@@ -1,0 +1,260 @@
+<template>
+  <div class="page">
+    <div class="page-bar">
+      <table class="page-bar-layout" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="page-bar-left">
+            <Button  icon="chevron-left" size="small" @click="goBack" type="warning">返回</Button>
+          </td>
+          <td class="page-bar-title">用户管理 - 角色</td>
+          <td class="page-bar-right"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="page-tools">
+      <table cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <Button  @click="addRole" icon="plus">添加</Button>
+          </td>
+          <td>
+            <Button  @click="batch_del" icon="ios-trash-outline">删除</Button>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="page-searchbox">
+      <table cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <Input v-model="queryForm.roleName"  placeholder="角色名称"/>
+          </td>
+          <td>
+            <Button @click="query"  type="primary" icon="ios-search">查询</Button>
+          </td>
+          <td>
+            <Button @click="reset"  type="default">重置</Button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <Loading :loading="loading">
+    <div class="page-datatable">
+      <i-table @on-selection-change="select" :columns="columns" :data="list"></i-table>
+      <div style="height:10px;"></div>
+      <Page ref="pagebar" size="small"
+            @on-page-size-change="pageSizeChange" @on-change="pageChange" show-sizer :transfer="true"></Page>
+    </div>
+    </Loading>
+    <RoleEdit ref="editRole" @on-save="query"></RoleEdit>
+  </div>
+</template>
+<script>
+  import DataRowOperateBar from '@/components/commons/DataRowOperateBar';
+  import Loading from '@/components/loading';
+  import RoleEdit from '@/components/frame/RoleEdit';
+
+  export default {
+    components: {
+      DataRowOperateBar,
+      Loading,
+      RoleEdit
+    },
+    data() {
+      let that = this;
+      return {
+        columns: [
+          {
+            type: 'selection',
+            width: 50,
+            align: 'center',
+            render: function (h,params) {
+              if(params.row.roleId === 1){
+                params.row._disabled = true
+              }
+            }
+          },
+          {
+            title: '角色名称',
+            key: 'roleName'
+          },
+          {
+            title: '备注',
+            key: 'remark',
+          },
+          {
+            title: '创建时间',
+            key: 'createTime',
+            align: 'center',
+            width: 160,
+          },
+          {
+            title: '操作',
+            width: 100,
+            align: 'center',
+            render: function (h, params) {
+              if(params.row.roleId === 1){
+                return h('span',{},'/')
+              }
+              return h(DataRowOperateBar, {
+                props: {
+                  commands: '编辑,删除'
+                },
+                on: {
+                  'on-command': (name) => {
+                    that.rowCommand(name, params)
+                  }
+                }
+              });
+            }
+          }
+        ],
+        list: [],
+        total:0,
+        queryParam: {},
+        queryForm: {
+          roleName: '',
+          page: '',
+          pageSize: ''
+        },
+        selection: [],
+        loading: 0
+      }
+    },
+    mounted: function () {
+      this.query();
+    },
+    computed: {},
+    methods: {
+      load: function () {
+        var pagebar = this.$refs.pagebar;
+        this.loading = 1;
+        this.queryParam.page = pagebar.currentPage,
+        this.queryParam.pageSize = pagebar.currentPageSize,
+        //查询角色列表数据
+        this.$http.post("/api/role/list", this.queryParam).then((res) => {
+          if (res.data.code === 0) {
+            this.loading = 0;
+            this.list = res.data.data.rows;
+            this.total = res.data.data.total;
+            for (let i = 0; i < this.list.length; i++) {
+              this.list[i].xh = i + 1;
+              var role = this.list[i];
+              if(i.roleId == 1){
+                this.list[i]._disabled = true;
+              }
+            }
+            this.selection = [];
+            // 同步条件信息到表单
+            $.extend(this.queryForm, this.queryParam);
+          } else {
+            this.loading = 0;
+            this.list = null;
+            this.$Message.error(res.data.message);
+          }
+        }).catch((error) => {
+          this.$Message.error("请求失败，请重新发送")
+        });
+
+      },
+      query: function () {
+        $.extend(this.queryParam, this.queryForm);
+        this.$refs.pagebar.currentPage = 1;
+        this.load();
+      },
+      reset: function () {
+        // 清空条件
+        this.queryForm.roleName = '';
+
+        var pagebar = this.$refs.pagebar;
+        pagebar.current = 1;
+        pagebar.currentPage = 1;
+        pagebar.currentPageSize = 10;
+
+        this.query();
+      },
+      pageChange: function (page) {
+        this.load();
+      },
+      pageSizeChange: function (pageSize) {
+        var pagebar = this.$refs.pagebar;
+        if (pagebar.currentPage === 1) {
+          this.load();
+        }
+      },
+      select: function (selection) {
+        this.selection = selection;
+      },
+      batch_del: function () {
+        var selection = this.selection;
+        var roleIds = [];
+        for (var i = 0; i < selection.length; i++) {
+          roleIds.push(selection[i].roleId);
+        }
+        if (roleIds.length > 0) {
+          this.$Modal.confirm({
+            title: '删除确认',
+            content: '<p>删除后不能恢复，确定删除已选择的记录吗？</p>',
+            onOk: () => {
+              this.$http.post('/api/role/delete?roleIds=' + roleIds, {}).then((res) => {
+                if (res.data.code === 0) {
+                  this.$Message.success("删除成功");
+                  $.extend(this.queryForm, this.queryParam);
+                  this.load();
+                } else {
+                  this.$Message.error(res.data.message)
+                }
+              }).catch((error) => {
+                this.$Message.error(error.toString())
+              });
+            }
+          });
+        } else {
+          this.$Message.error("请选中需删除的数据");
+        }
+      },
+      rowCommand: function (name, params) {
+        if (name === '编辑') {
+          this.updateRole(params.row.roleId);
+          return;
+        }
+        if (name === '删除') {
+          this.$Modal.confirm({
+            title: '删除确认',
+            content: '<p>删除后不能恢复，确定删除已选择的记录吗？</p>',
+            onOk: () => {
+              let roleIds = [params.row.roleId];
+              this.$http.post('/api/role/delete?roleIds=' + roleIds, {}).then((res) => {
+                if (res.data.code === 0) {
+                  this.$Message.success("删除成功");
+                  $.extend(this.queryForm, this.queryParam);
+                  this.load();
+                } else {
+                  this.$Message.error(res.data.message)
+                }
+              }).catch((error) => {
+                this.$Message.error(error.toString())
+              });
+            }
+          });
+        }
+      },
+      goBack: function () {
+        this.$router.go(-1);
+      },
+      addRole: function () {
+        this.$refs.editRole.open(0);
+      },
+      updateRole: function (roleId) {
+        this.$refs.editRole.open(roleId);
+      },
+    }
+  }
+
+</script>
+
+<style type="text/css">
+
+</style>

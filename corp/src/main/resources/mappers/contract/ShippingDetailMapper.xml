@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyarc.tp.corp.contract.shipping.dao.ShippingDetailMapper">
+	<insert id="insertSelective"
+		parameterType="com.lyarc.tp.corp.contract.shipping.bean.ShippingDetail">
+		insert into t_shipping_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="shippingId != null">
+				shipping_id,
+			</if>
+			<if test="materId != null">
+				mater_id,
+			</if>
+			<if test="drawing != null">
+				drawing,
+			</if>
+			<if test="materName != null">
+				mater_name,
+			</if>
+			<if test="texture != null">
+				texture,
+			</if>
+			<if test="casting != null">
+				casting,
+			</if>
+			<if test="hardness != null">
+				hardness,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="weight != null">
+				weight,
+			</if>
+			<if test="weightTotal != null">
+				weight_total,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+		</trim>
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="shippingId != null">
+				#{shippingId,jdbcType=VARCHAR},
+			</if>
+			<if test="materId != null">
+				#{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="drawing != null">
+				#{drawing,jdbcType=VARCHAR},
+			</if>
+			<if test="materName != null">
+				#{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="texture != null">
+				#{texture,jdbcType=VARCHAR},
+			</if>
+			<if test="casting != null">
+				#{casting,jdbcType=VARCHAR},
+			</if>
+			<if test="hardness != null">
+				#{hardness,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="weight != null">
+				#{weight,jdbcType=DECIMAL},
+			</if>
+			<if test="weightTotal != null">
+				#{weightTotal,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{amount,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+
+	<delete id="deleteByShippingId" parameterType="java.lang.String">
+		delete from t_shipping_detail
+		where shipping_id = #{shippingId,jdbcType=VARCHAR}
+	</delete>
+</mapper>

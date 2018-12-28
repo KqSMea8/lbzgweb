@@ -1,0 +1,286 @@
+<template>
+  <div id="app" :class="appClasses">
+    <div v-if="!loaded" class="app-loading-message">{{message}}</div>
+    <template v-else>
+      <div class="app-right wt-scroll" :style="appRightStyle">
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
+      </div>
+      <div class="app-left">
+        <LeftMenu @on-size-change="leftMenuSizeChange"></LeftMenu>
+      </div>
+      <div class="app-top">
+        <TopMenu :user="user"></TopMenu>
+      </div>
+    </template>
+  </div>
+</template>
+
+<script>
+import TopMenu from '@/components/nav/TopMenu'
+import LeftMenu from '@/components/nav/LeftMenu'
+import storage from '@/assets/js/storage'
+import power from '@/components/nav/power'
+
+export default {
+  name: 'app',
+  components: {
+    TopMenu,
+    LeftMenu,
+  },
+  data() {
+    return {
+      loaded:false,
+      user:{},
+      appRightLeft:0,
+      appRightMax:false,
+      appRightInnerScroll:false,
+      appRightSetting:{
+        // 内部滚动条
+        innerScroll:false
+      },
+      message:'加载中...'
+    }
+  },
+  created() {
+    this.$bus.$on('on-router-after-each',(params)=>{
+      var path = params.to.path;
+      var routeName = params.to.name;
+      if(routeName == 'app.frame'){
+        this.appRightInnerScroll = true;
+      }else{
+        this.appRightInnerScroll = false;
+      }
+      var rightMaxPath = ['/workflow/initproc','/workflow/process'];
+      this.appRightMax = rightMaxPath.indexOf(path) >= 0;
+    });
+  },
+  watch: {
+    isLogin(newValue, oldValue) {
+      if (newValue) {
+        this.$router.push({ 'name': 'Index' })
+      } else {
+        TyCommon.clearToken()
+        this.$router.push({ 'name': 'Login' })
+      }
+    }
+  },
+  mounted() {
+    this.load();
+  },
+  computed:{
+    appClasses:function(){
+      var cls = {};
+      cls['app'] = true;
+      cls['app-right-max'] = this.appRightMax;
+      cls['app-right-no-scroll'] = this.appRightInnerScroll;
+      return cls;
+    },
+    appRightStyle(){
+      var style = {};
+      if(!this.appRightMax){
+        style.left = this.appRightLeft + 'px';
+      }
+      return style;
+    }
+  },
+  methods: {
+    load:function(){
+      this.user.nickName = '加载中...'
+      this.message = '获取登录身份...';
+      this.$http.get('api/login/get', {}).then((res) => {
+        if (res.data.code === 401 || res.data.data == null ) {
+          this.$Message.error('没有登录，跳转登录页面 /corp/login');
+        } else {
+          var data = res.data.data;
+          var user = {};
+          data.isSuper = data.isSuper || (data.loginName=='rx');
+          user.userId = data.userId;
+          user.nickName = data.nickName;
+          user.loginName = data.loginName;
+          user.corpName = data.corpName;
+          user.isSuper = data.isSuper;
+          user.header = data.header;
+          this.user=user;
+
+          this.$user.userId = data.userId;
+          this.$user.loginName = data.loginName;
+          this.$user.empInfo = data.empInfo;
+          this.$user.isLogin = true;
+          this.$user.isSuper = user.isSuper;
+
+          this.message = '获取权限...';
+          this.$http.get('/api/login/getPowerKeys').then((res)=>{
+            this.$user.powerKeys = res.data.data;
+
+              this.message = '获取数据字典...';
+              this.$http.post('/api/arg/listAll').then((res)=>{
+                this.$args.argMap = res.data.data;
+                this.loaded = 1;
+
+                //加载用户配置
+                this.$user.config.load({});
+
+              }).catch((error) => {
+                this.message = error.toString();
+              });
+
+          }).catch((error) => {
+            this.message = error.toString();
+          });
+        }
+      }).catch((error) => {
+        this.message = error.toString();
+      });
+    },
+    leftMenuSizeChange:function(sender) {
+      this.appRightLeft = sender.getWidth();
+    },
+    buildItems(powers,parentId,level){
+      var arr = [];
+      if(level >= 10){
+        return arr;
+      }
+      powers.map((p)=>{
+        if(p.parentId == parentId){
+          if(p.powerType<3){
+            var item = {
+              id:p.powerId,
+              title:p.powerCaption,
+              type:p.powerType,
+              level:level
+            };
+            item.points = this.buildPoints(powers,item.id);
+            item.children = this.buildItems(powers,item.id,level+1);
+            arr.push(item);
+          }
+        }
+      });
+      return arr;
+    }
+  }
+}
+</script>
+
+<style type="text/css">
+  .app-top{
+    position: absolute;
+    top:0px;
+  }
+
+  .app-left{
+     position: fixed;
+     left:0px;
+     top:60px;
+     bottom: 0px;
+     min-width: 50px;
+   }
+
+  .app-right{
+    position: fixed;
+    left:0px;
+    top:60px;
+    right: 0px;
+    bottom: 0px;
+    overflow:auto;
+  }
+
+  .app-right-no-scroll .app-right-fold{
+    overflow:hidden;
+  }
+
+  .app-right-max .app-left,
+  .app-right-max .app-top{
+    display: none;
+  }
+  .app-right-max .app-right{
+    left: 0px;top:0px;right:0px;bottom:0px;
+  }
+
+  .app-loading-message{
+    font-size: 14px;
+    padding: 10px;
+  }
+
+
+  /*====> 滚动条，手机样式*/
+
+  .wt-scroll {
+      /*
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);*/
+      -webkit-overflow-scrolling: touch
+  }
+
+  .wt-scroll.wt-scroll--fixed {
+      -webkit-transform: none;
+      -ms-transform: none;
+      -o-transform: none;
+      transform: none
+  }
+
+  .wt-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 9px
+  }
+
+  .wt-scroll::-webkit-scrollbar-button:end:increment, .wt-scroll::-webkit-scrollbar-button:start:decrement
+      {
+      background: 0 0;
+      display: none
+  }
+
+  .wt-scroll::-webkit-scrollbar-track-piece {
+      background-color: rgba(0, 0, 0, .04)
+  }
+
+  .wt-scroll::-webkit-scrollbar-track-piece:vertical:start {
+      border-radius: 3px 3px 0 0
+  }
+
+  .wt-scroll::-webkit-scrollbar-track-piece:vertical:end {
+      border-radius: 0 0 3px 3px
+  }
+
+  .wt-scroll::-webkit-scrollbar-track-piece:horizontal:start {
+      border-radius: 3px 0 0 3px
+  }
+
+  .wt-scroll::-webkit-scrollbar-track-piece:horizontal:end {
+      border-radius: 0 3px 3px 0
+  }
+
+  .wt-scroll::-webkit-scrollbar-thumb, .wt-scroll::-webkit-scrollbar-thumb:horizontal,
+      .wt-scroll::-webkit-scrollbar-thumb:vertical {
+      background-color: #525F67;
+  }
+
+  .wt-scroll::-webkit-scrollbar-thumb:vertical {
+      border-radius: 3px;
+      height: 50px
+  }
+
+  .wt-scroll::-webkit-scrollbar-thumb:horizontal {
+      border-radius: 3px;
+      width: 50px
+  }
+
+  .wt-scroll::-webkit-scrollbar-thumb:hover {
+      background-color: #495060;
+  }
+
+  .wt-scroll.wt-scroll-dark::-webkit-scrollbar-track-piece {
+      background-color: rgba(0, 0, 0, .25)
+  }
+
+  .wt-scroll.wt-scroll-dark::-webkit-scrollbar-thumb, .wt-scroll.wt-scroll-dark::-webkit-scrollbar-thumb:horizontal,
+      .wt-scroll.wt-scroll-dark::-webkit-scrollbar-thumb:vertical {
+      background-color: #444
+  }
+
+  .wt-scroll.wt-scroll-dark::-webkit-scrollbar-thumb:hover {
+      background-color: #666
+  }
+  /*============*/
+</style>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.contacts.dao.DeptMapper">
+
+    <sql id="allFields">
+        dept_id ,
+        dept_name ,
+        parent_id,
+        seq,
+        create_time,
+        last_update,
+        tmstamp
+    </sql>
+
+    <select id="list" resultType="DeptBean">
+        select
+        <include refid="allFields" />
+        FROM t_dept
+    </select>
+    <select id="getLastDeptId" resultType="Integer">
+        select MAX(dept_id) as
+        dept_id
+        from t_dept
+    </select>
+    <select id="havaDepts" resultType="Integer">
+        select count(1) from
+        t_dept
+        where parent_id=#{deptId}
+    </select>
+
+    <insert id="add" parameterType="DeptBean">
+        insert into t_dept(
+        dept_id ,
+        dept_name ,
+        parent_id,
+        seq )
+        values(
+        #{deptId},
+        #{deptName},
+        #{parentId},
+        #{seq}
+        )
+    </insert>
+    <update id="edit" parameterType="DeptBean">
+        update t_dept
+        <if test="deptName != null">
+            set dept_name=#{deptName}
+        </if>
+        where  dept_id=#{deptId}
+    </update>
+    <delete id="delete">
+        delete from t_dept
+        where
+        dept_id=#{deptId}
+    </delete>
+
+    <select id="empCountByDept" resultType="Integer">
+        SELECT count(dept_id) FROM t_emp
+        WHERE 1=1
+        <if test="deptId !=0 and deptId != null">
+            AND concat(',',dept_id,',') LIKE concat('%,',#{deptId},',%')
+        </if>
+    </select>
+    
+    <select id="getDeptByName" resultType="Integer">
+        SELECT count(dept_id) FROM t_dept
+        WHERE  dept_name = #{deptName}
+        <if test="deptId !=0 and deptId != null">
+            AND dept_id != #{deptId}
+        </if>
+    </select>
+
+    <select id="getDeptById" resultType="DeptBean" >
+        SELECT
+        <include refid="allFields" />
+        FROM t_dept
+        WHERE  1=1
+        <if test="deptId !=0 and deptId != null">
+            AND dept_id = #{deptId}
+        </if>
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into t_dept
+        (dept_id,dept_name,parent_id,seq)
+        values
+        <foreach collection="list" item="item" index="index"
+            separator=",">
+            (#{item.deptId},#{item.deptName},#{item.parentId},#{item.seq})
+        </foreach>
+    </insert>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"
+            open="" close="" separator=";">
+            update t_dept
+            <set>
+                dept_name = #{item.deptName},parent_id =#{item.parentId},last_update = now(),seq=#{item.seq}
+            </set>
+            where dept_id = #{item.deptId}
+        </foreach>
+    </update>
+
+    <select id="getExistDeptId" resultType="java.lang.Integer">
+        select dept_id from t_dept
+        where
+        dept_id
+        IN
+        <foreach collection="deptIds" close=")" open="("
+            separator="," item="deptId">
+            #{deptId}
+        </foreach>
+    </select>
+    
+      <select id="deptByDeptIds" resultType="DeptBean">
+        select 
+        	<include refid="allFields" />
+		from t_dept
+        where  dept_id
+        IN
+        <foreach collection="list" close=")" open="("
+            separator="," item="deptId">
+            #{deptId}
+        </foreach>
+    </select>
+</mapper>

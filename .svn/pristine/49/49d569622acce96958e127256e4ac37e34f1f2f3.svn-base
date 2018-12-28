@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Oct 23 19:39:55 CST 2018
+httpclient-4.5.jar>public=
+httpclient-4.5-sources.jar>public=
+httpclient-4.5.pom>public=

@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Dec 26 16:31:22 CST 2018
+httpcore-4.4.1.jar>public=
+httpcore-4.4.1-sources.jar>public=
+httpcore-4.4.1.pom>public=
+httpcore-4.4.1.pom>aliyun=
+httpcore-4.4.1.jar>aliyun=

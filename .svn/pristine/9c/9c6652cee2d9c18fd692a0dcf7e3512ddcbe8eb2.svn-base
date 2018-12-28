@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.purchase.provider.dao.ProviderInquireMapper">
+	<resultMap id="BaseResultMap"
+		type="com.lyarc.tp.corp.purchase.provider.bean.ProviderInquire">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="provider_id" jdbcType="VARCHAR" property="providerId" />
+		<result column="mater_id" jdbcType="VARCHAR" property="materId" />
+		<result column="mater_name" jdbcType="VARCHAR" property="materName" />
+		<result column="spec" jdbcType="VARCHAR" property="spec" />
+		<result column="model" jdbcType="VARCHAR" property="model" />
+		<result column="unit" jdbcType="VARCHAR" property="unit" />
+		<result column="sub_type" jdbcType="VARCHAR" property="subType" />
+		<result column="apply_to_product_type" jdbcType="VARCHAR" property="applyToProductType" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="delivery_date" jdbcType="VARCHAR" property="deliveryDate" />
+		<result column="pay_type" jdbcType="VARCHAR" property="payType" />
+		<result column="link_man" jdbcType="VARCHAR" property="linkMan" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="link_phone" jdbcType="VARCHAR" property="linkPhone" />
+		<result column="inquire_time" jdbcType="TIMESTAMP" property="inquireTime" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="tmstamp" jdbcType="TIMESTAMP" property="tmStamp" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		remark,provider_id,mater_id,mater_name,spec,model,unit,
+		sub_type,apply_to_product_type,price,delivery_date,
+		pay_type,link_man,address,link_phone,inquire_time,
+		create_time,update_time,tmstamp
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_provider_inquire
+		where
+		id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="list" parameterType="ProviderInquire"
+		resultType="ProviderInquireDto">
+		select
+		t.*,p.provider_name
+		from t_provider_inquire t left join t_provider p
+		on t.provider_id=p.provider_id
+		where 1=1
+		<if test='providerId != null'>
+			AND t.provider_id =#{providerId}
+		</if>
+		<if test='providerName != null'>
+			 AND p.provider_name LIKE concat('%',#{providerName},'%')
+		</if>
+		<if test='materId != null'>
+			AND t.mater_id =#{materId}
+		</if>
+		<if test='materName != null'>
+			AND t.mater_name =#{materName}
+		</if>		
+		ORDER BY t.create_time DESC
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<select id="count" parameterType="ProviderInquire"
+		resultType="java.lang.Long">
+		select count(1)
+		from t_provider_inquire t where 1=1
+		<if test='providerId != null and providerId !=""'>
+			AND t.provider_id =#{providerId}
+		</if>
+		<if test="createTime != null">
+			AND DATE_FORMAT(t.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTime},'%Y-%m-%d')
+		</if>
+		<if test="createTimeEnd != null">
+			AND DATE_FORMAT(t.create_time,'%Y-%m-%d') >= DATE_FORMAT(#{createTimeEnd},'%Y-%m-%d')
+		</if>
+	</select>
+	<insert id="insert" parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderInquire">
+		insert into t_provider_inquire
+		(remark,provider_id,mater_id,mater_name,spec,model,unit,
+		sub_type,apply_to_product_type,price,delivery_date,
+		pay_type,link_man,address,link_phone,inquire_time,
+		create_time,update_time,tmstamp)
+		values
+		(#{remark,jdbcType=VARCHAR},#{providerId,jdbcType=VARCHAR},#{materId,jdbcType=VARCHAR},#{materName,jdbcType=VARCHAR},
+		#{spec,jdbcType=VARCHAR},#{model,jdbcType=VARCHAR},#{unit,jdbcType=VARCHAR},#{subType,jdbcType=VARCHAR},
+		#{applyToProductType,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{deliveryDate,jdbcType=VARCHAR},#{payType,jdbcType=VARCHAR},
+		#{linkMan,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{linkPhone,jdbcType=VARCHAR},#{inquireTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{tmStamp,jdbcType=TIMESTAMP})
+	</insert>
+
+	<insert id="insertSelective"
+		parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderInquire">
+		insert into t_provider_inquire
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="providerId != null">
+				provider_id,
+			</if>
+			<if test="materId != null">
+				mater_id,
+			</if>
+			<if test="materName != null">
+				mater_name,
+			</if>
+			<if test="spec != null">
+				spec,
+			</if>
+			<if test="model != null">
+				model,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			<if test="subType != null">
+				sub_type,
+			</if>
+			<if test="applyToProductType != null">
+				apply_to_product_type,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="deliveryDate != null">
+				delivery_date,
+			</if>
+			<if test="payType != null">
+				pay_type,
+			</if>
+			<if test="linkMan != null">
+				link_man,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="linkPhone != null">
+				link_phone,
+			</if>
+			<if test="inquireTime != null">
+				inquire_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="tmStamp != null">
+				tmstamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="providerId != null">
+				#{providerId,jdbcType=VARCHAR},
+			</if>
+			<if test="materId != null">
+				#{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="materName != null">
+				#{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="spec != null">
+				#{spec,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				#{model,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="subType != null">
+				#{subType,jdbcType=VARCHAR},
+			</if>
+			<if test="applyToProductType != null">
+				#{applyToProductType,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="deliveryDate != null">
+				#{deliveryDate,jdbcType=VARCHAR},
+			</if>
+			<if test="payType != null">
+				#{payType,jdbcType=VARCHAR},
+			</if>
+			<if test="linkMan != null">
+				#{linkMan,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="linkPhone != null">
+				#{linkPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="inquireTime != null">
+				#{inquireTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmStamp != null">
+				#{tmStamp,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKey"
+		parameterType="com.lyarc.tp.corp.purchase.provider.bean.ProviderInquire">
+		update t_provider_inquire
+		<set>
+			<if test="remark != null">
+				remark=#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="providerId != null">
+				provider_id=#{providerId,jdbcType=VARCHAR},
+			</if>
+			<if test="materId != null">
+				mater_id=#{materId,jdbcType=VARCHAR},
+			</if>
+			<if test="materName != null">
+				mater_name=#{materName,jdbcType=VARCHAR},
+			</if>
+			<if test="spec != null">
+				spec=#{spec,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				model=#{model,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				unit=#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="subType != null">
+				sub_type=#{subType,jdbcType=VARCHAR},
+			</if>
+			<if test="applyToProductType != null">
+				apply_to_product_type=#{applyToProductType,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				price=#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="deliveryDate != null">
+				delivery_date=#{deliveryDate,jdbcType=VARCHAR},
+			</if>
+			<if test="payType != null">
+				pay_type=#{payType,jdbcType=VARCHAR},
+			</if>
+			<if test="linkMan != null">
+				link_man=#{linkMan,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address=#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="linkPhone != null">
+				link_phone=#{linkPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="inquireTime != null">
+				inquire_time=#{inquireTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time=#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time=#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tmStamp != null">
+				tmstamp=#{tmStamp,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id=#{id,jdbcType=INTEGER}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_provider_inquire
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+</mapper>

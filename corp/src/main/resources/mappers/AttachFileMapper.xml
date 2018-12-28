@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyarc.tp.corp.attachfile.dao.AttachFileMapper">
+
+    <sql id="allFields">
+	af.file_id,af.module,af.obj_id,af.title,af.file_name,af.file_name_ext,af.file_size,af.file_md5,af.file_path,
+	af.file_catalog,af.deleted,af.delete_time,af.deleter,af.creator,af.create_time,af.last_update,af.tmstamp
+</sql>
+
+    <select id="list" parameterType="QueryFileBean" resultType="AttachFileBean">
+        SELECT
+        <include refid="allFields"/>
+        FROM t_attach_file af
+        WHERE af.module=#{module} AND af.obj_id=#{objId} AND af.deleted=0
+        <if test="lastFileId != null">
+            AND (
+            af.create_time &lt; (SELECT att.create_time FROM t_attach_file att WHERE att.file_id=#{lastFileId})
+            OR (af.create_time = (SELECT att.create_time FROM t_attach_file att WHERE att.file_id=#{lastFileId}) AND att.file_id &lt; #{lastFileId})
+            )
+        </if>
+        ORDER BY af.create_time DESC,af.file_id DESC
+        <if test="rows != null">
+            limit #{rows}
+        </if>
+    </select>
+
+    <select id="listByIds" resultType="AttachFileBean">
+        SELECT
+        <include refid="allFields"/>
+        FROM t_attach_file af
+        WHERE af.file_id in
+        <foreach collection="fileIds" item="fileId" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </select>
+
+    <insert id="insert" parameterType="AttachFileBean">
+        INSERT INTO t_attach_file
+        (file_id,module,obj_id,title,file_name,file_name_ext,file_size,file_md5,file_path,
+	     file_catalog,deleted,creator)
+	     VALUES
+	     (#{fileId},#{module},#{objId},#{title},#{fileName},#{fileNameExt},#{fileSize},#{fileMd5},#{filePath},
+	     #{fileCatalog},#{deleted},#{creator})
+    </insert>
+
+    <select id="get" parameterType="java.lang.String" resultType="AttachFileBean">
+        SELECT
+        <include refid="allFields"/>
+        FROM t_attach_file af
+        WHERE af.file_id=#{fileId}
+    </select>
+
+    <update id="update" parameterType="AttachFileBean">
+        UPDATE t_attach_file
+        <set>
+            <if test="attachFileBean.module != null">
+                module=#{attachFileBean.module},
+            </if>
+            <if test="attachFileBean.objId != null">
+                obj_id=#{attachFileBean.objId},
+            </if>
+            <if test="attachFileBean.deleted != null">
+                deleted=#{attachFileBean.deleted},
+            </if>
+            <if test="attachFileBean.deleteTime != null">
+                delete_time=#{attachFileBean.deleteTime},
+            </if>
+            <if test="attachFileBean.deleter != null">
+                deleter=#{attachFileBean.deleter},
+            </if>
+            <if test="attachFileBean.lastUpdate != null">
+                last_update=#{attachFileBean.lastUpdate}
+            </if>
+        </set>
+        WHERE file_id IN
+        <foreach collection="fileIds" item="fileId" separator="," open="(" close=")">
+            #{fileId}
+        </foreach>
+    </update>
+
+</mapper>

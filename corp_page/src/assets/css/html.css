@@ -1,0 +1,39 @@
+[v-cloak] {
+  visibility: visible
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+.ivu-table td, .ivu-table th {
+  min-width: 0;
+  height: 42px;
+}
+
+.noselect {
+
+-webkit-touch-callout: none; /* iOS Safari */
+
+-webkit-user-select: none; /* Chrome/Safari/Opera */
+
+-khtml-user-select: none; /* Konqueror */
+
+-moz-user-select: none; /* Firefox */
+
+-ms-user-select: none; /* Internet Explorer/Edge */
+
+user-select: none; /* Non-prefixed version, currently
+
+not supported by any browser */
+
+}
+
+*{
+	list-style:none;
+}
